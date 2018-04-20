@@ -597,6 +597,12 @@ again:
 
        }
 
+       if(_frequency < 7 && samp_rate>6){
+           nodes_count = 1600;
+       }else if( _frequency < 6&&samp_rate == 9){
+           nodes_count = 1800;
+       }
+
 
     }
 
@@ -621,6 +627,8 @@ again:
   rcutils_time_point_value_t start_scan_time,end_scan_time;
 
   int max_nodes_count = nodes_count;
+  each_angle = 360.0/nodes_count;
+
 
   while (rclcpp::ok()) {
         try{
