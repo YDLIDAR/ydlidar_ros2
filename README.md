@@ -5,7 +5,7 @@ ROS2 node and test application for YDLIDAR
 
 Visit EAI Website for more details about YDLIDAR.
 
-How to build YDLIDAR ros package
+How to build YDLIDAR ros2 package
 =====================================================================
     1) Clone this project to your ament's workspace src folder
     2) Running ament to build ydlidar_node and ydlidar_client
@@ -25,6 +25,11 @@ ros2 run ydlidar ydlidar_client
 
 You should see YDLIDAR's scan result in the console
 
+2.Run YDLIDAR node and view using test application by launch
+------------------------------------------------------------
+launch $(ros2 pkg prefix ydlidar)/share/ydlidar/launch/ydlidar.py
+
+ros2 run ydldiar ydlidar_client or ros2 topic echo /scan
 
 Configuration
 =====================================================================
