@@ -20,6 +20,7 @@ set(SDK_PATH "./sdk/")
 FILE(GLOB SDK_SRC 
   "${SDK_PATH}/src/impl/unix/*.cpp"
   "${SDK_PATH}/src/*.cpp"
+  "${SDK_PATH}/src/*.c"
 )
 
 include_directories(
