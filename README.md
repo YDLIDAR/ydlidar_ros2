@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V1.3.1
+YDLIDAR ROS2 PACKAGE V1.3.5
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -65,6 +65,22 @@ resolution_fixed (bool, default: true)
 
     indicated whether the LIDAR has a fixed angular resolution. 
 
+auto_reconnect (bool, default: true)
+
+    indicated whether the LIDAR auto reconnection. 
+
+debug (bool, default: false)
+
+    indicated whether the LIDAR save parsing. 
+
+reversion (bool, default: false)
+
+    indicated whether the LIDAR data rotation 180°. 
+
+intensities (bool, default: false)
+
+    indicated whether the LIDAR has intensity. 
+
 angle_min (double, default: -180)
 
     Min valid angle (°) for LIDAR data. 
@@ -93,11 +109,33 @@ frequency (double, default: 7)
 
     the LIDAR scanning frequency.
 
+sensor_x (double, default: 0)
+
+    the LIDAR　X axis installation coordinates
+
+sensor_y (double, default: 0)
+
+    the LIDAR　Y axis installation coordinates
+
+sensor_yaw (double, default: 0)
+
+    the LIDAR　installation direction
+
+
+
+
 
 
 
 Upgrade Log
 =====================================================================
+
+2018-07-16 version:1.3.5
+
+   1.Update SDK verison to 1.3.6
+
+   2.add imu sync.
+
 2018-04-16 version:1.3.1
 
    1.Update SDK verison to 1.3.1

@@ -22,10 +22,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="app(2).png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.3.3</span>
+   &#160;<span id="projectnumber">V1.3.6</span>
    </div>
   </td>
  </tr>
@@ -66,6 +65,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li class="current"><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -92,7 +92,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
-      <li class="current"><a href="#index_w"><span>w</span></a></li>
+      <li><a href="#index_v"><span>v</span></a></li>
+      <li><a href="#index_w"><span>w</span></a></li>
+      <li><a href="#index_x"><span>x</span></a></li>
+      <li class="current"><a href="#index_y"><span>y</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -120,6 +123,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>_lock
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1bb836661c8c39c2b71c9a0de8755c5c">ydlidar::YDlidarDriver</a>
 </li>
+<li>_odom_lock
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a262d5d461db1c04e1e223e3b187dda0a">ydlidar::YDlidarDriver</a>
+</li>
+<li>_serial_lock
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ac1ace85f37283559d4f2bc2797eea900">ydlidar::YDlidarDriver</a>
+</li>
 <li>_thread
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a9fbd1b3471c1aa4959d74524b9a92410">ydlidar::YDlidarDriver</a>
 </li>
@@ -140,6 +149,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>config
 : <a class="el" href="struct_laser_scan.html#a5c7dd0b85432e62cf319f2ad4ec058b4">LaserScan</a>
 </li>
+<li>current_odom
+: <a class="el" href="structnode__info.html#acc5067d871a6b5f5b0c9178837a726bd">node_info</a>
+</li>
 </ul>
 
 
@@ -147,8 +159,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>description
 : <a class="el" href="structserial_1_1_port_info.html#a2ba37dd33d47b554aef5c15c1fe8b872">serial::PortInfo</a>
 </li>
-<li>distance_q2
-: <a class="el" href="structnode__info.html#a82eaf27a6196e803d3618c83b052f78c">node_info</a>
+<li>distance_q
+: <a class="el" href="structnode__info.html#ae7e8612af1b450934939094806752963">node_info</a>
+</li>
+<li>dth
+: <a class="el" href="structodom__info.html#a2f08c36b0bd40ab658246f6698a391c6">odom_info</a>
+</li>
+<li>dx
+: <a class="el" href="structodom__info.html#a491c0b6e3fe5f463bea4117429e7db39">odom_info</a>
+</li>
+<li>dy
+: <a class="el" href="structodom__info.html#a43087123c0b873d0710032ef76dadf9c">odom_info</a>
 </li>
 </ul>
 
@@ -193,6 +214,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>inter_byte_timeout
 : <a class="el" href="structserial_1_1_timeout.html#ada15f2a0ae478cbb62ef79d1633b2b81">serial::Timeout</a>
 </li>
+<li>isAutoconnting
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a4fcf172c55eabd5c6ca2d8c2bf14e5c6">ydlidar::YDlidarDriver</a>
+</li>
+<li>isAutoReconnect
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#aa9fe773e62367a784c888d97c1886661">ydlidar::YDlidarDriver</a>
+</li>
 <li>isConnected
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a4457578961d36ce22035d778c0fd7f06">ydlidar::YDlidarDriver</a>
 </li>
@@ -225,6 +252,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>phi
+: <a class="el" href="structodom__info.html#a24e43c65d6abd1e447390a3812e64f0d">odom_info</a>
+</li>
+<li>points
+: <a class="el" href="struct_point_cloud.html#a999f0be81318ef531f7671f2d867fc73">PointCloud</a>
+</li>
 <li>port
 : <a class="el" href="structserial_1_1_port_info.html#a5d4242cdd6c0d01260e24964af4c23d2">serial::PortInfo</a>
 </li>
@@ -251,6 +284,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>save_parsing
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a0f386d9157f5eaf3ab307f372e7355c9">ydlidar::YDlidarDriver</a>
+</li>
 <li>scan_frequence
 : <a class="el" href="structnode__info.html#a718a8a2f94497d5edea2be4550f74348">node_info</a>
 </li>
@@ -271,12 +307,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>stamp
 : <a class="el" href="structnode__info.html#a92f30331da1d7d95f9998dcd3886574c">node_info</a>
+, <a class="el" href="structodom__info.html#a464e597fa2c4251df9dff5f52c1421ba">odom_info</a>
 </li>
 <li>status
 : <a class="el" href="structdevice__health.html#ac3425f5555ecbb5a0da03b4cabe2777c">device_health</a>
 </li>
 <li>system_time_stamp
 : <a class="el" href="struct_laser_scan.html#a1bb6b997ce698fbc516bc20ab3ba3399">LaserScan</a>
+, <a class="el" href="struct_point_cloud.html#ac43b424d8ade6051d2d6486082e48c58">PointCloud</a>
 </li>
 </ul>
 
@@ -288,12 +326,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
+<h3><a class="anchor" id="index_v"></a>- v -</h3><ul>
+<li>v
+: <a class="el" href="structodom__info.html#a594cf92f9a99fa56c3ab35e425770c3c">odom_info</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
+<li>w
+: <a class="el" href="structodom__info.html#a945d6419f159611afa295a0044b70b4a">odom_info</a>
+</li>
 <li>write_timeout_constant
 : <a class="el" href="structserial_1_1_timeout.html#accf01b97f83564f4ce3d6e5f63e21006">serial::Timeout</a>
 </li>
 <li>write_timeout_multiplier
 : <a class="el" href="structserial_1_1_timeout.html#a31ddae32907cff9c3d27fa763981317d">serial::Timeout</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_x"></a>- x -</h3><ul>
+<li>x
+: <a class="el" href="structodom__info.html#a1181d663fd9608fbcc8f92bbb70af6d7">odom_info</a>
+, <a class="el" href="structpose__info.html#adc2c1d8e97954448b17a62c11094d676">pose_info</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_y"></a>- y -</h3><ul>
+<li>y
+: <a class="el" href="structodom__info.html#a011c578e1510e912f2fa3ba45000176b">odom_info</a>
 </li>
 </ul>
 </div><!-- contents -->

@@ -1,5 +1,10 @@
 var searchData=
 [
+  ['matrix',['Matrix',['../classmatrix_1_1_matrix.html',1,'matrix']]],
+  ['matrix_2ehpp',['Matrix.hpp',['../_matrix_8hpp.html',1,'']]],
+  ['matrix_3c_20double_2c_20m_2c_20m_20_3e',['Matrix&lt; double, M, M &gt;',['../classmatrix_1_1_matrix.html',1,'matrix']]],
+  ['matrix_3c_20type_2c_20m_2c_201_20_3e',['Matrix&lt; Type, M, 1 &gt;',['../classmatrix_1_1_matrix.html',1,'matrix']]],
+  ['matrix_3c_20type_2c_20m_2c_20m_20_3e',['Matrix&lt; Type, M, M &gt;',['../classmatrix_1_1_matrix.html',1,'matrix']]],
   ['max_5fangle',['max_angle',['../struct_laser_config.html#a2d09a717415770110787788127ad6b14',1,'LaserConfig']]],
   ['max_5frange',['max_range',['../struct_laser_config.html#a977dcea9a68dc9dd21113fd0eff24c9c',1,'LaserConfig']]],
   ['max_5fscan_5fnodes',['MAX_SCAN_NODES',['../classydlidar_1_1_y_dlidar_driver.html#a13a4f2dc4067b43794b2c47c06d5d27aa3db6fc46c7ce55cdf3a968b70e96374a',1,'ydlidar::YDlidarDriver']]],

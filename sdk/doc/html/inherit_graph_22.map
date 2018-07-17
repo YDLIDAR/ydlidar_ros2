@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classmatrix_1_1_matrix.html" title="matrix::Matrix\&lt; Type,\l M, 1 \&gt;" alt="" coords="5,49,152,90"/>
+<area shape="rect" id="node2" href="$classmatrix_1_1_vector.html" title="matrix::Vector\&lt; Type, M \&gt;" alt="" coords="200,5,376,32"/>
+<area shape="rect" id="node3" href="$classmatrix_1_1_vector.html" title="matrix::Vector\&lt; Type, 2 \&gt;" alt="" coords="202,56,374,83"/>
+<area shape="rect" id="node5" href="$classmatrix_1_1_vector.html" title="matrix::Vector\&lt; Type, 3 \&gt;" alt="" coords="202,107,374,133"/>
+<area shape="rect" id="node4" href="$classmatrix_1_1_vector2.html" title="matrix::Vector2\&lt; Type \&gt;" alt="" coords="424,56,588,83"/>
+<area shape="rect" id="node6" href="$classmatrix_1_1_vector3.html" title="matrix::Vector3\&lt; Type \&gt;" alt="" coords="424,107,588,133"/>
+</map>

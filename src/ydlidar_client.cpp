@@ -9,6 +9,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
+#include <math.h>
 
 #define RAD2DEG(x) ((x)*180./M_PI)
 

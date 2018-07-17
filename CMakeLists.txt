@@ -14,6 +14,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rmw REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 set(SDK_PATH "./sdk/")
 
@@ -27,18 +29,23 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/sdk/include
   ${PROJECT_SOURCE_DIR}/sdk/src
+  ${PROJECT_SOURCE_DIR}/sdk/matrix
 )
 
 add_executable(ydlidar_node src/ydlidar_node.cpp  ${SDK_SRC})
 ament_target_dependencies(ydlidar_node
   "rclcpp"
   "sensor_msgs"
+  "visualization_msgs"
+  "geometry_msgs"
 )
 
 add_executable(ydlidar_client src/ydlidar_client.cpp)
 ament_target_dependencies(ydlidar_client
   "rclcpp"
   "sensor_msgs"
+  "visualization_msgs"
+  "geometry_msgs"
 )
 
 

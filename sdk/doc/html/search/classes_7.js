@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['packagenode',['PackageNode',['../struct_package_node.html',1,'']]],
-  ['portinfo',['PortInfo',['../structserial_1_1_port_info.html',1,'serial']]]
+  ['node_5finfo',['node_info',['../structnode__info.html',1,'']]],
+  ['node_5fpackage',['node_package',['../structnode__package.html',1,'']]],
+  ['node_5fpackages',['node_packages',['../structnode__packages.html',1,'']]]
 ];

@@ -1,6 +1,7 @@
 var searchData=
 [
   ['range_5fres',['range_res',['../struct_laser_config.html#ae52eb0e0aca41f6dde58700a642e4c80',1,'LaserConfig']]],
+  ['rangedata',['RangeData',['../structline__feature_1_1_range_data.html',1,'line_feature']]],
   ['ranges',['ranges',['../struct_laser_scan.html#a4d059cb77f0f9f6e558db50c9993f7df',1,'LaserScan']]],
   ['rate',['rate',['../structsampling__rate.html#a8d860fbedd930d2022fe7bb6cf1f78b6',1,'sampling_rate']]],
   ['read',['read',['../classserial_1_1_serial.html#a01fc2e3d77cb7d70069de87eca1400e9',1,'serial::Serial::read(uint8_t *buffer, size_t size)'],['../classserial_1_1_serial.html#a3ecd4645c76548ba079eab6f2f46adfb',1,'serial::Serial::read(std::vector&lt; uint8_t &gt; &amp;buffer, size_t size=1)'],['../classserial_1_1_serial.html#ad6c6637fdf8edd85c3a6a63d98fc18f7',1,'serial::Serial::read(std::string &amp;buffer, size_t size=1)'],['../classserial_1_1_serial.html#aa52fbf7d23fb761a46e2400829d2b77a',1,'serial::Serial::read(size_t size=1)']]],

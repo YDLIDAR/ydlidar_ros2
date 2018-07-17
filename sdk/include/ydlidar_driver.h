@@ -2,6 +2,7 @@
 #define YDLIDAR_DRIVER_H
 #include <stdlib.h>
 #include <atomic>
+#include <list>
 #include "locker.h"
 #include "serial.h"
 #include "thread.h"
@@ -36,8 +37,11 @@
 #define LIDAR_ANS_TYPE_MEASUREMENT          0x81
 #define LIDAR_RESP_MEASUREMENT_SYNCBIT        (0x1<<0)
 #define LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT  2
+#define LIDAR_RESP_MEASUREMENT_SYNC_QUALITY_SHIFT  8
 #define LIDAR_RESP_MEASUREMENT_CHECKBIT       (0x1<<0)
 #define LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT    1
+#define LIDAR_RESP_MEASUREMENT_DISTANCE_SHIFT 2
+
 
 #define LIDAR_CMD_RUN_POSITIVE             0x06
 #define LIDAR_CMD_RUN_INVERSION            0x07
@@ -73,22 +77,55 @@ typedef enum {
 	CT_RingStart  = 1,
 	CT_Tail,
 }CT;
-#define Node_Default_Quality (10<<2)
+#define Node_Default_Quality (10)
 #define Node_Sync 1
 #define Node_NotSync 2
 #define PackagePaidBytes 10
 #define PH 0x55AA
 
+
+#define MAX_QUEUE_SIZE 20
+
 #if defined(_WIN32)
 #pragma pack(1)
 #endif
 
+
+struct pose_info
+{
+    uint64_t   stamp; //! 时间戳
+    double x;
+    double y;
+    double phi;
+};
+
+struct point_info {
+    double x;
+    double y;
+    double z;
+};
+
+struct odom_info
+{
+    uint64_t   stamp; ///< 时间戳
+    double x;	      ///< x位置
+    double y;	     ///< y位置
+    double phi;	     ///< 角度方向
+    double v;       ///< 线速度
+    double w;       ///< 角速度
+    double dx;       ///< x位置增量
+    double dy;       ///< y位置增量
+    double dth;       ///< 方向增量
+};
+
 struct node_info {
-    uint8_t    sync_quality;//!信号质量
+    uint8_t    sync_flag;
+    uint16_t   sync_quality;//!信号质量
     uint16_t   angle_q6_checkbit; //!测距点角度
-    uint16_t   distance_q2; //! 当前测距点距离
+    uint16_t   distance_q; //! 当前测距点距离
     uint64_t   stamp; //! 时间戳
     uint8_t    scan_frequence;//! 特定版本此值才有效,无效值是0, 当前扫描频率current_frequence = scan_frequence/10.0
+    odom_info   current_odom; //! 当前里程计同步坐标
 } __attribute__((packed)) ;
 
 struct PackageNode {
@@ -187,7 +224,7 @@ struct LaserConfig {
 	float max_angle;
 	//! Scan resolution [rad].
 	float ang_increment;
-	//! Scan resoltuion [s]
+	//! Scan resoltuion [ns]
 	float time_increment;
 	//! Time between scans
 	float scan_time;
@@ -220,6 +257,14 @@ struct LaserScan {
 	uint64_t system_time_stamp;
 	//! Configuration of scan
 	LaserConfig config;
+};
+
+
+struct PointCloud {
+    //! Array of points
+    std::vector<point_info> points;
+    //! System time when first range was measured in nanoseconds
+    uint64_t system_time_stamp;
 };
 
 using namespace std;
@@ -288,6 +333,12 @@ namespace ydlidar{
     	*/
         const bool isconnected() const;
 
+        /**
+         * @brief setSyncOdometry 同步激光和imu,里程计数据
+         * @param odom imu或者里程计数据
+         */
+        void setSyncOdometry(const odom_info& odom);
+
 		/**
 		* @brief 设置雷达是否带信号质量 \n
     	* 连接成功后，必须使用::disconnect函数关闭
@@ -315,6 +366,25 @@ namespace ydlidar{
         * 并且版本号大于等于2.0.9 才支持此功能, 小于2.0.9版本禁止开启掉电保护
     	*/
         void setHeartBeat(const bool& enable);
+
+        /**
+         * @brief 设置雷达异常自动重新连接 \n
+         * @param[in] enable    是否开启自动重连:
+         *     true	开启
+         *	  false 关闭
+         */
+        void setAutoReconnect(const bool& enable);
+
+        /**
+         * @brief 设置保存解析命令到文件 \n
+         * @param[in] parse    是否保存解析:
+         *     true	保存
+         *	  false 不保存
+         * @filename 保存文件名
+         */
+        bool setSaveParse(bool parse, const std::string& filename);
+
+
 
 		/**
 		* @brief 获取雷达设备健康状态 \n
@@ -657,6 +727,19 @@ namespace ydlidar{
     	*/
 		result_t createThread();
 
+
+        /**
+        * @brief 重新连接开启扫描 \n
+        * @param[in] force    扫描模式
+        * @param[in] timeout  超时时间
+        * @return 返回执行结果
+        * @retval RESULT_OK       开启成功
+        * @retval RESULT_FAILE    开启失败
+        * @note sdk 自动重新连接调用
+        */
+
+        result_t startAutoScan(bool force = false, uint32_t timeout = DEFAULT_TIMEOUT) ;
+
 		/**
 		* @brief 解包激光数据 \n
     	* @param[in] node 解包后激光点信息
@@ -767,6 +850,9 @@ namespace ydlidar{
 		std::atomic<bool>     isConnected;  ///< 串口连接状体
         std::atomic<bool>     isScanning;   ///< 扫图状态
 		std::atomic<bool>     isHeartbeat;  ///< 掉电保护状态
+        std::atomic<bool>     isAutoReconnect;  ///< 异常自动从新连接
+        std::atomic<bool>     isAutoconnting;  ///< 是否正在自动连接中
+        std::atomic<bool>     save_parsing;    ///< 是否保存解析命令到文件，调试调用
 
 		enum {
 			DEFAULT_TIMEOUT = 2000,    /**< 默认超时时间. */ 
@@ -788,6 +874,8 @@ namespace ydlidar{
 		size_t         scan_node_count;      ///< 激光点数
 		Event          _dataEvent;			 ///< 数据同步事件
 		Locker         _lock;				///< 线程锁
+        Locker         _serial_lock;       ///< 串口锁
+        Locker         _odom_lock;        ///< 里程计同步锁
 		Thread 	       _thread;				///< 线程id
 
 	private:
@@ -820,6 +908,15 @@ namespace ydlidar{
         uint16_t LastSampleAngleCal;
         bool CheckSunResult;
         uint16_t Valu8Tou16;
+
+        std::string serial_port;///< 雷达端口
+
+        std::list< odom_info> odom_queue;
+
+        odom_info   last_odom; //! 当前里程计同步坐标
+        odom_info   current_odom;
+
+        FILE *fd;
 
 	};
 }
