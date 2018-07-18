@@ -472,15 +472,16 @@ namespace ydlidar{
 		uint32_t size = (m_intensities)?sizeof(node_package):sizeof(node_packages);
 		uint8_t* recvBuffer = new uint8_t[size];
 
-		uint32_t waitTime;
-		uint64_t ns;
+		uint32_t waitTime = 0;
+		uint64_t ns =  getTime();
 		uint8_t *packageBuffer = (m_intensities)?(uint8_t*)&package.package_Head:(uint8_t*)&packages.package_Head;
 		uint8_t  package_Sample_Num = 0;
-		int32_t AngleCorrectForDistance;
+		int32_t AngleCorrectForDistance = 0;
 		int  package_recvPos = 0;
-        uint8_t package_type;
-        uint8_t scan_frequence;
+        uint8_t package_type = 0;
+        uint8_t scan_frequence = 0;
 
+		(*node).scan_frequence = 0;
 		if(package_Sample_Index == 0) {
 			recvPos = 0;
 			while ((waitTime=getms() - startTs) <= timeout) {
