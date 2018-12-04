@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V1.3.5
+YDLIDAR ROS2 PACKAGE V1.3.6
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -53,14 +53,6 @@ low_exposure (low_exposure, default: false)
 
     indicated whether the LIDAR has low light power mode. 
 
-angle_fixed (bool, default: true)
-
-    indicated whether the driver needs do angle compensation. 
-
-heartbeat (bool, default: false)
-
-    indicated whether the LIDAR IS powered off. 
-
 resolution_fixed (bool, default: true)
 
     indicated whether the LIDAR has a fixed angular resolution. 
@@ -68,10 +60,6 @@ resolution_fixed (bool, default: true)
 auto_reconnect (bool, default: true)
 
     indicated whether the LIDAR auto reconnection. 
-
-debug (bool, default: false)
-
-    indicated whether the LIDAR save parsing. 
 
 reversion (bool, default: false)
 
@@ -109,18 +97,6 @@ frequency (double, default: 7)
 
     the LIDAR scanning frequency.
 
-sensor_x (double, default: 0)
-
-    the LIDAR　X axis installation coordinates
-
-sensor_y (double, default: 0)
-
-    the LIDAR　Y axis installation coordinates
-
-sensor_yaw (double, default: 0)
-
-    the LIDAR　installation direction
-
 
 
 
@@ -129,6 +105,12 @@ sensor_yaw (double, default: 0)
 
 Upgrade Log
 =====================================================================
+
+2018-07-16 version:1.3.6
+
+   1.Update SDK verison to 1.3.9
+ 
+   2.remove imu sync.
 
 2018-07-16 version:1.3.5
 

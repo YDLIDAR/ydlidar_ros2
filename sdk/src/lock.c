@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 #include <fcntl.h>
 #include <string.h>
 #include <limits.h>
@@ -63,7 +64,7 @@ int lfs_lock( const char *filename, int pid )
     send( s, "quit\n", strlen( "quit\n" ), 0 );
     close(s);
     /* printf("%s\n", buffer); */
-    if( buffer[0] == '2' ){ free(buffer); return 0;}
+    if( buffer[0] == '2' ) return 0;
 	free(buffer);
     return 1;
 }
@@ -108,7 +109,7 @@ int lfs_unlock( const char *filename, int pid )
     }
     send( s, "quit\n", strlen( "quit\n" ), 0 );
     close(s);
-    if( buffer[0] == '2' ) {free(buffer); return 0;}
+    if( buffer[0] == '2' ) return 0;
 		free(buffer);
     return 1;
 }

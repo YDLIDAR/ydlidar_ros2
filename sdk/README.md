@@ -1,4 +1,4 @@
-YDLIDAR SDK PACKAGE V1.3.6
+YDLIDAR SDK PACKAGE V1.3.9
 =====================================================================
 
 SDK [test](https://github.com/yangfuyuan/sdk) application for YDLIDAR
@@ -7,85 +7,66 @@ Visit EAI Website for more details about [YDLIDAR](http://www.ydlidar.com/) .
 
 How to build YDLIDAR SDK samples
 =====================================================================
-
     $ git clone https://github.com/yangfuyuan/sdk
-
     $ cd sdk
-
     $ git checkout master
-
     $ cd ..
-
     $ mkdir build
-
     $ cd build
-
     $ cmake ../sdk
-
     $ make			###linux
-
     $ vs open Project.sln	###windows
-
+    
 How to run YDLIDAR SDK samples
 =====================================================================
-
     $ cd samples
 
 linux:
 
-    $ ./ydlidar_test
-
-    $ Please enter the lidar port:/dev/ttyUSB0
-
-    $ Please enter the lidar baud rate:115200
-
-    $ Please enter the lidar intensity:0
+	$ ./ydlidar_test
+	$Lidar[ydlidar7] detected, whether to select current radar(yes/no)?:yes
+	0. 115200
+	1. 128000
+	2. 153600
+	3. 230400
+	4. 512000
+	$Please enter the lidar serial baud rate:2
+	0. false
+	1. true
+	$Please enter the lidar intensity:1
 
 
 windows:
 
-    $ ydlidar_test.exe
+	$ ydlidar_test.exe
+	$Lidar[ydlidar7] detected, whether to select current radar(yes/no)?:yes
+	0. 115200
+	1. 128000
+	2. 153600
+	3. 230400
+	4. 512000
+	$Please enter the lidar serial baud rate:2
+	0. false
+	1. true
+	$Please enter the lidar intensity:1
 
-    $ Please enter the lidar port:COM3
-    
-    $ Please enter the lidar baud rate:115200
-
-    $ Please enter the lidar intensity:0
-
-=====================================================================
 
 You should see YDLIDAR's scan result in the console:
 
-     	YDLIDAR C++ TEST
-	Please enter the lidar port:/dev/ttyUSB0
-	Please enter the lidar baud rate:115200
-	Please enter the lidar intensity:1
-	fhs_lock: creating lockfile:      25148
-
-	Yd Lidar running correctly ! The health status: good
-	firmware: 273
+	[YDLidar]: YDLidar running correctly ! The health status is good
 	[YDLIDAR] Connection established in [/dev/ttyUSB0]:
-	Firmware version: 1.1.7
+	Firmware version: 1.2.0
 	Hardware version: 1
 	Model: S4
-	Serial: 2018022700000003
-	[YDLIDAR INFO] Current Sampling Rate : 4K
-	[YDLIDAR INFO] Current Scan Frequency : 7.000000Hz
-	set EXPOSURE MODEL SUCCESS!!!
-	[YDLIDAR INFO] Now YDLIDAR is scanning ......
-	min_angle: -3.141593 
-	max_angle: 3.141593 
-	Scan received: 571 ranges
-	fit line size: 9 
-	line length: 0.127150,   line angle: -1.888069
-	line length: 0.149980,   line angle: -2.520781
-	line length: 0.149141,   line angle: -2.590903
-	line length: 0.186178,   line angle: -2.221969
-	line length: 0.123318,   line angle: -2.354801
-	line length: 0.086761,   line angle: 2.476112
-	line length: 0.035698,   line angle: 2.552944
-	line length: 0.108063,   line angle: 0.907348
-	line length: 0.115837,   line angle: -1.229582
+	Serial: 2018091100006004
+	[YDLidar]: [YDLIDAR INFO] Current Sampling Rate : 4K
+	[YDLidar]: set EXPOSURE MODEL SUCCESS!!!
+	[YDLidar]: [YDLIDAR INFO] Now YDLIDAR is scanning ......
+
+	[YDLidar]: Scan received[1543834103116861000]: 498 ranges
+	[YDLidar]: Scan received[1543834103241414000]: 497 ranges
+	[YDLidar]: Scan received[1543834103468167000]: 497 ranges
+	[YDLidar]: Scan received[1543834103592417000]: 494 ranges
 
 
 
@@ -94,67 +75,39 @@ Lidar point data structure
 
 data structure:
 
-    struct odom_info {
-
-      uint64_t   stamp; ///< 时间戳
-
-      double x;	      ///< x位置
-
-      double y;	     ///< y位置
-
-      double phi;     ///< 角度方向
-
-      double v;       ///< 线速度
-
-      double w;       ///< 角速度
-
-      double dx;       ///< x位置增量
-
-      double dy;       ///< y位置增量
-
-      double dth;       ///< 方向增量
-
-    };
-
-    struct node_info {
-
-       uint8_t    sync_flag;//new scan flag
-
-       uint16_t    sync_quality;//!intensity
-
-       uint16_t   angle_q6_checkbit; //!angle
-
-       uint16_t   distance_q; //! distance
-
-       uint64_t   stamp; //! time stamp
-
-       uint8_t    scan_frequence;//! current_frequence = scan_frequence/10.0, If the current value equals zero, it is an invalid value
-
-       odom_info   current_odom; //! current odometry sync pose
-
-    } __attribute__((packed)) ;
+	struct node_info {
+    	uint8_t    sync_flag;
+    	uint16_t   sync_quality;//!信号质量
+    	uint16_t   angle_q6_checkbit; //!测距点角度
+    	uint16_t   distance_q2; //! 当前测距点距离
+    	uint64_t   stamp; //! 时间戳
+    	uint8_t    scan_frequence;//! 特定版本此值才有效,无效值是0, 当前扫描频率current_frequence = scan_frequence/10.0
+	} __attribute__((packed)) ;
 
 example:
 
-    if(data[i].scan_frequence != 0) {
+	if(data[i].scan_frequence != 0) {
+ 		current_frequence = data[i].scan_frequence/10.0;
+	}
 
-        current_frequence = data[i].scan_frequence/10.0;
-    }
+	current_time_stamp = data[i].stamp;
 
-    current_time_stamp = data[i].stamp;
+	 if(m_isMultipleRate) {
+		current_distance = (float)data[i].distance_q2/2000.f;
+	}else {
+		current_distance = (float)data[i].distance_q2/4000.f;
+	}
 
-    current_distance = data[i].distance_q;　//v1.3.5版本之后距离不用右移２位
+	current_angle = ((data[i].angle_q6_checkbit>>LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);
 
-    current_angle = ((data[i].angle_q6_checkbit>>LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);
+	current_intensity = (float)(data[i].sync_quality >> LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT);
 
-    current_intensity = (float)(data[i].sync_quality);//v1.3.5版本之后信号质量不用右移２位
+	###note:current_frequence = data[0].scan_frequence/10.0.
 
-    ###note:current_frequence = data[0].scan_frequence/10.0.
-
-    ###if the current_frequence value equals zero, it is an invalid value.
+	###if the current_frequence value equals zero, it is an invalid value.
 
 code:
-
+        
         void ParseScan(node_info* data, const size_t& size) {
 
             double current_frequence, current_distance, current_angle, current_intensity;
@@ -169,13 +122,15 @@ code:
 
                 }
 
-                current_time_stamp = data[i].stamp;
+		 if(m_isMultipleRate) {
+			current_distance = (float)data[i].distance_q2/2000.f;
+		}else {
+			current_distance = (float)data[i].distance_q2/4000.f;
+		}
 
                 current_angle = ((data[i].angle_q6_checkbit>>LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);//LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT equals 8
 
-                current_distance =  data[i].distance_q;
-
-                current_intensity = (float)(data[i].sync_quality );
+                current_intensity = (float)(data[i].sync_quality >> LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT);
 
             }
 
@@ -197,22 +152,17 @@ code:
 Upgrade Log
 =====================================================================
 
-2018-07-17 version:1.3.6
+2018-12-3 version:1.3.9
 
-  1.add fit line.
+1.Optimized interface.
 
-
-2018-05-23 version:1.3.5
-
-  1.add sync imu or odometry.
-
-  2.update scan protocol.
+2.Getting Radar Port Lists.
 
 2018-05-23 version:1.3.4
 
-  1.add automatic reconnection if there is an exception
+1.add automatic reconnection if there is an exception
 
-  2.add serial file lock.
+2.add serial file lock.
 
 2018-05-14 version:1.3.3
 
@@ -227,3 +177,4 @@ Upgrade Log
 2018-04-16 version:1.3.1
 
    1.Compensate for each laser point timestamp.
+
