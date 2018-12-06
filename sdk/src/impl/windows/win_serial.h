@@ -19,148 +19,148 @@
 
 namespace serial {
 
-	using std::string;
-	using std::wstring;
-	using std::invalid_argument;
+using std::string;
+using std::wstring;
+using std::invalid_argument;
 
 
-	class Serial::SerialImpl {
-	public:
-		explicit SerialImpl (const string &port,
-			unsigned long baudrate,
-			bytesize_t bytesize,
-			parity_t parity,
-			stopbits_t stopbits,
-			flowcontrol_t flowcontrol);
+class Serial::SerialImpl {
+ public:
+  explicit SerialImpl(const string &port,
+                      unsigned long baudrate,
+                      bytesize_t bytesize,
+                      parity_t parity,
+                      stopbits_t stopbits,
+                      flowcontrol_t flowcontrol);
 
-		virtual ~SerialImpl ();
+  virtual ~SerialImpl();
 
-		bool open ();
+  bool open();
 
-		void close ();
+  void close();
 
-		bool isOpen () const;
+  bool isOpen() const;
 
-		size_t available ();
+  size_t available();
 
-		bool waitReadable (uint32_t timeout);
+  bool waitReadable(uint32_t timeout);
 
-		void waitByteTimes (size_t count);
+  void waitByteTimes(size_t count);
 
-		int waitfordata(size_t data_count, uint32_t timeout, size_t * returned_size);
+  int waitfordata(size_t data_count, uint32_t timeout, size_t *returned_size);
 
-		size_t read (uint8_t *buf, size_t size = 1);
+  size_t read(uint8_t *buf, size_t size = 1);
 
-		size_t write (const uint8_t *data, size_t length);
+  size_t write(const uint8_t *data, size_t length);
 
-		void flush ();
+  void flush();
 
-		void flushInput ();
+  void flushInput();
 
-		void flushOutput ();
+  void flushOutput();
 
-		void sendBreak (int duration);
+  void sendBreak(int duration);
 
-		bool setBreak (bool level);
+  bool setBreak(bool level);
 
-		bool setRTS (bool level);
+  bool setRTS(bool level);
 
-		bool setDTR (bool level);
+  bool setDTR(bool level);
 
-		bool waitForChange ();
+  bool waitForChange();
 
-		bool getCTS ();
+  bool getCTS();
 
-		bool getDSR ();
+  bool getDSR();
 
-		bool getRI ();
+  bool getRI();
 
-		bool getCD ();
+  bool getCD();
 
-		uint32_t getByteTime();
+  uint32_t getByteTime();
 
-		void setPort (const string &port);
+  void setPort(const string &port);
 
-		string getPort () const;
+  string getPort() const;
 
-		void setTimeout (Timeout &timeout);
+  void setTimeout(Timeout &timeout);
 
-		Timeout getTimeout () const;
+  Timeout getTimeout() const;
 
-		bool setBaudrate (unsigned long baudrate);
+  bool setBaudrate(unsigned long baudrate);
 
-		unsigned long getBaudrate () const;
+  unsigned long getBaudrate() const;
 
-		bool setBytesize (bytesize_t bytesize);
+  bool setBytesize(bytesize_t bytesize);
 
-		bytesize_t getBytesize () const;
+  bytesize_t getBytesize() const;
 
-		bool setParity (parity_t parity);
+  bool setParity(parity_t parity);
 
-		parity_t getParity () const;
+  parity_t getParity() const;
 
-		bool setStopbits (stopbits_t stopbits);
+  bool setStopbits(stopbits_t stopbits);
 
-		stopbits_t getStopbits () const;
+  stopbits_t getStopbits() const;
 
-		bool setFlowcontrol (flowcontrol_t flowcontrol);
+  bool setFlowcontrol(flowcontrol_t flowcontrol);
 
-		flowcontrol_t getFlowcontrol () const;
-
-
-		bool  setDcb(DCB *dcb);
+  flowcontrol_t getFlowcontrol() const;
 
 
-		bool  getDcb(DCB *dcb);
-
-		int readLock ();
-
-		int readUnlock ();
-
-		int writeLock ();
-
-		int writeUnlock ();
-
-	protected:
-		bool reconfigurePort ();
-
-    public:
-        enum {
-            DEFAULT_RX_BUFFER_SIZE = 2048,
-            DEFAULT_TX_BUFFER_SIZE = 128,
-        };
+  bool  setDcb(DCB *dcb);
 
 
-	private:
-		wstring port_;               // Path to the file descriptor
-		HANDLE fd_;
-		OVERLAPPED _wait_o;
+  bool  getDcb(DCB *dcb);
 
-                OVERLAPPED communicationOverlapped;
-                OVERLAPPED readCompletionOverlapped;
-                OVERLAPPED writeCompletionOverlapped;
-                DWORD originalEventMask;
-                DWORD triggeredEventMask;
+  int readLock();
 
-                COMMTIMEOUTS currentCommTimeouts;
-                    COMMTIMEOUTS restoredCommTimeouts;
+  int readUnlock();
 
-		bool is_open_;
+  int writeLock();
 
-		Timeout timeout_;           // Timeout for read operations
-		unsigned long baudrate_;    // Baudrate
-		uint32_t byte_time_ns_;     // Nanoseconds to transmit/receive a single byte
+  int writeUnlock();
 
-		parity_t parity_;           // Parity
-		bytesize_t bytesize_;       // Size of the bytes
-		stopbits_t stopbits_;       // Stop Bits
-		flowcontrol_t flowcontrol_; // Flow Control
+ protected:
+  bool reconfigurePort();
 
-		// Mutex used to lock the read functions
-		HANDLE read_mutex;
-		// Mutex used to lock the write functions
-		HANDLE write_mutex;
-	};
+ public:
+  enum {
+    DEFAULT_RX_BUFFER_SIZE = 2048,
+    DEFAULT_TX_BUFFER_SIZE = 128,
+  };
+
+
+ private:
+  wstring port_;               // Path to the file descriptor
+  HANDLE fd_;
+  OVERLAPPED _wait_o;
+
+  OVERLAPPED communicationOverlapped;
+  OVERLAPPED readCompletionOverlapped;
+  OVERLAPPED writeCompletionOverlapped;
+  DWORD originalEventMask;
+  DWORD triggeredEventMask;
+
+  COMMTIMEOUTS currentCommTimeouts;
+  COMMTIMEOUTS restoredCommTimeouts;
+
+  bool is_open_;
+
+  Timeout timeout_;           // Timeout for read operations
+  unsigned long baudrate_;    // Baudrate
+  uint32_t byte_time_ns_;     // Nanoseconds to transmit/receive a single byte
+
+  parity_t parity_;           // Parity
+  bytesize_t bytesize_;       // Size of the bytes
+  stopbits_t stopbits_;       // Stop Bits
+  flowcontrol_t flowcontrol_; // Flow Control
+
+  // Mutex used to lock the read functions
+  HANDLE read_mutex;
+  // Mutex used to lock the write functions
+  HANDLE write_mutex;
+};
 
 }
 

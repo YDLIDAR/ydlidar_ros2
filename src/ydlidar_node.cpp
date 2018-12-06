@@ -1,10 +1,10 @@
 ﻿/*
  *  YDLIDAR SYSTEM
- *  YDLIDAR ROS 2 Node  
+ *  YDLIDAR ROS 2 Node
  *
  *  Copyright 2017 - 2020 EAI TEAM
  *  http://www.eaibot.com
- * 
+ *
  */
 
 #ifdef _MSC_VER
@@ -36,23 +36,25 @@
 using namespace ydlidar;
 
 std::vector<float> split(const std::string &s, char delim) {
-    std::vector<float> elems;
-    std::stringstream ss(s);
-    std::string number;
-    while (std::getline(ss, number, delim)) {
-        elems.push_back(atoi(number.c_str()));
-    }
-    return elems;
+  std::vector<float> elems;
+  std::stringstream ss(s);
+  std::string number;
+
+  while (std::getline(ss, number, delim)) {
+    elems.push_back(atoi(number.c_str()));
+  }
+
+  return elems;
 }
 
 
 
 bool fileExists(const std::string filename) {
-    return 0 == _access(filename.c_str(), 0x00 ); // 0x00 = Check for existence only!
+  return 0 == _access(filename.c_str(), 0x00);  // 0x00 = Check for existence only!
 }
 
 
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
 
   auto node = rclcpp::Node::make_shared("ydlidar_node");
@@ -72,7 +74,7 @@ int main(int argc, char * argv[]) {
   double max_range = 16.0;
   double min_range = 0.06;
   double frequency = 7.0;
-    
+
 
   node->get_parameter("port", port);
 
@@ -107,30 +109,34 @@ int main(int argc, char * argv[]) {
 
 
 
-  std::vector<float> ignore_array = split(list ,',');
-  if (ignore_array.size()%2) {  
-    RCLCPP_ERROR(node->get_logger(),"ignore array is odd need be even");
+  std::vector<float> ignore_array = split(list, ',');
+
+  if (ignore_array.size() % 2) {
+    RCLCPP_ERROR(node->get_logger(), "ignore array is odd need be even");
   }
-  for (uint16_t i =0 ; i < ignore_array.size();i++) {
+
+  for (uint16_t i = 0 ; i < ignore_array.size(); i++) {
     if (ignore_array[i] < -180 && ignore_array[i] > 180) {
-      RCLCPP_ERROR(node->get_logger(),"ignore array should be between -180 and 180");
+      RCLCPP_ERROR(node->get_logger(), "ignore array should be between -180 and 180");
     }
   }
 
-    
+
 
   CYdLidar laser;
 
-  if (frequency<5) {
-      frequency = 7.0;
+  if (frequency < 5) {
+    frequency = 7.0;
   }
-  if (frequency>12) {
-      frequency = 12;
+
+  if (frequency > 12) {
+    frequency = 12;
   }
+
   if (angle_max < angle_min) {
-      double temp = angle_max;
-      angle_max = angle_min;
-      angle_min = temp;
+    double temp = angle_max;
+    angle_max = angle_min;
+    angle_min = temp;
   }
 
   laser.setSerialPort(port);
@@ -150,7 +156,7 @@ int main(int argc, char * argv[]) {
   laser.setIgnoreArray(ignore_array);
 
 
-  printf("[YDLIDAR INFO] Current ROS Driver Version: %s\n",((std::string)ROS2Verision).c_str());
+  printf("[YDLIDAR INFO] Current ROS Driver Version: %s\n", ((std::string)ROS2Verision).c_str());
   laser.initialize();
 
   // Set the QoS. ROS 2 will provide QoS profiles based on the following use cases:
@@ -161,7 +167,7 @@ int main(int argc, char * argv[]) {
   custom_qos_profile.depth = 7;
 
 
-    
+
 
   auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan", custom_qos_profile);
 
@@ -171,39 +177,40 @@ int main(int argc, char * argv[]) {
 
   while (rclcpp::ok()) {
 
-      bool hardError;
-        LaserScan scan;//
-        if(laser.doProcessSimple(scan, hardError )){
+    bool hardError;
+    LaserScan scan;//
 
-            auto scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
+    if (laser.doProcessSimple(scan, hardError)) {
 
-            scan_msg->header.stamp.sec = RCL_NS_TO_S( scan.system_time_stamp);
-            scan_msg->header.stamp.nanosec =  scan.system_time_stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
-            scan_msg->header.frame_id = frame_id;
-            scan_msg->angle_min = scan.config.min_angle;
-            scan_msg->angle_max = scan.config.max_angle;
-            scan_msg->angle_increment = scan.config.ang_increment;
-            scan_msg->scan_time = scan.config.scan_time;
-            scan_msg->time_increment = scan.config.time_increment;
-            scan_msg->range_min = scan.config.min_range;
-            scan_msg->range_max = scan.config.max_range;
-            
-            scan_msg->ranges = scan.ranges;
-            scan_msg->intensities =  scan.intensities;
-            laser_pub->publish(scan_msg);
-            
+      auto scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
 
-		} else {
-             RCLCPP_ERROR(node->get_logger(), "Failed to get scan");
-        }
+      scan_msg->header.stamp.sec = RCL_NS_TO_S(scan.system_time_stamp);
+      scan_msg->header.stamp.nanosec =  scan.system_time_stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
+      scan_msg->header.frame_id = frame_id;
+      scan_msg->angle_min = scan.config.min_angle;
+      scan_msg->angle_max = scan.config.max_angle;
+      scan_msg->angle_increment = scan.config.ang_increment;
+      scan_msg->scan_time = scan.config.scan_time;
+      scan_msg->time_increment = scan.config.time_increment;
+      scan_msg->range_min = scan.config.min_range;
+      scan_msg->range_max = scan.config.max_range;
+
+      scan_msg->ranges = scan.ranges;
+      scan_msg->intensities =  scan.intensities;
+      laser_pub->publish(scan_msg);
 
 
+    } else {
+      RCLCPP_ERROR(node->get_logger(), "Failed to get scan");
+    }
 
-        rclcpp::spin_some(node);
-    	loop_rate.sleep();
+
+
+    rclcpp::spin_some(node);
+    loop_rate.sleep();
   }
 
-  
+
   printf("[YDLIDAR INFO] Now YDLIDAR is stopping .......\n");
   laser.turnOff();
   laser.disconnecting();
