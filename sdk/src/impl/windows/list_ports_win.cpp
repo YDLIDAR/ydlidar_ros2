@@ -6,7 +6,8 @@
  * A copy of the licence can be obtained from:
  * http://opensource.org/licenses/MIT
  */
-
+#pragma  comment(lib, "setupapi.lib")
+#undef UNICODE
 #include "serial.h"
 #include <tchar.h>
 #include <windows.h>
@@ -169,7 +170,8 @@ serial::list_ports() {
       deviceId = std::to_string(atoi(deviceId.c_str()));
     }
 
-    if (hardwareId.find("VID_10C4&PID_EA60") != std::string::npos) {
+    if (hardwareId.find("VID_10C4&PID_EA60") != std::string::npos ||
+        hardwareId.find("VID_0483&PID_5740") != std::string::npos) {
       PortInfo port_entry;
       port_entry.port = portName;
       port_entry.description = friendlyName;

@@ -25,10 +25,13 @@ FILE(GLOB SDK_SRC
 	
 ENDIF()
 
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 add_subdirectory(samples)
 
 add_library(ydlidar_driver SHARED ${SDK_SRC})
 IF (WIN32)
+target_link_libraries(ydlidar_driver setupapi)
 ELSE()
 target_link_libraries(ydlidar_driver rt pthread)
 ENDIF()                    

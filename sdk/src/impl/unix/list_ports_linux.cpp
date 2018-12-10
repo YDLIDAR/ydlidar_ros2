@@ -63,7 +63,7 @@ glob(const vector<string> &patterns) {
     glob_retval = glob(iter->c_str(), GLOB_APPEND, NULL, &glob_results);
   }
 
-  for (int path_index = 0; path_index < glob_results.gl_pathc; path_index++) {
+  for (size_t path_index = 0; path_index < glob_results.gl_pathc; path_index++) {
     paths_found.push_back(glob_results.gl_pathv[path_index]);
   }
 
@@ -235,7 +235,7 @@ format(const char *format, ...) {
 
     if (return_value < 0) {
       done = true;
-    } else if (return_value >= buffer_size_bytes) {
+    } else if (return_value >= (int)buffer_size_bytes) {
       // Realloc and try again.
 
       buffer_size_bytes = return_value + 1;
@@ -306,8 +306,10 @@ serial::list_ports() {
     string device_id = sysfs_info[2];
 
     std::size_t found = hardware_id.find("10c4:ea60");
+    std::size_t found1 = hardware_id.find("0483:5740");
 
-    if (found != std::string::npos) {
+
+    if (found != std::string::npos || found1 != std::string::npos) {
       PortInfo device_entry;
       device_entry.port = device;
       device_entry.description = friendly_name;
