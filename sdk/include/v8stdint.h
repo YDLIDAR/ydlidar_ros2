@@ -128,7 +128,7 @@ set_signal_handler(int signal_value, signal_handler_t signal_handler)
     // NOLINTNEXTLINE(runtime/arrays)
     char error_string[error_length];
 #ifndef _WIN32
-#if (defined(_GNU_SOURCE) && !defined(ANDROID))
+#if (defined(_GNU_SOURCE) && !defined(ANDROID) &&(_POSIX_C_SOURCE >= 200112L))
     char *msg = strerror_r(errno, error_string, error_length);
 
     if (msg != error_string) {
