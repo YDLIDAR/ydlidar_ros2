@@ -9,11 +9,8 @@
 #else
 #error "unsupported target"
 #endif
-
 #include "locker.h"
-#include "serial.h"
 #include "thread.h"
 #include "timer.h"
-#include "Console.h"
 
-#define SDKVerision "1.3.9"
+#define SDKVerision "2.0.9"

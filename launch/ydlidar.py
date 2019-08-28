@@ -4,7 +4,7 @@ from ros2run.api import get_executable_path
 
 def launch(launch_descriptor, argv):
     ld = launch_descriptor
-    package = 'ydlidar'
+    package = 'ydlidar_ros2'
     ld.add_process(
         cmd=[get_executable_path(package_name=package, executable_name='ydlidar_node')],
         name='ydlidar_node',

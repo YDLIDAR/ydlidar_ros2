@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>YDLIDAR SDK: YDLIDAR SDK PACKAGE V1.3.4</title>
+<title>YDLDIAR SDK: YDLIDAR SDK PACKAGE V1.3.4</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">YDLIDAR SDK
+   <div id="projectname">YDLDIAR SDK
    &#160;<span id="projectnumber">V1.3.4</span>
    </div>
   </td>
@@ -82,10 +82,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">YDLIDAR SDK PACKAGE V1.3.4 </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>SDK <a href="https://github.com/yangfuyuan/sdk">test</a> application for YDLIDAR</p>
+<div class="textblock"><p>SDK <a href="https://github.com/yangfuyuan/sdk/tree/non-singleton">test</a> application for YDLIDAR</p>
 <p>Visit EAI Website for more details about <a href="http://www.ydlidar.com/">YDLIDAR</a> .</p>
 <h1>How to build YDLIDAR SDK samples </h1>
-<p>$ git clone <a href="https://github.com/yangfuyuan/sdk">https://github.com/yangfuyuan/sdk</a> $ cd sdk $ git checkout master $ cd .. $ mkdir build $ cd build $ cmake ../sdk $ make ###linux $ vs open Project.sln ###windows</p>
+<p>$ git clone <a href="https://github.com/yangfuyuan/sdk">https://github.com/yangfuyuan/sdk</a> $ cd sdk $ git checkout non-singleton $ cd .. $ mkdir build $ cd build $ cmake ../sdk $ make ###linux $ vs open Project.sln ###windows</p>
 <h1>How to run YDLIDAR SDK samples </h1>
 <p>$ cd samples</p>
 <p>linux: </p><pre class="fragment">$ ./ydlidar_test
@@ -128,7 +128,7 @@ Scan received: 1412 ranges
 
 current_time_stamp = data[i].stamp;
 
-current_distance = data[i].distance_q2;
+current_distance = data[i].distance_q2/4.f;
 
 current_angle = ((data[i].angle_q6_checkbit&gt;&gt;LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);
 
@@ -155,7 +155,7 @@ current_intensity = (float)(data[i].sync_quality &gt;&gt; 2);
 
             current_angle = ((data[i].angle_q6_checkbit&gt;&gt;LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);//LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT equals 8
 
-            current_distance =  data[i].distance_q2;
+            current_distance =  data[i].distance_q2/4.f;
 
             current_intensity = (float)(data[i].sync_quality &gt;&gt; 2);
 

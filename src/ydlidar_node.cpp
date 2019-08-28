@@ -30,7 +30,7 @@
 #include <string>
 #include <signal.h>
 
-#define ROS2Verision "1.3.6"
+#define ROS2Verision "2.0.9"
 
 
 using namespace ydlidar;
@@ -59,11 +59,7 @@ int main(int argc, char *argv[]) {
 
   auto node = rclcpp::Node::make_shared("ydlidar_node");
   std::string port = "/dev/ttyUSB0";
-  int baudrate = 115200;
   std::string frame_id = "laser_frame";
-  bool angle_fixed = true;
-  bool intensities = false;
-  bool low_exposure = false;
   bool reversion = false;
   bool resolution_fixed = true;
   bool auto_reconnect = true;
@@ -72,8 +68,8 @@ int main(int argc, char *argv[]) {
   int samp_rate = 9;
   std::string list = "";
   double max_range = 16.0;
-  double min_range = 0.06;
-  double frequency = 7.0;
+  double min_range = 0.1;
+  double frequency = 10.0;
 
 
   node->get_parameter("port", port);
@@ -82,19 +78,13 @@ int main(int argc, char *argv[]) {
 
   node->get_parameter("ignore_array", list);
 
-  node->get_parameter("baudrate", baudrate);
-
   node->get_parameter("samp_rate", samp_rate);
 
   node->get_parameter("resolution_fixed", resolution_fixed);
 
-  node->get_parameter("low_exposure", low_exposure);
-
   node->get_parameter("auto_reconnect", auto_reconnect);
 
   node->get_parameter("reversion", reversion);
-
-  node->get_parameter("intensities", intensities);
 
   node->get_parameter("angle_max", angle_max);
 
@@ -140,16 +130,9 @@ int main(int argc, char *argv[]) {
   }
 
   laser.setSerialPort(port);
-  laser.setSerialBaudrate(baudrate);
-  laser.setIntensities(intensities);
   laser.setMaxRange(max_range);
   laser.setMinRange(min_range);
-  laser.setMaxAngle(angle_max);
-  laser.setMinAngle(angle_min);
-  laser.setReversion(reversion);
-  laser.setFixedResolution(resolution_fixed);
   laser.setAutoReconnect(auto_reconnect);
-  laser.setExposure(low_exposure);
   laser.setScanFrequency(frequency);
   laser.setSampleRate(samp_rate);
   laser.setReversion(reversion);
@@ -157,7 +140,10 @@ int main(int argc, char *argv[]) {
 
 
   printf("[YDLIDAR INFO] Current ROS Driver Version: %s\n", ((std::string)ROS2Verision).c_str());
-  laser.initialize();
+  bool ret = laser.initialize();
+  if (ret) {
+    ret = laser.turnOn();
+  }
 
   // Set the QoS. ROS 2 will provide QoS profiles based on the following use cases:
   // Default QoS settings for publishers and subscriptions (rmw_qos_profile_default).
@@ -175,7 +161,7 @@ int main(int argc, char *argv[]) {
 
   rclcpp::WallRate loop_rate(20);
 
-  while (rclcpp::ok()) {
+  while (ret && rclcpp::ok()) {
 
     bool hardError;
     LaserScan scan;//
@@ -187,16 +173,44 @@ int main(int argc, char *argv[]) {
       scan_msg->header.stamp.sec = RCL_NS_TO_S(scan.system_time_stamp);
       scan_msg->header.stamp.nanosec =  scan.system_time_stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
       scan_msg->header.frame_id = frame_id;
-      scan_msg->angle_min = scan.config.min_angle;
-      scan_msg->angle_max = scan.config.max_angle;
-      scan_msg->angle_increment = scan.config.ang_increment;
+      scan_msg->angle_min = angles::from_degrees(angle_min);
+      scan_msg->angle_max = angles::from_degrees(angle_max);
+//      scan_msg->angle_increment = scan.config.ang_increment;
       scan_msg->scan_time = scan.config.scan_time;
       scan_msg->time_increment = scan.config.time_increment;
       scan_msg->range_min = scan.config.min_range;
       scan_msg->range_max = scan.config.max_range;
+      int fixed_size = scan.data.size();
+      if(resolution_fixed) {
+          fixed_size = laser.getFixedSize();
+      }
+      if(scan_msg->angle_max - scan_msg->angle_min == 2*M_PI) {
+          scan_msg->angle_increment = (scan_msg->angle_max - scan_msg->angle_min) / (fixed_size);
+      } else {
+          scan_msg->angle_increment = (scan_msg->angle_max - scan_msg->angle_min) / (fixed_size - 1);
+      }
+      int index = 0;
+      scan_msg->ranges.resize(fixed_size, std::numeric_limits<float>::infinity());
+      scan_msg->intensities.resize(fixed_size, 0);
 
-      scan_msg->ranges = scan.ranges;
-      scan_msg->intensities =  scan.intensities;
+      for(int i = 0; i < scan.data.size(); i++) {
+          LaserPoint point = scan.data[i];
+          float angle = angles::from_degrees(point.angle);
+          angle = 2*M_PI - angle;
+          angle = angles::normalize_angle(angle);
+          index = (angle -scan_msg->angle_min ) / scan_msg->angle_increment + 0.5;
+          if(index >=0 && index < fixed_size) {
+             if(point.range < scan_msg->range_min) {
+                 scan_msg->ranges[index] = std::numeric_limits<float>::infinity();
+                 scan_msg->intensities[index] = 0;
+              } else {
+                 scan_msg->ranges[index] = point.range;
+                 scan_msg->intensities[index] = point.intensity;
+             }
+          }
+
+      } 
+
       laser_pub->publish(scan_msg);
 
 

@@ -106,7 +106,7 @@ struct Timeout {
 /*!
 * Class that provides a portable serial port interface.
 */
-class Serial {
+class Serial  {
  public:
   /*!
   * Creates a Serial object and opens the port if a port is specified,
@@ -166,10 +166,10 @@ class Serial {
   *
   * \return Returns true if the port is open, false otherwise.
   */
-  bool isOpen() const;
+  bool isOpen();
 
   /*! Closes the serial port. */
-  void close();
+  void closePort();
 
   /*! Return the number of characters in the buffer. */
   size_t available();
@@ -187,7 +187,32 @@ class Serial {
   void waitByteTimes(size_t count);
 
 
+  /**
+   * @brief waitfordata
+   * @param data_count
+   * @param timeout
+   * @param returned_size
+   * @return
+   */
   int waitfordata(size_t data_count, uint32_t timeout, size_t *returned_size);
+
+
+  /**
+   * @brief writeData
+   * @param data
+   * @param size
+   * @return
+   */
+  virtual size_t writeData(const uint8_t *data, size_t size);
+
+
+  /**
+   * @brief readData
+   * @param data
+   * @param size
+   * @return
+   */
+  virtual size_t readData(uint8_t *data, size_t size);
 
   /*! Read a given amount of bytes from the serial port into a given buffer.
   *
@@ -544,7 +569,8 @@ class Serial {
   bool getCD();
 
   /*! Returns the singal byte time. */
-  uint32_t getByteTime();
+  int getByteTime();
+
 
  private:
   // Disable copy constructors

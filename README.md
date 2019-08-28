@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V1.3.6
+YDLIDAR ROS2 PACKAGE V2.0.9
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -19,17 +19,17 @@ How to run YDLIDAR ros2 package
 
 1. Run YDLIDAR node and view using test application
 ------------------------------------------------------------
-ros2 run ydlidar ydlidar_node
+ros2 run ydldiar_ros2 ydlidar_node
 
-ros2 run ydlidar ydlidar_client
+ros2 run ydldiar_ros2 ydlidar_client
 
 You should see YDLIDAR's scan result in the console
 
 2.Run YDLIDAR node and view using test application by launch
 ------------------------------------------------------------
-launch $(ros2 pkg prefix ydlidar)/share/ydlidar/launch/ydlidar.py
+launch $(ros2 pkg prefix ydldiar_ros2)/share/ydldiar_ros2/launch/ydlidar.py
 
-ros2 run ydldiar ydlidar_client or ros2 topic echo /scan
+ros2 run ydldiar_ros2 ydlidar_client or ros2 topic echo /scan
 
 Configuration
 =====================================================================
@@ -41,17 +41,9 @@ port (string, default: /dev/ydlidar)
 
     serial port name used in your system. 
 
-baudrate (int, default: 115200)
-
-    serial port baud rate. 
-
 frame_id (string, default: laser_frame)
 
     frame ID for the device. 
-
-low_exposure (low_exposure, default: false)
-
-    indicated whether the LIDAR has low light power mode. 
 
 resolution_fixed (bool, default: true)
 
@@ -64,10 +56,6 @@ auto_reconnect (bool, default: true)
 reversion (bool, default: false)
 
     indicated whether the LIDAR data rotation 180°. 
-
-intensities (bool, default: false)
-
-    indicated whether the LIDAR has intensity. 
 
 angle_min (double, default: -180)
 
@@ -105,6 +93,10 @@ frequency (double, default: 7)
 
 Upgrade Log
 =====================================================================
+
+2019-80-28 version:2.0.9
+  
+   1.support SS 
 
 2018-07-16 version:1.3.6
 

@@ -60,7 +60,7 @@ typedef uint32_t       _size_t;
 typedef uint64_t       _size_t;
 #define THREAD_PROC    __stdcall
 #elif defined (__GNUC__)
-typedef unsigned long  _size_t;
+typedef unsigned long int _size_t;
 #define THREAD_PROC
 #elif defined (__ICCARM__)
 typedef uint32_t       _size_t;
@@ -70,7 +70,6 @@ typedef uint32_t       _size_t;
 typedef _size_t (THREAD_PROC *thread_proc_t)(void *);
 
 typedef int32_t result_t;
-typedef uint64_t TTimeStamp;
 
 #define RESULT_OK      0
 #define RESULT_TIMEOUT -1

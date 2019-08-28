@@ -66,17 +66,18 @@ Serial::Serial(const string &port, uint32_t baudrate, serial::Timeout timeout,
 
 Serial::~Serial() {
   delete pimpl_;
+  pimpl_ = NULL;
 }
 
 bool Serial::open() {
   return pimpl_->open();
 }
 
-void Serial::close() {
+void Serial::closePort() {
   pimpl_->close();
 }
 
-bool Serial::isOpen() const {
+bool Serial::isOpen() {
   return pimpl_->isOpen();
 }
 
@@ -93,8 +94,17 @@ void Serial::waitByteTimes(size_t count) {
   pimpl_->waitByteTimes(count);
 }
 
-int Serial::waitfordata(size_t data_count, uint32_t timeout, size_t *returned_size) {
+int Serial::waitfordata(size_t data_count, uint32_t timeout,
+                        size_t *returned_size) {
   return pimpl_->waitfordata(data_count, timeout, returned_size);
+}
+
+size_t Serial::writeData(const uint8_t *data, size_t size) {
+  return write(data, size);
+}
+
+size_t Serial::readData(uint8_t *data, size_t size) {
+  return read(data, size);
 }
 
 size_t Serial::read_(uint8_t *buffer, size_t size) {
@@ -144,7 +154,8 @@ size_t Serial::readline(string &buffer, size_t size, string eol) {
       break; // Timeout occured on reading 1 byte
     }
 
-    if (string(reinterpret_cast<const char *>(buffer_ + read_so_far - eol_len), eol_len) == eol) {
+    if (string(reinterpret_cast<const char *>(buffer_ + read_so_far - eol_len),
+               eol_len) == eol) {
       break; // EOL found
     }
 
@@ -207,7 +218,8 @@ vector<string> Serial::readlines(size_t size, string eol) {
 
 size_t Serial::write(const string &data) {
   ScopedWriteLock lock(this->pimpl_);
-  return this->write_(reinterpret_cast<const uint8_t *>(data.c_str()), data.length());
+  return this->write_(reinterpret_cast<const uint8_t *>(data.c_str()),
+                      data.length());
 }
 
 size_t Serial::write(const std::vector<uint8_t> &data) {
@@ -230,7 +242,7 @@ void Serial::setPort(const string &port) {
   bool was_open = pimpl_->isOpen();
 
   if (was_open) {
-    close();
+    closePort();
   }
 
   pimpl_->setPort(port);
@@ -344,7 +356,7 @@ bool Serial::getCD() {
   return pimpl_->getCD();
 }
 
-uint32_t Serial::getByteTime() {
+int Serial::getByteTime() {
   return pimpl_->getByteTime();
 }
 }

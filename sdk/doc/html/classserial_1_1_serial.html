@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>YDLIDAR SDK: serial::Serial Class Reference</title>
+<title>YDLIDAR-SS SDK: serial::Serial Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="ydlidar.png"/></td>
+  <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.3.8</span>
+   <div id="projectname">YDLIDAR-SS SDK
+   &#160;<span id="projectnumber">V2.0.9</span>
    </div>
   </td>
  </tr>
@@ -66,6 +66,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -117,19 +118,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a071000a2f5f77a40df8311fad5044481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4403ddb51e9d209fd86ed316f0ee9b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#aa4403ddb51e9d209fd86ed316f0ee9b4">open</a> ()</td></tr>
 <tr class="separator:aa4403ddb51e9d209fd86ed316f0ee9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48458f741d0fdcc5623b4daa079cbf78"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a48458f741d0fdcc5623b4daa079cbf78">isOpen</a> () const </td></tr>
-<tr class="separator:a48458f741d0fdcc5623b4daa079cbf78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a501082725b61e4baf615266065bbac5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a501082725b61e4baf615266065bbac5f">close</a> ()</td></tr>
-<tr class="separator:a501082725b61e4baf615266065bbac5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a657df1809f2eb966aec5811ed2c70b8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a657df1809f2eb966aec5811ed2c70b8c">isOpen</a> ()</td></tr>
+<tr class="separator:a657df1809f2eb966aec5811ed2c70b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb659db0159a6f4bcefe760fa20df18e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#afb659db0159a6f4bcefe760fa20df18e">closePort</a> ()</td></tr>
+<tr class="separator:afb659db0159a6f4bcefe760fa20df18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5fae6cebb8e34345ca1f55cbccc4698"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#ab5fae6cebb8e34345ca1f55cbccc4698">available</a> ()</td></tr>
 <tr class="separator:ab5fae6cebb8e34345ca1f55cbccc4698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59bd8d40309769e8eed91dd3684e0000"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a59bd8d40309769e8eed91dd3684e0000">waitReadable</a> ()</td></tr>
 <tr class="separator:a59bd8d40309769e8eed91dd3684e0000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35c0f6ff20c142a5210dde288731f954"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a35c0f6ff20c142a5210dde288731f954">waitByteTimes</a> (size_t count)</td></tr>
 <tr class="separator:a35c0f6ff20c142a5210dde288731f954"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa94e4ca3b2b803e3145c99fe063ae09b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa94e4ca3b2b803e3145c99fe063ae09b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_t data_count, uint32_t timeout, size_t *returned_size)</td></tr>
+<tr class="memitem:aa94e4ca3b2b803e3145c99fe063ae09b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#aa94e4ca3b2b803e3145c99fe063ae09b">waitfordata</a> (size_t data_count, uint32_t timeout, size_t *returned_size)</td></tr>
+<tr class="memdesc:aa94e4ca3b2b803e3145c99fe063ae09b"><td class="mdescLeft">&#160;</td><td class="mdescRight">waitfordata  <a href="#aa94e4ca3b2b803e3145c99fe063ae09b">More...</a><br /></td></tr>
 <tr class="separator:aa94e4ca3b2b803e3145c99fe063ae09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb637cc63ead4662317cea58a997e0f6"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#aeb637cc63ead4662317cea58a997e0f6">writeData</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="memdesc:aeb637cc63ead4662317cea58a997e0f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">writeData  <a href="#aeb637cc63ead4662317cea58a997e0f6">More...</a><br /></td></tr>
+<tr class="separator:aeb637cc63ead4662317cea58a997e0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23af62642b1739cf31fb1c8a272074a1"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a23af62642b1739cf31fb1c8a272074a1">readData</a> (uint8_t *data, size_t size)</td></tr>
+<tr class="memdesc:a23af62642b1739cf31fb1c8a272074a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">readData  <a href="#a23af62642b1739cf31fb1c8a272074a1">More...</a><br /></td></tr>
+<tr class="separator:a23af62642b1739cf31fb1c8a272074a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01fc2e3d77cb7d70069de87eca1400e9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a01fc2e3d77cb7d70069de87eca1400e9">read</a> (uint8_t *buffer, size_t size)</td></tr>
 <tr class="separator:a01fc2e3d77cb7d70069de87eca1400e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ecd4645c76548ba079eab6f2f46adfb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a3ecd4645c76548ba079eab6f2f46adfb">read</a> (std::vector&lt; uint8_t &gt; &amp;buffer, size_t size=1)</td></tr>
@@ -204,8 +211,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 <tr class="separator:a29a1f68b9a238e9a6a833373855708ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a7c1a8e363b530147970155d0f6fe8d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a5a7c1a8e363b530147970155d0f6fe8d">getCD</a> ()</td></tr>
 <tr class="separator:a5a7c1a8e363b530147970155d0f6fe8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b7ad05b2521db6bbf184108f59e105e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#a8b7ad05b2521db6bbf184108f59e105e">getByteTime</a> ()</td></tr>
-<tr class="separator:a8b7ad05b2521db6bbf184108f59e105e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb2866093a60772d13691c99bd91adc6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classserial_1_1_serial.html#acb2866093a60772d13691c99bd91adc6">getByteTime</a> ()</td></tr>
+<tr class="separator:acb2866093a60772d13691c99bd91adc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that provides a portable serial port interface. </p>
@@ -342,12 +349,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 
 </div>
 </div>
-<a class="anchor" id="a501082725b61e4baf615266065bbac5f"></a>
+<a class="anchor" id="afb659db0159a6f4bcefe760fa20df18e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void serial::Serial::close </td>
+          <td class="memname">void serial::Serial::closePort </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -443,12 +450,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 
 </div>
 </div>
-<a class="anchor" id="a8b7ad05b2521db6bbf184108f59e105e"></a>
+<a class="anchor" id="acb2866093a60772d13691c99bd91adc6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t serial::Serial::getByteTime </td>
+          <td class="memname">int serial::Serial::getByteTime </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -618,7 +625,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 
 </div>
 </div>
-<a class="anchor" id="a48458f741d0fdcc5623b4daa079cbf78"></a>
+<a class="anchor" id="a657df1809f2eb966aec5811ed2c70b8c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -626,7 +633,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
           <td class="memname">bool serial::Serial::isOpen </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -792,6 +799,50 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A std::string containing the data read from the port. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a23af62642b1739cf31fb1c8a272074a1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t serial::Serial::readData </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>readData </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td></td></tr>
+    <tr><td class="paramname">size</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -1252,6 +1303,49 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 
 </div>
 </div>
+<a class="anchor" id="aa94e4ca3b2b803e3145c99fe063ae09b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int serial::Serial::waitfordata </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>data_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>timeout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>returned_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>waitfordata </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data_count</td><td></td></tr>
+    <tr><td class="paramname">timeout</td><td></td></tr>
+    <tr><td class="paramname">returned_size</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a59bd8d40309769e8eed91dd3684e0000"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1359,9 +1453,53 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>waitfordata</b> (size_
 
 </div>
 </div>
+<a class="anchor" id="aeb637cc63ead4662317cea58a997e0f6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t serial::Serial::writeData </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>writeData </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td></td></tr>
+    <tr><td class="paramname">size</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/yang/gaussian/sdk/include/<a class="el" href="serial_8h_source.html">serial.h</a></li>
-<li>/home/yang/gaussian/sdk/src/serial.cpp</li>
+<li>/home/yang/git/sdk/include/<a class="el" href="serial_8h_source.html">serial.h</a></li>
+<li>/home/yang/git/sdk/src/serial.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

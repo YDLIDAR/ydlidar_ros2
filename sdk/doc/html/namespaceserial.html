@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>YDLIDAR SDK: serial Namespace Reference</title>
+<title>YDLIDAR-SS SDK: serial Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="ydlidar.png"/></td>
+  <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.3.8</span>
+   <div id="projectname">YDLIDAR-SS SDK
+   &#160;<span id="projectnumber">V2.0.9</span>
    </div>
   </td>
  </tr>
@@ -157,65 +157,65 @@ timespec&#160;</td><td class="memItemRight" valign="bottom"><b>timespec_from_ms<
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Return 0 if everything is OK, otherwise -1 with some error msg. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Here are termios structure members: <pre class="fragment">Member      Description 
-c_cflag     Control options 
-c_lflag     Line options 
-c_iflag     Input options 
-c_oflag     Output options 
-c_cc        Control characters 
-c_ispeed    Input baud (new interface) 
-c_ospeed    Output baud (new interface) 
-</pre> The c_cflag member controls the baud rate, number of data bits, parity, stop bits, and hardware flow control. There are constants for all of the supported configurations. Constant Description <pre class="fragment">CBAUD   Bit mask for baud rate 
-B0  0 baud (drop DTR) 
-B50 50 baud 
-B75 75 baud 
-B110    110 baud 
-B134    134.5 baud 
-B150    150 baud 
-B200    200 baud 
-B300    300 baud 
-B600    600 baud 
-B1200   1200 baud 
-B1800   1800 baud 
-B2400   2400 baud 
-B4800   4800 baud 
-B9600   9600 baud 
-B19200  19200 baud 
-B38400  38400 baud 
-B57600  57,600 baud 
-B76800  76,800 baud 
-B115200 115,200 baud 
-EXTA    External rate clock 
-EXTB    External rate clock 
-CSIZE   Bit mask for data bits 
-CS5 5   data bits 
-CS6 6   data bits 
-CS7 7   data bits 
-CS8 8   data bits 
-CSTOPB  2 stop bits (1 otherwise) 
-CREAD   Enable receiver 
-PARENB  Enable parity bit 
-PARODD  Use odd parity instead of even 
-HUPCL   Hangup (drop DTR) on last close 
-CLOCAL  Local line - do not change "owner" of port 
-LOBLK   Block job control output 
-CNEW_RTSCTS CRTSCTS Enable hardware flow control (not supported on all 
-platforms) 
-</pre> The input modes member c_iflag controls any input processing that is done to characters received on the port. Like the c_cflag field, the final value stored in c_iflag is the bitwise OR of the desired options. <pre class="fragment">Constant    Description 
-INPCK   Enable parity check 
-IGNPAR  Ignore parity errors 
-PARMRK  Mark parity errors 
-ISTRIP  Strip parity bits 
-IXON    Enable software flow control (outgoing) 
-IXOFF   Enable software flow control (incoming) 
-IXANY   Allow any character to start flow again 
-IGNBRK  Ignore break condition 
-BRKINT  Send a SIGINT when a break condition is detected 
-INLCR   Map NL to CR 
-IGNCR   Ignore CR 
-ICRNL   Map CR to NL 
-IUCLC   Map uppercase to lowercase 
-IMAXBEL Echo BEL on input line too long 
+<dl class="section note"><dt>Note</dt><dd>Here are termios structure members: <pre class="fragment">Member      Description
+c_cflag     Control options
+c_lflag     Line options
+c_iflag     Input options
+c_oflag     Output options
+c_cc        Control characters
+c_ispeed    Input baud (new interface)
+c_ospeed    Output baud (new interface)
+</pre> The c_cflag member controls the baud rate, number of data bits, parity, stop bits, and hardware flow control. There are constants for all of the supported configurations. Constant Description <pre class="fragment">CBAUD   Bit mask for baud rate
+B0  0 baud (drop DTR)
+B50 50 baud
+B75 75 baud
+B110    110 baud
+B134    134.5 baud
+B150    150 baud
+B200    200 baud
+B300    300 baud
+B600    600 baud
+B1200   1200 baud
+B1800   1800 baud
+B2400   2400 baud
+B4800   4800 baud
+B9600   9600 baud
+B19200  19200 baud
+B38400  38400 baud
+B57600  57,600 baud
+B76800  76,800 baud
+B115200 115,200 baud
+EXTA    External rate clock
+EXTB    External rate clock
+CSIZE   Bit mask for data bits
+CS5 5   data bits
+CS6 6   data bits
+CS7 7   data bits
+CS8 8   data bits
+CSTOPB  2 stop bits (1 otherwise)
+CREAD   Enable receiver
+PARENB  Enable parity bit
+PARODD  Use odd parity instead of even
+HUPCL   Hangup (drop DTR) on last close
+CLOCAL  Local line - do not change "owner" of port
+LOBLK   Block job control output
+CNEW_RTSCTS CRTSCTS Enable hardware flow control (not supported on all
+platforms)
+</pre> The input modes member c_iflag controls any input processing that is done to characters received on the port. Like the c_cflag field, the final value stored in c_iflag is the bitwise OR of the desired options. <pre class="fragment">Constant    Description
+INPCK   Enable parity check
+IGNPAR  Ignore parity errors
+PARMRK  Mark parity errors
+ISTRIP  Strip parity bits
+IXON    Enable software flow control (outgoing)
+IXOFF   Enable software flow control (incoming)
+IXANY   Allow any character to start flow again
+IGNBRK  Ignore break condition
+BRKINT  Send a SIGINT when a break condition is detected
+INLCR   Map NL to CR
+IGNCR   Ignore CR
+ICRNL   Map CR to NL
+IUCLC   Map uppercase to lowercase
+IMAXBEL Echo BEL on input line too long
 </pre> Here are some examples of setting parity checking: <br />
 No parity (8N1): <pre class="fragment">options.c_cflag &amp;= ~PARENB
 options.c_cflag &amp;= ~CSTOPB

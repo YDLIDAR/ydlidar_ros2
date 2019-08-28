@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['max_5fangle',['max_angle',['../struct_laser_config.html#a2d09a717415770110787788127ad6b14',1,'LaserConfig']]],
-  ['max_5frange',['max_range',['../struct_laser_config.html#a977dcea9a68dc9dd21113fd0eff24c9c',1,'LaserConfig']]],
-  ['max_5fscan_5fnodes',['MAX_SCAN_NODES',['../classydlidar_1_1_y_dlidar_driver.html#abbb612f1ac6a9f6dfdcfeafb149dd0daa3db6fc46c7ce55cdf3a968b70e96374a',1,'ydlidar::YDlidarDriver']]],
-  ['millisecondtimer',['MillisecondTimer',['../classserial_1_1_millisecond_timer.html',1,'serial']]],
-  ['min_5fangle',['min_angle',['../struct_laser_config.html#a0b68f6041dc05310626ef221d4cc2db9',1,'LaserConfig']]],
-  ['min_5frange',['min_range',['../struct_laser_config.html#a262652da08f505f112be9e017fb43a43',1,'LaserConfig']]],
-  ['model',['model',['../structdevice__info.html#a3c491b342ed11af3c70358e7e8f6c935',1,'device_info']]]
+  ['laserconfig',['LaserConfig',['../struct_laser_config.html',1,'']]],
+  ['laserpoint',['LaserPoint',['../struct_laser_point.html',1,'']]],
+  ['laserscan',['LaserScan',['../struct_laser_scan.html',1,'']]],
+  ['lidar_5fans_5fheader',['lidar_ans_header',['../structlidar__ans__header.html',1,'']]],
+  ['lidarportlist',['lidarPortList',['../classydlidar_1_1_y_dlidar_driver.html#a11d95d075a221a6f9ea5fee85d692b33',1,'ydlidar::YDlidarDriver']]],
+  ['linefeature',['LineFeature',['../classline__feature_1_1_line_feature.html',1,'line_feature']]],
+  ['loaddata',['LoadData',['../class_c_simple_ini_templ.html#a174244fd3e09ff78da05fe46be86e714',1,'CSimpleIniTempl::LoadData(const std::string &amp;a_strData)'],['../class_c_simple_ini_templ.html#aa797cf47cec05906f07d5065882af4d3',1,'CSimpleIniTempl::LoadData(const char *a_pData, size_t a_uDataLen)']]],
+  ['loadfile',['LoadFile',['../class_c_simple_ini_templ.html#aebb6e5fff76efc05ca6cc4b7b56481a3',1,'CSimpleIniTempl::LoadFile(const char *a_pszFile)'],['../class_c_simple_ini_templ.html#a7ccb65e82fa347b42b59330968f826ae',1,'CSimpleIniTempl::LoadFile(FILE *a_fpFile)']]],
+  ['loadorder',['LoadOrder',['../struct_c_simple_ini_templ_1_1_entry_1_1_load_order.html',1,'CSimpleIniTempl::Entry']]],
+  ['locker',['Locker',['../class_locker.html',1,'']]]
 ];

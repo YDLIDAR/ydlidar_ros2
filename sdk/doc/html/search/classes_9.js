@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['termios2',['termios2',['../structserial_1_1termios2.html',1,'serial']]],
-  ['thread',['Thread',['../class_thread.html',1,'']]],
-  ['timeout',['Timeout',['../structserial_1_1_timeout.html',1,'serial']]]
+  ['offset_5fangle',['offset_angle',['../structoffset__angle.html',1,'']]],
+  ['outputwriter',['OutputWriter',['../class_c_simple_ini_templ_1_1_output_writer.html',1,'CSimpleIniTempl']]]
 ];
