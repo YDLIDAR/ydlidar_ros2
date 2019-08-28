@@ -135,7 +135,6 @@ int main(int argc, char *argv[]) {
   laser.setAutoReconnect(auto_reconnect);
   laser.setScanFrequency(frequency);
   laser.setSampleRate(samp_rate);
-  laser.setReversion(reversion);
   laser.setIgnoreArray(ignore_array);
 
 
@@ -193,18 +192,21 @@ int main(int argc, char *argv[]) {
       scan_msg->ranges.resize(fixed_size, std::numeric_limits<float>::infinity());
       scan_msg->intensities.resize(fixed_size, 0);
 
-      for(int i = 0; i < scan.data.size(); i++) {
+      for(size_t i = 0; i < scan.data.size(); i++) {
           LaserPoint point = scan.data[i];
           float angle = angles::from_degrees(point.angle);
+  	  if(reversion) {
+		angle += M_PI;
+          }
           angle = 2*M_PI - angle;
           angle = angles::normalize_angle(angle);
           index = (angle -scan_msg->angle_min ) / scan_msg->angle_increment + 0.5;
           if(index >=0 && index < fixed_size) {
-             if(point.range < scan_msg->range_min) {
+             if(point.distance < scan_msg->range_min) {
                  scan_msg->ranges[index] = std::numeric_limits<float>::infinity();
                  scan_msg->intensities[index] = 0;
               } else {
-                 scan_msg->ranges[index] = point.range;
+                 scan_msg->ranges[index] = point.distance;
                  scan_msg->intensities[index] = point.intensity;
              }
           }
