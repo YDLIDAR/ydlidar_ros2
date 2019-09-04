@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
   double max_range = 16.0;
   double min_range = 0.1;
   double frequency = 10.0;
+  bool auto_filter_data_overlap = false;
 
 
   node->get_parameter("port", port);
@@ -95,6 +96,8 @@ int main(int argc, char *argv[]) {
   node->get_parameter("min_range", min_range);
 
   node->get_parameter("frequency", frequency);
+
+  node->get_parameter("auto_filter_data_overlap", auto_filter_data_overlap);
 
 
 
@@ -136,6 +139,7 @@ int main(int argc, char *argv[]) {
   laser.setScanFrequency(frequency);
   laser.setSampleRate(samp_rate);
   laser.setIgnoreArray(ignore_array);
+  laser.setFilterDataNoise(auto_filter_data_overlap);
 
 
   printf("[YDLIDAR INFO] Current ROS Driver Version: %s\n", ((std::string)ROS2Verision).c_str());
@@ -195,8 +199,8 @@ int main(int argc, char *argv[]) {
       for(size_t i = 0; i < scan.data.size(); i++) {
           LaserPoint point = scan.data[i];
           float angle = angles::from_degrees(point.angle);
-  	  if(reversion) {
-		angle += M_PI;
+  	      if(reversion) {
+		        angle += M_PI;
           }
           angle = 2*M_PI - angle;
           angle = angles::normalize_angle(angle);

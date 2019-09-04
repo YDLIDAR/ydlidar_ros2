@@ -43,6 +43,7 @@ CYdLidar::CYdLidar(): lidarPtr(nullptr), global_nodes(nullptr) {
   m_pointTime = 1e9 / 5000;
   last_node_time = getTime();
   node_counts         = 720;
+  m_FilterDataNoise = false;
 
 }
 
@@ -223,8 +224,8 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
           frist_data = true;
         }
 
-        if (point.angle < last_point.angle &&
-            fabs(point.angle - last_point.angle) < 20) {
+        if ((point.angle < last_point.angle &&
+            fabs(point.angle - last_point.angle) < 20) || !m_FilterDataNoise) {
           last_data.push_back(point);
         } else {
           last_point = point;

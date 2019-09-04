@@ -42,6 +42,8 @@ class YDLIDAR_API CYdLidar {
   PropertyBuilderByName(std::string, SerialPort, private) ///< serial port
   PropertyBuilderByName(std::vector<float>, IgnoreArray,
                         private) ///< Culling angle list
+  PropertyBuilderByName(bool, FilterDataNoise,
+                        private) ///< whether to close data overlap noise
 
 
  public:

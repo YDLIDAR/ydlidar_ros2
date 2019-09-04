@@ -85,6 +85,10 @@ frequency (double, default: 7)
 
     the LIDAR scanning frequency.
 
+auto_filter_data_overlap(bool, defalut: false)
+
+    indicated whether the LIDAR auto filter data overlap. 
+
 
 
 
