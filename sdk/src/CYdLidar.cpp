@@ -225,7 +225,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
         }
 
         if ((point.angle < last_point.angle &&
-            fabs(point.angle - last_point.angle) < 20) || !m_FilterDataNoise) {
+            fabs(point.angle - last_point.angle) < 20) && m_FilterDataNoise) {
           last_data.push_back(point);
         } else {
           last_point = point;
