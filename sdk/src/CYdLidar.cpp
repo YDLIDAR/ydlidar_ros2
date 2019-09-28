@@ -131,7 +131,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
 
     double sys_scan_time = static_cast<double>((sys_scan_end_time -
                            sys_scan_start_time) * 1.0 / 1e9);
-    uint32_t scan_time = m_pointTime * (count - 1);
+    uint32_t scan_time = m_pointTime * count;
     sys_scan_end_time -= m_pointTime;
     sys_scan_start_time = sys_scan_end_time -  scan_time ;
 

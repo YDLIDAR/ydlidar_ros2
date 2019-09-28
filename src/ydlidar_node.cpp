@@ -187,11 +187,8 @@ int main(int argc, char *argv[]) {
       if(resolution_fixed) {
           fixed_size = laser.getFixedSize();
       }
-      if(scan_msg->angle_max - scan_msg->angle_min == 2*M_PI) {
-          scan_msg->angle_increment = (scan_msg->angle_max - scan_msg->angle_min) / (fixed_size);
-      } else {
-          scan_msg->angle_increment = (scan_msg->angle_max - scan_msg->angle_min) / (fixed_size - 1);
-      }
+
+      scan_msg->angle_increment = (scan_msg->angle_max - scan_msg->angle_min) / (fixed_size);
       int index = 0;
       scan_msg->ranges.resize(fixed_size, std::numeric_limits<float>::infinity());
       scan_msg->intensities.resize(fixed_size, 0);
