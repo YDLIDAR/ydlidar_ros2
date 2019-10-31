@@ -131,7 +131,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
 
     double sys_scan_time = static_cast<double>((sys_scan_end_time -
                            sys_scan_start_time) * 1.0 / 1e9);
-    uint32_t scan_time = m_pointTime * count;
+    uint32_t scan_time = m_pointTime * (count - 1);
     sys_scan_end_time -= m_pointTime;
     sys_scan_start_time = sys_scan_end_time -  scan_time ;
 
@@ -355,6 +355,7 @@ bool  CYdLidar::turnOn() {
     }
   }
 
+  m_pointTime = lidarPtr->getPointTime();
   if (checkLidarAbnormal()) {
     lidarPtr->stop();
     fprintf(stderr,
@@ -364,7 +365,6 @@ bool  CYdLidar::turnOn() {
   }
 
   isScanning = true;
-  m_pointTime = lidarPtr->getPointTime();
   lidarPtr->setAutoReconnect(m_AutoReconnect);
   printf("[YDLIDAR INFO] Now YDLIDAR is scanning ......\n");
   fflush(stdout);
@@ -389,7 +389,12 @@ bool  CYdLidar::turnOff() {
   return true;
 }
 
+/**
+ * @brief CYdLidar::checkLidarAbnormal
+ * @return
+ */
 bool CYdLidar::checkLidarAbnormal() {
+
   size_t   count = YDlidarDriver::MAX_SCAN_NODES;
   int check_abnormal_count = 0;
 
@@ -398,6 +403,8 @@ bool CYdLidar::checkLidarAbnormal() {
   }
 
   result_t op_result = RESULT_FAIL;
+  std::vector<int> data;
+  int buffer_count  = 0;
 
   while (check_abnormal_count < m_AbnormalCheckCount) {
     //Ensure that the voltage is insufficient or the motor resistance is high, causing an abnormality.
@@ -405,10 +412,61 @@ bool CYdLidar::checkLidarAbnormal() {
       delay(check_abnormal_count * 1000);
     }
 
-    op_result =  lidarPtr->grabScanData(global_nodes, count);
+    float scan_time = 0.0;
+    uint64_t start_time = 0;
+    uint64_t end_time = 0;
+    op_result = RESULT_OK;
+
+    while (buffer_count < 10 && scan_time < 0.05 && IS_OK(op_result)) {
+      start_time = getTime();
+      count = YDlidarDriver::MAX_SCAN_NODES;
+      op_result =  lidarPtr->grabScanData(global_nodes, count);
+      end_time = getTime();
+      scan_time = 1.0 * static_cast<int64_t>(end_time - start_time) / 1e9;
+      buffer_count++;
+    }
 
     if (IS_OK(op_result)) {
-      return false;
+      data.push_back(count);
+      int collection = 0;
+
+      while (collection < 5) {
+        count = YDlidarDriver::MAX_SCAN_NODES;
+        start_time = getTime();
+        op_result =  lidarPtr->grabScanData(global_nodes, count);
+        end_time = getTime();
+
+
+        if (IS_OK(op_result)) {
+          if (abs(data.front() - count) > 20) {
+            data.erase(data.begin());
+          }
+
+          scan_time = 1.0 * static_cast<int64_t>(end_time - start_time) / 1e9;
+
+          if (scan_time > 0.04 && scan_time < 1.0) {
+            m_SampleRate = static_cast<int>((count / scan_time + 500) / 1000);
+            m_pointTime = 1e9 / (m_SampleRate * 1000);
+            if (m_SampleRate == 3) {
+            }
+          }
+
+          data.push_back(count);
+        }
+
+        collection++;
+      }
+
+      if (data.size() > 1) {
+        int total = accumulate(data.begin(), data.end(), 0);
+        int mean =  total / data.size(); //均值
+        node_counts = (static_cast<int>((mean + 5) / 10)) * 10;
+        printf("[YDLIDAR]:Fixed Size: %d\n", node_counts);
+        printf("[YDLIDAR]:Sample Rate: %dK\n", m_SampleRate);
+        return false;
+
+      }
+
     }
 
     check_abnormal_count++;
@@ -463,7 +521,7 @@ bool CYdLidar::getDeviceInfo() {
 
   if (devinfo.model != YDlidarDriver::YDLIDAR_R2_SS_1 &&
       devinfo.model != YDlidarDriver::YDLIDAR_G4 &&
-      devinfo.model != YDlidarDriver::YDLIDAR_G4PRO) {
+      devinfo.model != YDlidarDriver::YDLIDAR_G4PRO && !lidarPtr->isSingleChannel()) {
     printf("[YDLIDAR INFO] Current SDK does not support current lidar models[%d]\n",
            devinfo.model);
     return false;
@@ -471,6 +529,11 @@ bool CYdLidar::getDeviceInfo() {
 
   std::string model = "R2-SS-1";
   int m_samp_rate = 5;
+  if(lidarPtr->isSingleChannel()) {
+      m_samp_rate = 3;
+      m_SampleRate = 3;
+      model = "S2";
+  }
 
   switch (devinfo.model) {
     case YDlidarDriver::YDLIDAR_G4:
@@ -494,7 +557,14 @@ bool CYdLidar::getDeviceInfo() {
   Major = (uint8_t)(devinfo.firmware_version >> 8);
   Minjor = (uint8_t)(devinfo.firmware_version & 0xff);
   std::string serial_number;
-  printf("[YDLIDAR] Connection established in [%s][%d]:\n"
+  if(lidarPtr->isSingleChannel()) {
+      printf("[YDLIDAR] Connection established in [%s][%d]:\n"
+             "Model: %s\n",
+             m_SerialPort.c_str(),
+             m_SerialBaudrate,
+             model.c_str());
+  } else {
+      printf("[YDLIDAR] Connection established in [%s][%d]:\n"
          "Firmware version: %u.%u\n"
          "Hardware version: %u\n"
          "Model: %s\n"
@@ -506,11 +576,13 @@ bool CYdLidar::getDeviceInfo() {
          (unsigned int)devinfo.hardware_version,
          model.c_str());
 
+  }
   for (int i = 0; i < 16; i++) {
     serial_number += format("%01X", devinfo.serialnum[i] & 0xff);
   }
-
-  printf("%s\n", serial_number.c_str());
+  if(!lidarPtr->isSingleChannel()) {
+     printf("%s\n", serial_number.c_str());
+  }
   m_serial_number = serial_number;
   std::regex
   rx("^2(\\d{3})(0\\d{1}|1[0-2])(0\\d{1}|[12]\\d{1}|3[01])(\\d{4})(\\d{4})$");
@@ -525,13 +597,17 @@ bool CYdLidar::getDeviceInfo() {
     checkCalibrationAngle(serial_number);
   } else {
     m_isAngleOffsetCorrected = true;
-    checkSampleRate();
+    if(!lidarPtr->isSingleChannel()) {
+        checkSampleRate();
+    }
   }
 
   checkRobotOffsetAngleCorrected(serial_number);
 
   printf("[YDLIDAR INFO] Current Sampling Rate : %dK\n", m_SampleRate);
-  checkScanFrequency();
+  if(!lidarPtr->isSingleChannel()) {
+    checkScanFrequency();
+  }
   return true;
 }
 
@@ -828,6 +904,10 @@ bool  CYdLidar::checkCOMMs() {
             m_SerialPort.c_str(), m_SerialBaudrate);
     return false;
   }
+  lidarPtr->setSingleChannel(false);
+  if(m_SerialBaudrate==115200) {
+      lidarPtr->setSingleChannel(true);
+  }
 
   return true;
 }
@@ -845,6 +925,7 @@ bool CYdLidar::checkStatus() {
 
   if (!ret) {
     delay(1000);
+    ret = getDeviceHealth();
   }
 
   if (!getDeviceInfo()) {
@@ -876,10 +957,34 @@ bool CYdLidar::checkHardware() {
   return false;
 }
 
+bool CYdLidar::checkSingleChannelLidar() {
+    bool ret = true;
+  if (!checkCOMMs()) {
+    fprintf(stderr,
+              "[CYdLidar::initialize] Error initializing YDLIDAR check Comms.\n");
+    fflush(stderr);
+    return false;
+  }
+
+  if(lidarPtr->hasAvailable() < 1) {
+      fprintf(stderr,
+              "[CYdLidar::checkSingleChannelLidar] Not have available byte.\n");
+      fflush(stderr);
+      ret = false;
+  } else {
+      m_SerialBaudrate = 115200;
+  }
+
+  disconnecting();
+  return ret;
+}
+
 /*-------------------------------------------------------------
             initialize
 -------------------------------------------------------------*/
 bool CYdLidar::initialize() {
+  checkSingleChannelLidar();
+
   if (!checkCOMMs()) {
     fprintf(stderr,
             "[CYdLidar::initialize] Error initializing YDLIDAR check Comms.\n");

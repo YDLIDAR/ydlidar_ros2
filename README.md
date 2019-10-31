@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V2.0.9
+YDLIDAR ROS2 PACKAGE V2.1.0
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -98,7 +98,11 @@ auto_filter_data_overlap(bool, defalut: false)
 Upgrade Log
 =====================================================================
 
-2019-80-28 version:2.0.9
+2019-10-31 version:2.1.0
+
+   1.support S2
+
+2019-08-28 version:2.0.9
   
    1.support SS 
 

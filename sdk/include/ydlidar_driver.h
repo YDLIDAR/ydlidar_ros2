@@ -105,6 +105,23 @@ class YDlidarDriver {
   bool isconnected() const;
 
   /**
+   * @brief setSingleChannel
+   * @param value
+   */
+  void setSingleChannel(bool value);
+  /**
+   * @brief isSingleChannel
+   * @return
+   */
+  bool isSingleChannel() const;
+
+  /**
+   * @brief hasAvailable
+   * @return
+   */
+  size_t hasAvailable();
+
+  /**
   * @brief Is there intensity \n
   * @param[in] isintensities    intentsity
   *   true	intensity
@@ -532,6 +549,9 @@ class YDlidarDriver {
 
   std::string serial_port;///< lidar serial port
   std::vector<float> m_IgnoreArray;//
+  bool m_isSingleChannel;
+  bool has_start_header;
+  uint8_t last_byte;
 
 #ifdef DEBUG
   FILE *fd;

@@ -140,6 +140,8 @@ class YDLIDAR_API CYdLidar {
    */
   void saveRobotOffsetAngle();
 
+  bool checkSingleChannelLidar();
+
  private:
   bool    isScanning;
   float   frequencyOffset;

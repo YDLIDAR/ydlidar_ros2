@@ -36,21 +36,21 @@ int main(int argc, char *argv[]) {
 
   if (ports.size() == 1) {
     it = ports.begin();
-    printf("Lidar[%s] detected, whether to select current lidar(yes/no)?:",
-           it->first.c_str());
-    std::string ok = "yes";
-    std::cin >> ok;
+//    printf("Lidar[%s] detected, whether to select current lidar(yes/no)?:",
+//           it->first.c_str());
+//    std::string ok = "yes";
+//    std::cin >> ok;
 
-    for (size_t i = 0; i < ok.size(); i++) {
-      ok[i] = tolower(ok[i]);
-    }
+//    for (size_t i = 0; i < ok.size(); i++) {
+//      ok[i] = tolower(ok[i]);
+//    }
 
-    if (ok.find("yes") != std::string::npos || atoi(ok.c_str()) == 1) {
+//    if (ok.find("yes") != std::string::npos || atoi(ok.c_str()) == 1) {
       port = it->second;
-    } else {
-      printf("Please enter the lidar serial port:");
-      std::cin >> port;
-    }
+//    } else {
+//      printf("Please enter the lidar serial port:");
+//      std::cin >> port;
+//    }
   } else {
     int id = 0;
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 
   CYdLidar laser;
   laser.setSerialPort(port);
-  laser.setSerialBaudrate(230400);
+  laser.setSerialBaudrate(230400);//G4, R2:230400, S2:115200
   laser.setIntensities(false);//intensity
   laser.setAutoReconnect(true);//hot plug
 

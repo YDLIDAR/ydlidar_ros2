@@ -84,6 +84,9 @@ YDlidarDriver::YDlidarDriver():
   package_Sample_Index = 0;
   IntervalSampleAngle_LastPackage = 0.0;
   m_IgnoreArray.clear();
+  m_isSingleChannel = false;
+  has_start_header = false;
+  last_byte = 0x00;
 #ifdef DEBUG
   fd = NULL;
 
@@ -242,6 +245,30 @@ bool YDlidarDriver::isconnected() const {
   return isConnected;
 }
 
+void YDlidarDriver::setSingleChannel(bool value) {
+    m_isSingleChannel = value;
+}
+
+bool YDlidarDriver::isSingleChannel() const {
+  return m_isSingleChannel;
+}
+
+size_t YDlidarDriver::hasAvailable() {
+    if(!isConnected) {
+        return 0;
+    }
+    if(_serial == NULL) {
+        return 0;
+    }
+    stopScan();
+    flushSerial();
+    size_t return_size = 0;
+
+    _serial->waitfordata(1, DEFAULT_TIMEOUT/4, &return_size);
+
+    return _serial->available();
+}
+
 result_t YDlidarDriver::sendCommand(uint8_t cmd, const void *payload,
                                     size_t payloadsize) {
   uint8_t pkt_header[10];
@@ -333,6 +360,8 @@ result_t YDlidarDriver::waitResponseHeader(lidar_ans_header *header,
   uint8_t  recvBuffer[sizeof(lidar_ans_header)];
   uint8_t  *headerBuffer = reinterpret_cast<uint8_t *>(header);
   uint32_t waitTime = 0;
+  has_start_header = false;
+  last_byte = 0x00;
 
   while ((waitTime = getms() - startTs) <= timeout) {
     size_t remainSize = sizeof(lidar_ans_header) - recvPos;
@@ -359,6 +388,11 @@ result_t YDlidarDriver::waitResponseHeader(lidar_ans_header *header,
       switch (recvPos) {
         case 0:
           if (currentByte != LIDAR_ANS_SYNC_BYTE1) {
+            if (last_byte == (PH & 0xff) && currentByte == (PH >> 8)) {
+               has_start_header = true;
+            }
+
+            last_byte = currentByte;
             continue;
           }
 
@@ -366,6 +400,7 @@ result_t YDlidarDriver::waitResponseHeader(lidar_ans_header *header,
 
         case 1:
           if (currentByte != LIDAR_ANS_SYNC_BYTE2) {
+            last_byte = currentByte;
             recvPos = 0;
             continue;
           }
@@ -373,6 +408,7 @@ result_t YDlidarDriver::waitResponseHeader(lidar_ans_header *header,
           break;
       }
 
+      last_byte = currentByte;
       headerBuffer[recvPos++] = currentByte;
 
       if (recvPos == sizeof(lidar_ans_header)) {
@@ -1202,10 +1238,21 @@ result_t YDlidarDriver::getHealth(device_health &health, uint32_t timeout) {
     if ((ans = sendCommand(LIDAR_CMD_GET_DEVICE_HEALTH)) != RESULT_OK) {
       return ans;
     }
+    if (m_isSingleChannel) {
+      health.error_code = 0;
+      health.status = 0;
+      return RESULT_OK;
+    }
 
     lidar_ans_header response_header;
 
     if ((ans = waitResponseHeader(&response_header, timeout)) != RESULT_OK) {
+      if (has_start_header) {
+         m_isSingleChannel = true;
+         health.error_code = 0;
+         health.status = 0;
+         return RESULT_OK;
+      }
       return ans;
     }
 
@@ -1243,6 +1290,12 @@ result_t YDlidarDriver::getDeviceInfo(device_info &info, uint32_t timeout) {
 
     if ((ans = sendCommand(LIDAR_CMD_GET_DEVICE_INFO)) != RESULT_OK) {
       return ans;
+    }
+    if (m_isSingleChannel) {
+      memset(&info, 0, sizeof(info));
+      info.model = YDLIDAR_S2;
+      info.serialnum[0] = 2;
+      return RESULT_OK;
     }
 
     lidar_ans_header response_header;
@@ -1325,6 +1378,9 @@ void YDlidarDriver::checkTransferDelay() {
   //calc stamp
   trans_delay = _serial->getByteTime();
   m_pointTime = 1e9 / 5000;
+  if (m_isSingleChannel) {
+    m_pointTime = 1e9 / 3000;
+  }
 
   switch (model.model) {
     case YDLIDAR_G4://g4
@@ -1400,6 +1456,10 @@ result_t YDlidarDriver::startScan(bool force, uint32_t timeout) {
         RESULT_OK) {
       return ans;
     }
+    if (m_isSingleChannel) {
+      ans = this->createThread();
+      return ans;
+    }
 
     lidar_ans_header response_header;
 
@@ -1465,6 +1525,9 @@ result_t YDlidarDriver::startAutoScan(bool force, uint32_t timeout) {
     if ((ans = sendCommand(force ? LIDAR_CMD_FORCE_SCAN : LIDAR_CMD_SCAN)) !=
         RESULT_OK) {
       return ans;
+    }
+    if (m_isSingleChannel) {
+      return RESULT_OK;
     }
 
     lidar_ans_header response_header;
