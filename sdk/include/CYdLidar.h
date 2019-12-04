@@ -142,6 +142,8 @@ class YDLIDAR_API CYdLidar {
 
   bool checkSingleChannelLidar();
 
+  void fitLineFeature();
+
  private:
   bool    isScanning;
   float   frequencyOffset;
@@ -160,6 +162,12 @@ class YDLIDAR_API CYdLidar {
   uint32_t m_pointTime;
   uint64_t last_node_time;
   int     node_counts ;
+  bool m_isSingleChannel;
+
+  //line feature
+  std::vector<double> bearings;
+  std::vector<unsigned int> indices;
+  RangeData range_data;
 
 };	// End of class
 

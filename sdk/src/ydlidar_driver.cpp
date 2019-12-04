@@ -87,6 +87,7 @@ YDlidarDriver::YDlidarDriver():
   m_isSingleChannel = false;
   has_start_header = false;
   last_byte = 0x00;
+  retryCount = 0;
 #ifdef DEBUG
   fd = NULL;
 
@@ -246,7 +247,7 @@ bool YDlidarDriver::isconnected() const {
 }
 
 void YDlidarDriver::setSingleChannel(bool value) {
-    m_isSingleChannel = value;
+  m_isSingleChannel = value;
 }
 
 bool YDlidarDriver::isSingleChannel() const {
@@ -254,19 +255,21 @@ bool YDlidarDriver::isSingleChannel() const {
 }
 
 size_t YDlidarDriver::hasAvailable() {
-    if(!isConnected) {
-        return 0;
-    }
-    if(_serial == NULL) {
-        return 0;
-    }
-    stopScan();
-    flushSerial();
-    size_t return_size = 0;
+  if (!isConnected) {
+    return 0;
+  }
 
-    _serial->waitfordata(1, DEFAULT_TIMEOUT/4, &return_size);
+  if (_serial == NULL) {
+    return 0;
+  }
 
-    return _serial->available();
+  stopScan();
+  flushSerial();
+  size_t return_size = 0;
+
+  _serial->waitfordata(1, DEFAULT_TIMEOUT / 4, &return_size);
+
+  return _serial->available();
 }
 
 result_t YDlidarDriver::sendCommand(uint8_t cmd, const void *payload,
@@ -389,7 +392,7 @@ result_t YDlidarDriver::waitResponseHeader(lidar_ans_header *header,
         case 0:
           if (currentByte != LIDAR_ANS_SYNC_BYTE1) {
             if (last_byte == (PH & 0xff) && currentByte == (PH >> 8)) {
-               has_start_header = true;
+              has_start_header = true;
             }
 
             last_byte = currentByte;
@@ -455,10 +458,25 @@ result_t YDlidarDriver::checkAutoConnecting() {
         }
       }
     }
+    retryCount++;
+
+    if (retryCount > 100) {
+      retryCount = 100;
+    }
+
+    delay(100 * retryCount);
+
+    int retryConnect = 0;
 
     while (isAutoReconnect &&
            connect(serial_port.c_str(), m_baudrate) != RESULT_OK) {
-      delay(200);
+      retryConnect++;
+
+      if (retryConnect > 25) {
+        retryConnect = 25;
+      }
+
+      delay(200 * retryConnect);
     }
 
     if (!isAutoReconnect) {
@@ -507,6 +525,7 @@ int YDlidarDriver::cacheScanData() {
   flushSerial();
   waitScanData(local_buf, count);
   int timeout_count   = 0;
+  retryCount = 0;
 #ifdef DEBUG
   uint64_t sys_time = getTime();
 #endif
@@ -555,6 +574,7 @@ int YDlidarDriver::cacheScanData() {
       }
     } else {
       timeout_count = 0;
+      retryCount = 0;
     }
 
 
@@ -930,7 +950,7 @@ result_t YDlidarDriver::waitPackage(node_info *node, uint32_t timeout) {
                                            & 0x03) << LIDAR_RESP_MEASUREMENT_ANGLE_SAMPLE_SHIFT) |
                               (package.packageSample[package_Sample_Index].PakageSampleQuality));
       (*node).distance_q2 =
-        package.packageSample[package_Sample_Index].PakageSampleDistance;
+        package.packageSample[package_Sample_Index].PakageSampleDistance & 0xfffc;
     } else {
       (*node).distance_q2 = packages.packageSampleDistance[package_Sample_Index];
       (*node).sync_quality = ((uint16_t)(0xfc |
@@ -948,9 +968,14 @@ result_t YDlidarDriver::waitPackage(node_info *node, uint32_t timeout) {
       (*node).sync_quality = 0;
     }
 
+    float sampleAngle = IntervalSampleAngle * package_Sample_Index;
+
     if (m_IgnoreArray.size() != 0) {//eliminate the specified range angle.
-      double angle = (FirstSampleAngle + IntervalSampleAngle * package_Sample_Index) /
-                     64.0;
+      double angle = (FirstSampleAngle + sampleAngle) / 64.0;
+
+      if (!isHasZeroOffset(this->model.model)) {
+        angle += AngleCorrectForDistance / 64.0;
+      }
 
       if (angle < 0) {
         angle += 360;
@@ -969,24 +994,19 @@ result_t YDlidarDriver::waitPackage(node_info *node, uint32_t timeout) {
       }
     }
 
-    if ((FirstSampleAngle + IntervalSampleAngle * package_Sample_Index +
+    if ((FirstSampleAngle + sampleAngle +
          AngleCorrectForDistance) < 0) {
-      (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + IntervalSampleAngle
-                                    *
-                                    package_Sample_Index + AngleCorrectForDistance + 360 * 64)) << 1) +
+      (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + sampleAngle +
+                                    AngleCorrectForDistance + 23040)) << LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) +
                                   LIDAR_RESP_MEASUREMENT_CHECKBIT;
     } else {
-      if ((FirstSampleAngle + IntervalSampleAngle * package_Sample_Index +
-           AngleCorrectForDistance) > 360
-          * 64) {
-        (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + IntervalSampleAngle
-                                      *
-                                      package_Sample_Index + AngleCorrectForDistance - 360 * 64)) << 1) +
+      if ((FirstSampleAngle + sampleAngle + AngleCorrectForDistance) > 23040) {
+        (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + sampleAngle +
+                                      AngleCorrectForDistance - 23040)) << LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) +
                                     LIDAR_RESP_MEASUREMENT_CHECKBIT;
       } else {
-        (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + IntervalSampleAngle
-                                      *
-                                      package_Sample_Index + AngleCorrectForDistance)) << 1) +
+        (*node).angle_q6_checkbit = (((uint16_t)(FirstSampleAngle + sampleAngle +
+                                      AngleCorrectForDistance)) << LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) +
                                     LIDAR_RESP_MEASUREMENT_CHECKBIT;
       }
     }
@@ -1040,6 +1060,7 @@ result_t YDlidarDriver::waitPackage(node_info *node, uint32_t timeout) {
   if (package_Sample_Index >= nowPackageNum) {
     package_Sample_Index = 0;
     m_node_time_ns = (*node).stamp + m_pointTime;
+    CheckSumResult = false;
   }
 
   return RESULT_OK;
@@ -1238,6 +1259,7 @@ result_t YDlidarDriver::getHealth(device_health &health, uint32_t timeout) {
     if ((ans = sendCommand(LIDAR_CMD_GET_DEVICE_HEALTH)) != RESULT_OK) {
       return ans;
     }
+
     if (m_isSingleChannel) {
       health.error_code = 0;
       health.status = 0;
@@ -1248,11 +1270,12 @@ result_t YDlidarDriver::getHealth(device_health &health, uint32_t timeout) {
 
     if ((ans = waitResponseHeader(&response_header, timeout)) != RESULT_OK) {
       if (has_start_header) {
-         m_isSingleChannel = true;
-         health.error_code = 0;
-         health.status = 0;
-         return RESULT_OK;
+        m_isSingleChannel = true;
+        health.error_code = 0;
+        health.status = 0;
+        return RESULT_OK;
       }
+
       return ans;
     }
 
@@ -1291,6 +1314,7 @@ result_t YDlidarDriver::getDeviceInfo(device_info &info, uint32_t timeout) {
     if ((ans = sendCommand(LIDAR_CMD_GET_DEVICE_INFO)) != RESULT_OK) {
       return ans;
     }
+
     if (m_isSingleChannel) {
       memset(&info, 0, sizeof(info));
       info.model = YDLIDAR_S2;
@@ -1378,6 +1402,7 @@ void YDlidarDriver::checkTransferDelay() {
   //calc stamp
   trans_delay = _serial->getByteTime();
   m_pointTime = 1e9 / 5000;
+
   if (m_isSingleChannel) {
     m_pointTime = 1e9 / 3000;
   }
@@ -1394,20 +1419,19 @@ void YDlidarDriver::checkTransferDelay() {
       m_pointTime = 1e9 / 9000;
 
       switch (m_sampling_rate) {
-        case 0:
+        case YDLIDAR_RATE_4K:
           m_pointTime = 1e9 / 4000;
           break;
 
-        case 1:
+        case YDLIDAR_RATE_8K:
           m_pointTime = 1e9 / 8000;
           break;
 
-        case 2:
+        case YDLIDAR_RATE_9K:
           m_pointTime = 1e9 / 9000;
           break;
       }
 
-      trans_delay = _serial->getByteTime();
       break;
 
     default:
@@ -1456,6 +1480,7 @@ result_t YDlidarDriver::startScan(bool force, uint32_t timeout) {
         RESULT_OK) {
       return ans;
     }
+
     if (m_isSingleChannel) {
       ans = this->createThread();
       return ans;
@@ -1526,6 +1551,7 @@ result_t YDlidarDriver::startAutoScan(bool force, uint32_t timeout) {
         RESULT_OK) {
       return ans;
     }
+
     if (m_isSingleChannel) {
       return RESULT_OK;
     }

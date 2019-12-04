@@ -118,19 +118,17 @@ size_t Serial::read(uint8_t *buffer, size_t size) {
 
 size_t Serial::read(std::vector<uint8_t> &buffer, size_t size) {
   ScopedReadLock lock(this->pimpl_);
-  uint8_t *buffer_ = new uint8_t[size];
+  uint8_t *buffer_ = static_cast<uint8_t *>(alloca(size * sizeof(uint8_t)));
   size_t bytes_read = this->pimpl_->read(buffer_, size);
   buffer.insert(buffer.end(), buffer_, buffer_ + bytes_read);
-  delete[] buffer_;
   return bytes_read;
 }
 
 size_t Serial::read(std::string &buffer, size_t size) {
   ScopedReadLock lock(this->pimpl_);
-  uint8_t *buffer_ = new uint8_t[size];
+  uint8_t *buffer_ = static_cast<uint8_t *>(alloca(size * sizeof(uint8_t)));
   size_t bytes_read = this->pimpl_->read(buffer_, size);
   buffer.append(reinterpret_cast<const char *>(buffer_), bytes_read);
-  delete[] buffer_;
   return bytes_read;
 }
 

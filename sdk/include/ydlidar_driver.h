@@ -552,12 +552,24 @@ class YDlidarDriver {
   bool m_isSingleChannel;
   bool has_start_header;
   uint8_t last_byte;
+  int retryCount;
 
 #ifdef DEBUG
   FILE *fd;
 #endif
 
 };
+inline bool isHasZeroOffset(int model) {
+  bool ret = true;
+
+  if (model == YDlidarDriver::YDLIDAR_G4 ||
+      model == YDlidarDriver::YDLIDAR_G4PRO) {
+    ret = false;
+  }
+
+  return ret;
+}
+
 }
 
 #endif // YDLIDAR_DRIVER_H

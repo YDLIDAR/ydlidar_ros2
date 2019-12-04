@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V2.1.0
+YDLIDAR ROS2 PACKAGE V2.1.1
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -97,6 +97,10 @@ auto_filter_data_overlap(bool, defalut: false)
 
 Upgrade Log
 =====================================================================
+
+2019-12-04 version:2.1.1
+
+   1.Fixed G4, G4Pro IgnoreArray for AngleCorrectForDistance.
 
 2019-10-31 version:2.1.0
 

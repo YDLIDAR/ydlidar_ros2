@@ -30,7 +30,7 @@
 #include <string>
 #include <signal.h>
 
-#define ROS2Verision "2.0.9"
+#define ROS2Verision "2.1.1"
 
 
 using namespace ydlidar;

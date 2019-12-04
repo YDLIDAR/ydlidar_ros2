@@ -44,6 +44,7 @@ CYdLidar::CYdLidar(): lidarPtr(nullptr), global_nodes(nullptr) {
   last_node_time = getTime();
   node_counts         = 720;
   m_FilterDataNoise = false;
+  m_isSingleChannel = false;
 
 }
 
@@ -114,11 +115,8 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
 
   size_t   count = YDlidarDriver::MAX_SCAN_NODES;
   //line feature
-  std::vector<double> bearings;
-  std::vector<unsigned int> indices;
   indices.clear();
   bearings.clear();
-  RangeData range_data;
   range_data.clear();
 
   //wait Scan data:
@@ -225,7 +223,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
         }
 
         if ((point.angle < last_point.angle &&
-            fabs(point.angle - last_point.angle) < 20) && m_FilterDataNoise) {
+             fabs(point.angle - last_point.angle) < 20) && m_FilterDataNoise) {
           last_data.push_back(point);
         } else {
           last_point = point;
@@ -274,39 +272,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
 
     }
 
-    if (m_startRobotAngleOffset) {
-      line_feature_.setCachedRangeData(bearings, indices, range_data);
-      std::vector<gline> glines;
-      line_feature_.extractLines(glines);
-      bool find_line_angle = false;
-      gline max;
-      max.distance = 0.0;
-      double line_angle = 0.0;
-
-      if (glines.size()) {
-        max = glines[0];
-      }
-
-      for (std::vector<gline>::const_iterator it = glines.begin();
-           it != glines.end(); ++it) {
-        line_angle = M_PI_2 - it->angle;
-        line_angle = angles::normalize_angle(line_angle);
-
-        if (fabs(line_angle) < fabs(angles::from_degrees(m_RobotLidarDifference) -
-                                    M_PI / 12)) {
-          if (it->distance > 0.5 && it->distance > max.distance) {
-            max = (*it);
-            find_line_angle = true;
-            line_angle -= angles::from_degrees(m_RobotLidarDifference);
-            m_LRRAngleOffset = angles::to_degrees(line_angle);
-          }
-        }
-      }
-
-      if (find_line_angle) {
-        saveRobotOffsetAngle();
-      }
-    }
+    fitLineFeature();
 
     scan_msg.system_time_stamp = sys_scan_start_time;
     scan_msg.config.time_increment = static_cast<double>(m_pointTime * 1.0 / 1e9);
@@ -326,6 +292,42 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan, bool &hardwareError) {
 
   return false;
 
+}
+
+void CYdLidar::fitLineFeature() {
+  if (m_startRobotAngleOffset) {
+    line_feature_.setCachedRangeData(bearings, indices, range_data);
+    std::vector<gline> glines;
+    line_feature_.extractLines(glines);
+    bool find_line_angle = false;
+    gline max;
+    max.distance = 0.0;
+    double line_angle = 0.0;
+
+    if (glines.size()) {
+      max = glines[0];
+    }
+
+    for (std::vector<gline>::const_iterator it = glines.begin();
+         it != glines.end(); ++it) {
+      line_angle = M_PI_2 - it->angle;
+      line_angle = angles::normalize_angle(line_angle);
+
+      if (fabs(line_angle) < fabs(angles::from_degrees(m_RobotLidarDifference) -
+                                  M_PI / 12)) {
+        if (it->distance > 0.5 && it->distance > max.distance) {
+          max = (*it);
+          find_line_angle = true;
+          line_angle -= angles::from_degrees(m_RobotLidarDifference);
+          m_LRRAngleOffset = angles::to_degrees(line_angle);
+        }
+      }
+    }
+
+    if (find_line_angle) {
+      saveRobotOffsetAngle();
+    }
+  }
 }
 
 
@@ -356,6 +358,7 @@ bool  CYdLidar::turnOn() {
   }
 
   m_pointTime = lidarPtr->getPointTime();
+
   if (checkLidarAbnormal()) {
     lidarPtr->stop();
     fprintf(stderr,
@@ -444,9 +447,10 @@ bool CYdLidar::checkLidarAbnormal() {
 
           scan_time = 1.0 * static_cast<int64_t>(end_time - start_time) / 1e9;
 
-          if (scan_time > 0.04 && scan_time < 1.0) {
+          if (scan_time > 0.04 && scan_time < 0.5 && m_isSingleChannel) {
             m_SampleRate = static_cast<int>((count / scan_time + 500) / 1000);
             m_pointTime = 1e9 / (m_SampleRate * 1000);
+
             if (m_SampleRate == 3) {
             }
           }
@@ -529,10 +533,11 @@ bool CYdLidar::getDeviceInfo() {
 
   std::string model = "R2-SS-1";
   int m_samp_rate = 5;
-  if(lidarPtr->isSingleChannel()) {
-      m_samp_rate = 3;
-      m_SampleRate = 3;
-      model = "S2";
+
+  if (lidarPtr->isSingleChannel()) {
+    m_samp_rate = 3;
+    m_SampleRate = 3;
+    model = "S2";
   }
 
   switch (devinfo.model) {
@@ -557,38 +562,42 @@ bool CYdLidar::getDeviceInfo() {
   Major = (uint8_t)(devinfo.firmware_version >> 8);
   Minjor = (uint8_t)(devinfo.firmware_version & 0xff);
   std::string serial_number;
-  if(lidarPtr->isSingleChannel()) {
-      printf("[YDLIDAR] Connection established in [%s][%d]:\n"
-             "Model: %s\n",
-             m_SerialPort.c_str(),
-             m_SerialBaudrate,
-             model.c_str());
+
+  if (lidarPtr->isSingleChannel()) {
+    printf("[YDLIDAR] Connection established in [%s][%d]:\n"
+           "Model: %s\n",
+           m_SerialPort.c_str(),
+           m_SerialBaudrate,
+           model.c_str());
   } else {
-      printf("[YDLIDAR] Connection established in [%s][%d]:\n"
-         "Firmware version: %u.%u\n"
-         "Hardware version: %u\n"
-         "Model: %s\n"
-         "Serial: ",
-         m_SerialPort.c_str(),
-         m_SerialBaudrate,
-         Major,
-         Minjor,
-         (unsigned int)devinfo.hardware_version,
-         model.c_str());
+    printf("[YDLIDAR] Connection established in [%s][%d]:\n"
+           "Firmware version: %u.%u\n"
+           "Hardware version: %u\n"
+           "Model: %s\n"
+           "Serial: ",
+           m_SerialPort.c_str(),
+           m_SerialBaudrate,
+           Major,
+           Minjor,
+           (unsigned int)devinfo.hardware_version,
+           model.c_str());
 
   }
+
   for (int i = 0; i < 16; i++) {
     serial_number += format("%01X", devinfo.serialnum[i] & 0xff);
   }
-  if(!lidarPtr->isSingleChannel()) {
-     printf("%s\n", serial_number.c_str());
+
+  if (!lidarPtr->isSingleChannel()) {
+    printf("%s\n", serial_number.c_str());
   }
+
   m_serial_number = serial_number;
   std::regex
   rx("^2(\\d{3})(0\\d{1}|1[0-2])(0\\d{1}|[12]\\d{1}|3[01])(\\d{4})(\\d{4})$");
   std::smatch result;
 
-  if (!regex_match(serial_number, result, rx)) {
+  if (!regex_match(serial_number, result, rx) && lidarPtr->isSingleChannel()) {
     fprintf(stderr, "Invalid lidar serial number!!!\n");
     return false;
   }
@@ -597,17 +606,20 @@ bool CYdLidar::getDeviceInfo() {
     checkCalibrationAngle(serial_number);
   } else {
     m_isAngleOffsetCorrected = true;
-    if(!lidarPtr->isSingleChannel()) {
-        checkSampleRate();
+
+    if (!lidarPtr->isSingleChannel()) {
+      checkSampleRate();
     }
   }
 
   checkRobotOffsetAngleCorrected(serial_number);
 
   printf("[YDLIDAR INFO] Current Sampling Rate : %dK\n", m_SampleRate);
-  if(!lidarPtr->isSingleChannel()) {
+
+  if (!lidarPtr->isSingleChannel()) {
     checkScanFrequency();
   }
+
   return true;
 }
 
@@ -904,9 +916,13 @@ bool  CYdLidar::checkCOMMs() {
             m_SerialPort.c_str(), m_SerialBaudrate);
     return false;
   }
-  lidarPtr->setSingleChannel(false);
-  if(m_SerialBaudrate==115200) {
-      lidarPtr->setSingleChannel(true);
+
+  m_isSingleChannel = false;
+  lidarPtr->setSingleChannel(m_isSingleChannel);
+
+  if (m_SerialBaudrate == 115200) {
+    m_isSingleChannel = true;
+    lidarPtr->setSingleChannel(m_isSingleChannel);
   }
 
   return true;
@@ -958,21 +974,24 @@ bool CYdLidar::checkHardware() {
 }
 
 bool CYdLidar::checkSingleChannelLidar() {
-    bool ret = true;
+  bool ret = true;
+
   if (!checkCOMMs()) {
     fprintf(stderr,
-              "[CYdLidar::initialize] Error initializing YDLIDAR check Comms.\n");
+            "[CYdLidar::initialize] Error initializing YDLIDAR check Comms.\n");
     fflush(stderr);
     return false;
   }
 
-  if(lidarPtr->hasAvailable() < 1) {
-      fprintf(stderr,
-              "[CYdLidar::checkSingleChannelLidar] Not have available byte.\n");
-      fflush(stderr);
-      ret = false;
+  delay(50);
+
+  if (lidarPtr->hasAvailable() < 10) {
+    fprintf(stdout,
+            "[CYdLidar::checkSingleChannelLidar] Not have available byte.\n");
+    fflush(stdout);
+    ret = false;
   } else {
-      m_SerialBaudrate = 115200;
+    m_SerialBaudrate = 115200;
   }
 
   disconnecting();

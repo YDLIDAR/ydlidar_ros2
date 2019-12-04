@@ -15,9 +15,9 @@ Release Notes
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 | Title      |  Version |  Data |
 | :-------- | --------:|  :--: |
-| SDK     |  2.0.9 |   2019-08-26  |
+| SDK     |  2.1.0 |   2019-12-04  |
 
-- [fixed] Fixed G4Pro.
+- [fixed] Fixed G4, G4Pro IgnoreArray for AngleCorrectForDistance.
 
 
 
@@ -61,7 +61,7 @@ windows:
 
 You should see YDLIDAR's scan result in the console:
 
-	[YDLIDAR]:SDK Version: 2.0.9
+	[YDLIDAR]:SDK Version: 2.1.1
 	[YDLIDAR]:Lidar running correctly ! The health status: good
 	[YDLIDAR] Connection established in [/dev/ttyUSB0][230400]:
 	Firmware version: 1.2
@@ -143,6 +143,13 @@ example angle parsing:
 
 Upgrade Log
 ---------------
+2019-08-26 version: 2.1.1
+	   
+   1.Fixed G4, G4Pro IgnoreArray for AngleCorrectForDistance.
+
+2019-10-31 version: 2.1.0
+	   
+   1.support S2 Lidar.
 
 2019-08-26 version: 2.0.9
 	   
