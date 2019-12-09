@@ -2,6 +2,7 @@
 #include "common.h"
 #include <map>
 #include <regex>
+#include <numeric>
 
 using namespace std;
 using namespace ydlidar;
@@ -441,7 +442,7 @@ bool CYdLidar::checkLidarAbnormal() {
 
 
         if (IS_OK(op_result)) {
-          if (abs(data.front() - count) > 20) {
+          if ((data.front() > (count + 10)) || (data.front() < (count - 10))) {
             data.erase(data.begin());
           }
 
