@@ -25,7 +25,7 @@
   <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.4.4</span>
+   &#160;<span id="projectnumber">V1.4.2</span>
    </div>
   </td>
  </tr>
@@ -82,16 +82,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_a"><span>a</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
       <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
-      <li><a href="#index_h"><span>h</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_o"><span>o</span></a></li>
-      <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_w"><span>w</span></a></li>
+      <li><a href="#index_y"><span>y</span></a></li>
       <li class="current"><a href="#index_0x7e"><span>~</span></a></li>
     </ul>
   </div>
@@ -117,6 +117,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>ascendScanData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a6494501f3fee2f6dc410f869bbc18cb9">ydlidar::YDlidarDriver</a>
 </li>
+<li>autoReconnectLidar()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#aeb30a654d8f1b438e7214a78558ecac3">ydlidar::YDlidarDriver</a>
+</li>
 <li>available()
 : <a class="el" href="classserial_1_1_serial.html#ab5fae6cebb8e34345ca1f55cbccc4698">serial::Serial</a>
 </li>
@@ -127,17 +130,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>cacheScanData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ab462b22dc3a4d39fef4f722345a87d5e">ydlidar::YDlidarDriver</a>
 </li>
-<li>checkAutoConnecting()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a95e6d6ec7bc14746a0346590ff702a72">ydlidar::YDlidarDriver</a>
-</li>
-<li>checkCalibrationAngle()
-: <a class="el" href="class_c_yd_lidar.html#a8a3937dfb486836da1fd56ebb0016a51">CYdLidar</a>
-</li>
 <li>checkCOMMs()
 : <a class="el" href="class_c_yd_lidar.html#ab43ca6b1d054aa464a36bea0d4b7934c">CYdLidar</a>
-</li>
-<li>checkDeviceInfo()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae6f5e824cca4b38235f361001690c8b6">ydlidar::YDlidarDriver</a>
 </li>
 <li>checkHardware()
 : <a class="el" href="class_c_yd_lidar.html#ab3c24f8f59fee87aa4e829ca5c8f90d2">CYdLidar</a>
@@ -148,20 +142,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>checkSampleRate()
 : <a class="el" href="class_c_yd_lidar.html#abbe29195b58904a1c1c3c5183e6730df">CYdLidar</a>
 </li>
-<li>checkScanFrequency()
-: <a class="el" href="class_c_yd_lidar.html#a0e9ac7d5da50d40dd4f78b046a1618ae">CYdLidar</a>
-</li>
 <li>checkStatus()
 : <a class="el" href="class_c_yd_lidar.html#a8b401544eb4c992c7eff8d5fd47e5676">CYdLidar</a>
 </li>
-<li>checkTransDelay()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1d37680a99bfa91f847ef9997998fdb9">ydlidar::YDlidarDriver</a>
+<li>checkTransTime()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae9a739915f16227e21c2616faed42877">ydlidar::YDlidarDriver</a>
 </li>
 <li>clearDTR()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a67fe00d7458cdb52b4160d745b8ecd32">ydlidar::YDlidarDriver</a>
 </li>
-<li>closePort()
-: <a class="el" href="classserial_1_1_serial.html#afb659db0159a6f4bcefe760fa20df18e">serial::Serial</a>
+<li>close()
+: <a class="el" href="classserial_1_1_serial.html#a501082725b61e4baf615266065bbac5f">serial::Serial</a>
 </li>
 <li>connect()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a2c5eeecccaa6ed874635de1617e8d7d8">ydlidar::YDlidarDriver</a>
@@ -173,11 +164,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>disableConstFreq()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae4b3883dd18bf01737bc4783d2dae974">ydlidar::YDlidarDriver</a>
+</li>
 <li>disableDataGrabbing()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae66565bee3cdb8b74698b691f2ab1e63">ydlidar::YDlidarDriver</a>
 </li>
+<li>disableLowerPower()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a18895e94f42ce61890b4912727cdfbd8">ydlidar::YDlidarDriver</a>
+</li>
 <li>disconnect()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#aa26790ae49d33936229fa67739a8ff5f">ydlidar::YDlidarDriver</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
+<li>enableConstFreq()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1e5c25618be9867dfdb1aa2f5e9cb93c">ydlidar::YDlidarDriver</a>
+</li>
+<li>enableLowerPower()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a85a9af2aff7201a42f000299990b0ce5">ydlidar::YDlidarDriver</a>
 </li>
 </ul>
 
@@ -186,14 +193,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>flush()
 : <a class="el" href="classserial_1_1_serial.html#a45a7676a6e6c775cd549e889e714b5bb">serial::Serial</a>
 </li>
+<li>flushCache()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a6c6cd0b1e39fe6127656222d20ea4a9b">ydlidar::YDlidarDriver</a>
+</li>
 <li>flushInput()
 : <a class="el" href="classserial_1_1_serial.html#aa7432cbada95a7eac6d71a107cf2eaa3">serial::Serial</a>
 </li>
 <li>flushOutput()
 : <a class="el" href="classserial_1_1_serial.html#a95e0d6dcf2b7b9aa45225bfb1647c427">serial::Serial</a>
-</li>
-<li>flushSerial()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae45cd96c458c10464eda383fce3bd69b">ydlidar::YDlidarDriver</a>
 </li>
 </ul>
 
@@ -206,7 +213,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classserial_1_1_serial.html#ac735ef88a54659e2d0b3ae674c5f0a41">serial::Serial</a>
 </li>
 <li>getByteTime()
-: <a class="el" href="classserial_1_1_serial.html#acb2866093a60772d13691c99bd91adc6">serial::Serial</a>
+: <a class="el" href="classserial_1_1_serial.html#a8b7ad05b2521db6bbf184108f59e105e">serial::Serial</a>
 </li>
 <li>getCD()
 : <a class="el" href="classserial_1_1_serial.html#a5a7c1a8e363b530147970155d0f6fe8d">serial::Serial</a>
@@ -217,12 +224,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ad787e714bc05e5a70a42b096e632c60f">ydlidar::YDlidarDriver</a>
 </li>
-<li>getDeviceHealth()
-: <a class="el" href="class_c_yd_lidar.html#a242c377e2958d04814621019013fe8cc">CYdLidar</a>
-</li>
 <li>getDeviceInfo()
-: <a class="el" href="class_c_yd_lidar.html#a17998bc48c0aa98cb414736d4683cb0e">CYdLidar</a>
-, <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ab75303116c4ccb144ecc215e94114e1a">ydlidar::YDlidarDriver</a>
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ab75303116c4ccb144ecc215e94114e1a">ydlidar::YDlidarDriver</a>
 </li>
 <li>getDSR()
 : <a class="el" href="classserial_1_1_serial.html#a91a00816bce6a163ea022b4cf8d4ce0e">serial::Serial</a>
@@ -233,8 +236,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getHealth()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a9fe6f8b842a2aff2c3ae13f8423b03f4">ydlidar::YDlidarDriver</a>
 </li>
+<li>getMotorState()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#af5d460ababe4b8a34b02d33268f24d4d">ydlidar::YDlidarDriver</a>
+</li>
+<li>getPackageTime()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a362075b330011c088b6b0b98eda58161">ydlidar::YDlidarDriver</a>
+</li>
 <li>getParity()
 : <a class="el" href="classserial_1_1_serial.html#a80e5d87b1e93b4c5a9d6f2cc7110b3c4">serial::Serial</a>
+</li>
+<li>getPointTime()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#af4d92b72895448edff8a1250eab437a1">ydlidar::YDlidarDriver</a>
 </li>
 <li>getPort()
 : <a class="el" href="classserial_1_1_serial.html#a56eafe1694c92655d79993ce7139f0bf">serial::Serial</a>
@@ -257,18 +269,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getTimeout()
 : <a class="el" href="classserial_1_1_serial.html#a13023f118c75b27fa2f0280d2d1c2a20">serial::Serial</a>
 </li>
-<li>getZeroOffsetAngle()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#af11880716f7d26af4caaa483c04945b0">ydlidar::YDlidarDriver</a>
-</li>
 <li>grabScanData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a6d6e04efa9d7e5d4aea41ee53d4ea8af">ydlidar::YDlidarDriver</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
-<li>handleSingleChannelDevice()
-: <a class="el" href="class_c_yd_lidar.html#a3f6a6ba2b6db3cf3f57d7feb5b25d527">CYdLidar</a>
 </li>
 </ul>
 
@@ -278,13 +280,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a918486cdb4f3fbe863ec2e1231168538">ydlidar::YDlidarDriver</a>
 </li>
 <li>isOpen()
-: <a class="el" href="classserial_1_1_serial.html#a657df1809f2eb966aec5811ed2c70b8c">serial::Serial</a>
-</li>
-<li>isRangeIgnore()
-: <a class="el" href="class_c_yd_lidar.html#a9d81d57f978ec2c1918e5bb876d91ac8">CYdLidar</a>
-</li>
-<li>isRangeValid()
-: <a class="el" href="class_c_yd_lidar.html#a35e66729e93eeb084367a685c04feaef">CYdLidar</a>
+: <a class="el" href="classserial_1_1_serial.html#a48458f741d0fdcc5623b4daa079cbf78">serial::Serial</a>
 </li>
 <li>isscanning()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae37c037538f3acc3e488c7d3bbfcaece">ydlidar::YDlidarDriver</a>
@@ -306,19 +302,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
-<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
-<li>PropertyBuilderByName()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a775ccda7f7fc95f772245d8c7d557179">ydlidar::YDlidarDriver</a>
-</li>
-</ul>
-
-
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
 <li>read()
 : <a class="el" href="classserial_1_1_serial.html#a01fc2e3d77cb7d70069de87eca1400e9">serial::Serial</a>
-</li>
-<li>readData()
-: <a class="el" href="classserial_1_1_serial.html#a23af62642b1739cf31fb1c8a272074a1">serial::Serial</a>
 </li>
 <li>readline()
 : <a class="el" href="classserial_1_1_serial.html#a010b18ec545dfe1a7bb1c95be4bdaa54">serial::Serial</a>
@@ -364,14 +350,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>setFlowcontrol()
 : <a class="el" href="classserial_1_1_serial.html#a76e56ce22e2706b8954a1dc9c5188c92">serial::Serial</a>
 </li>
-<li>setIntensities()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#afc543dbbe1c5e37afc366e3c92203533">ydlidar::YDlidarDriver</a>
-</li>
 <li>setParity()
 : <a class="el" href="classserial_1_1_serial.html#af471db5d3a89128430e7e3c5389cd08a">serial::Serial</a>
 </li>
 <li>setPort()
 : <a class="el" href="classserial_1_1_serial.html#a127104a1b211c46e4cad9002123e6ea8">serial::Serial</a>
+</li>
+<li>setRotationInversion()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1569723d0e46b801aee5284455f3b1d1">ydlidar::YDlidarDriver</a>
+</li>
+<li>setRotationPositive()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ae6645c26b9b46b2aa4aaae87521a38f1">ydlidar::YDlidarDriver</a>
 </li>
 <li>setRTS()
 : <a class="el" href="classserial_1_1_serial.html#a7c91f22768107389f52d80d691994fc7">serial::Serial</a>
@@ -416,7 +405,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a6cdf0c5a7ddf2375c1392c3a0e65edfe">ydlidar::YDlidarDriver</a>
 </li>
 <li>stopScan()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a7a4d770ff830163846e350f978a160ed">ydlidar::YDlidarDriver</a>
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a18689e3a98f8f1cfc90796f4afbb6aaa">ydlidar::YDlidarDriver</a>
 </li>
 </ul>
 
@@ -425,14 +414,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>waitByteTimes()
 : <a class="el" href="classserial_1_1_serial.html#a35c0f6ff20c142a5210dde288731f954">serial::Serial</a>
 </li>
-<li>waitDevicePackage()
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#adca8845f132e46fee8534a0ca0685b74">ydlidar::YDlidarDriver</a>
-</li>
 <li>waitForChange()
 : <a class="el" href="classserial_1_1_serial.html#a9d889dc0ec2cec50a620650f10cf8e83">serial::Serial</a>
-</li>
-<li>waitfordata()
-: <a class="el" href="classserial_1_1_serial.html#aa94e4ca3b2b803e3145c99fe063ae09b">serial::Serial</a>
 </li>
 <li>waitForData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a13f404b44f51941d1642bfe250de3522">ydlidar::YDlidarDriver</a>
@@ -451,10 +434,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>write()
 : <a class="el" href="classserial_1_1_serial_1_1_serial_impl.html#adb5572ca568cd0186dec4bc4af28f13b">serial::Serial::SerialImpl</a>
-, <a class="el" href="classserial_1_1_serial.html#a7c92c0307b86a935f6623953eec66460">serial::Serial</a>
+, <a class="el" href="classserial_1_1_serial.html#a9c2827088d82ee82f245ffa106fa7d10">serial::Serial</a>
 </li>
-<li>writeData()
-: <a class="el" href="classserial_1_1_serial.html#aeb637cc63ead4662317cea58a997e0f6">serial::Serial</a>
+</ul>
+
+
+<h3><a class="anchor" id="index_y"></a>- y -</h3><ul>
+<li>YDlidarDriver()
+: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a19e20b6aa35834507a0dacc8a3c510e6">ydlidar::YDlidarDriver</a>
 </li>
 </ul>
 

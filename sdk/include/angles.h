@@ -31,12 +31,15 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
-#pragma once
+
+#ifndef GEOMETRY_ANGLES_UTILS_H
+#define GEOMETRY_ANGLES_UTILS_H
+
 #include <algorithm>
 #include <cmath>
-
+#include <math.h>
 #ifndef M_PI
-#define M_PI 3.1415926
+#define M_PI 3.141592653
 #endif
 
 namespace angles {
@@ -270,4 +273,6 @@ static inline bool shortest_angular_distance_with_limits(double from, double to,
   shortest_angle = delta;
   return false;
 }
-}// namespace angles
+}
+
+#endif

@@ -59,21 +59,18 @@ int main(int argc, char *argv[]) {
 
   auto node = rclcpp::Node::make_shared("ydlidar_node");
   std::string port = "/dev/ttyUSB0";
-  int baudrate = 230400;
+  int baudrate = 512000;
   std::string frame_id = "laser_frame";
   bool reversion = false;
   bool resolution_fixed = true;
   bool auto_reconnect = true;
   double angle_max = 180;
   double angle_min = -180;
-  int samp_rate = 9;
+  int samp_rate = 20;
   std::string list = "";
   double max_range = 32.0;
   double min_range = 0.06;
   double frequency = 10.0;
-  bool m_singleChannel = false;
-  bool m_isToFLidar = false;
-  bool m_Inverted = true;
 
 
   node->get_parameter("port", port);
@@ -88,13 +85,9 @@ int main(int argc, char *argv[]) {
 
   node->get_parameter("resolution_fixed", resolution_fixed);
 
-  node->get_parameter("singleChannel", m_singleChannel);
-
   node->get_parameter("auto_reconnect", auto_reconnect);
 
   node->get_parameter("reversion", reversion);
-
-  node->get_parameter("isToFLidar", m_isToFLidar);
 
   node->get_parameter("angle_max", angle_max);
 
@@ -125,12 +118,12 @@ int main(int argc, char *argv[]) {
 
   CYdLidar laser;
 
-  if (frequency < 5) {
+  if (frequency < 3) {
     frequency = 7.0;
   }
 
-  if (frequency > 12) {
-    frequency = 12;
+  if (frequency > 16) {
+    frequency = 16;
   }
 
   if (angle_max < angle_min) {
@@ -141,7 +134,6 @@ int main(int argc, char *argv[]) {
 
   laser.setSerialPort(port);
   laser.setSerialBaudrate(baudrate);
-  laser.setInverted(m_Inverted);
   laser.setMaxRange(max_range);
   laser.setMinRange(min_range);
   laser.setMaxAngle(angle_max);
@@ -149,10 +141,8 @@ int main(int argc, char *argv[]) {
   laser.setReversion(reversion);
   laser.setFixedResolution(resolution_fixed);
   laser.setAutoReconnect(auto_reconnect);
-  laser.setSingleChannel(m_singleChannel);
   laser.setScanFrequency(frequency);
   laser.setSampleRate(samp_rate);
-  laser.setTOFLidar(m_isToFLidar);
   laser.setIgnoreArray(ignore_array);
 
 
@@ -187,28 +177,18 @@ int main(int argc, char *argv[]) {
 
       auto scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
 
-      scan_msg->header.stamp.sec = RCL_NS_TO_S(scan.stamp);
-      scan_msg->header.stamp.nanosec =  scan.stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
+      scan_msg->header.stamp.sec = RCL_NS_TO_S(scan.system_time_stamp);
+      scan_msg->header.stamp.nanosec =  scan.system_time_stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
       scan_msg->header.frame_id = frame_id;
       scan_msg->angle_min = scan.config.min_angle;
       scan_msg->angle_max = scan.config.max_angle;
-      scan_msg->angle_increment = scan.config.angle_increment;
+      scan_msg->angle_increment = scan.config.ang_increment;
       scan_msg->scan_time = scan.config.scan_time;
       scan_msg->time_increment = scan.config.time_increment;
       scan_msg->range_min = scan.config.min_range;
       scan_msg->range_max = scan.config.max_range;
-      
-      int size = (scan.config.max_angle - scan.config.min_angle)/ scan.config.angle_increment + 1;
-      scan_msg->ranges.resize(size);
-      scan_msg->intensities.resize(size);
-      for(int i=0; i < scan.points.size(); i++) {
-        int index = std::ceil((scan.points[i].angle - scan.config.min_angle)/scan.config.angle_increment);
-        if(index >=0 && index < size) {
-          scan_msg->ranges[index] = scan.points[i].range;
-          scan_msg->intensities[index] = scan.points[i].intensity;
-        }
-      }
-
+      scan_msg->ranges = scan.ranges;
+      scan_msg->intensities = scan.intensities;
       laser_pub->publish(scan_msg);
 
 
@@ -224,6 +204,7 @@ int main(int argc, char *argv[]) {
 
 
   printf("[YDLIDAR INFO] Now YDLIDAR is stopping .......\n");
+  fflush(stdout);
   laser.turnOff();
   laser.disconnecting();
   rclcpp::shutdown();

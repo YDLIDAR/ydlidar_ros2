@@ -207,6 +207,7 @@ class Event {
     if (ret != 0) {
       fprintf(stderr, "Failed to init condattr...\n");
       fflush(stderr);
+      exit(1);
     }
 
     ret = pthread_condattr_setclock(&_cond_cattr, CLOCK_MONOTONIC);
@@ -270,8 +271,6 @@ class Event {
       } else {
         struct timespec wait_time;
         clock_gettime(CLOCK_MONOTONIC, &wait_time);
-
-
         wait_time.tv_sec += timeout / 1000;
         wait_time.tv_nsec += (timeout % 1000) * 1000000ULL;
 

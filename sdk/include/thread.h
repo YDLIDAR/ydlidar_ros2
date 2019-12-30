@@ -102,7 +102,7 @@ class Thread {
 #else
     UNUSED(timeout);
     void *res;
-    int s = -1;
+    int s;
     s = pthread_cancel((pthread_t)(this->_handle));
 
     if (s != 0) {
@@ -115,6 +115,7 @@ class Thread {
 
     if (res == PTHREAD_CANCELED) {
       printf("%lu thread has been canceled\n", this->_handle);
+      fflush(stdout);
       this->_handle = 0;
     }
 

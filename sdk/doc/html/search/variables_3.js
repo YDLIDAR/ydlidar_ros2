@@ -2,5 +2,6 @@ var searchData=
 [
   ['description',['description',['../structserial_1_1_port_info.html#a2ba37dd33d47b554aef5c15c1fe8b872',1,'serial::PortInfo']]],
   ['device_5fid',['device_id',['../structserial_1_1_port_info.html#af6a8211d14bccb07b538ac584d195466',1,'serial::PortInfo']]],
-  ['distance_5fq2',['distance_q2',['../structnode__info.html#a82eaf27a6196e803d3618c83b052f78c',1,'node_info']]]
+  ['distance_5fq2',['distance_q2',['../structnode__info.html#a82eaf27a6196e803d3618c83b052f78c',1,'node_info']]],
+  ['dstamp',['dstamp',['../structnode__info.html#ada5f6b686e9fb2d6c365906e7016f912',1,'node_info']]]
 ];

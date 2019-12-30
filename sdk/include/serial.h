@@ -1,3 +1,37 @@
+/*!
+ * \file serial/serial.h
+ * \author  William Woodall <wjwwood@gmail.com>
+ * \author  John Harrison   <ash.gti@gmail.com>
+ * \version 0.1
+ *
+ * \section LICENSE
+ *
+ * The MIT License
+ *
+ * Copyright (c) 2012 William Woodall
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ * \section DESCRIPTION
+ *
+ * This provides a cross platform interface for interacting with Serial Ports.
+ */
 #ifndef SERIAL_H
 #define SERIAL_H
 
@@ -106,7 +140,7 @@ struct Timeout {
 /*!
 * Class that provides a portable serial port interface.
 */
-class Serial  {
+class Serial {
  public:
   /*!
   * Creates a Serial object and opens the port if a port is specified,
@@ -166,10 +200,10 @@ class Serial  {
   *
   * \return Returns true if the port is open, false otherwise.
   */
-  bool isOpen();
+  bool isOpen() const;
 
   /*! Closes the serial port. */
-  void closePort();
+  void close();
 
   /*! Return the number of characters in the buffer. */
   size_t available();
@@ -187,32 +221,7 @@ class Serial  {
   void waitByteTimes(size_t count);
 
 
-  /**
-   * @brief waitfordata
-   * @param data_count
-   * @param timeout
-   * @param returned_size
-   * @return
-   */
   int waitfordata(size_t data_count, uint32_t timeout, size_t *returned_size);
-
-
-  /**
-   * @brief writeData
-   * @param data
-   * @param size
-   * @return
-   */
-  virtual size_t writeData(const uint8_t *data, size_t size);
-
-
-  /**
-   * @brief readData
-   * @param data
-   * @param size
-   * @return
-   */
-  virtual size_t readData(uint8_t *data, size_t size);
 
   /*! Read a given amount of bytes from the serial port into a given buffer.
   *
@@ -285,7 +294,8 @@ class Serial  {
   * \return A size_t representing the number of bytes read.
   *
   */
-  size_t readline(std::string &buffer, size_t size = 65536, std::string eol = "\n");
+  size_t readline(std::string &buffer, size_t size = 65536,
+                  std::string eol = "\n");
 
   /*! Reads in a line or until a given delimiter has been processed.
   *
@@ -569,8 +579,7 @@ class Serial  {
   bool getCD();
 
   /*! Returns the singal byte time. */
-  int getByteTime();
-
+  uint32_t getByteTime();
 
  private:
   // Disable copy constructors

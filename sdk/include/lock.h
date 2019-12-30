@@ -218,19 +218,19 @@ extern "C" {
 //int uucp_lock( const char *file);
 //int uucp_unlock(void);
 int check_group_uucp();
-int check_lock_pid(const char *file, int openpid);
-int lock_device(const char *);
-void unlock_device(const char *);
-int is_device_locked(const char *);
-int check_lock_status(const char *);
-int lfs_unlock(const char *, int);
-int lfs_lock(const char *, int);
-int lib_lock_dev_unlock(const char *, int);
-int lib_lock_dev_lock(const char *, int);
-void fhs_unlock(const char *, int);
-int fhs_lock(const char *, int);
-void uucp_unlock(const char *, int);
-int uucp_lock(const char *, int);
+int check_lock_pid( const char *file, int openpid );
+int lock_device( const char * );
+void unlock_device( const char * );
+int is_device_locked( const char * );
+int check_lock_status( const char * );
+int lfs_unlock(const char *, int );
+int lfs_lock( const char *, int);
+int lib_lock_dev_unlock(const char *, int );
+int lib_lock_dev_lock( const char *, int);
+void fhs_unlock(const char *, int );
+int fhs_lock( const char *, int);
+void uucp_unlock( const char *, int );
+int uucp_lock( const char *, int );
 
 #ifdef __cplusplus
 }

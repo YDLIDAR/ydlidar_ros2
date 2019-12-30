@@ -4,6 +4,7 @@ PROJECT(ydlidar_test)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_definitions(-std=c++11) # Use C++11
 
+
 #Include directories
 INCLUDE_DIRECTORIES(
      ${CMAKE_SOURCE_DIR}

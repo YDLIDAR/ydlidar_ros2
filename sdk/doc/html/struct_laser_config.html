@@ -25,7 +25,7 @@
   <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.4.4</span>
+   &#160;<span id="projectnumber">V1.4.2</span>
    </div>
   </td>
  </tr>
@@ -86,7 +86,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="struct_laser_config-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -99,12 +98,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="ydlidar__protocol_8h_source.html">ydlidar_protocol.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a83ad493487829d78aa5b9350883ebba7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83ad493487829d78aa5b9350883ebba7"></a>
-<a class="el" href="struct_laser_config.html">LaserConfig</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="struct_laser_config.html">LaserConfig</a> &amp;data)</td></tr>
-<tr class="separator:a83ad493487829d78aa5b9350883ebba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a0b68f6041dc05310626ef221d4cc2db9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b68f6041dc05310626ef221d4cc2db9"></a>
@@ -115,10 +108,10 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#a2d09a717415770110787788127ad6b14">max_angle</a></td></tr>
 <tr class="memdesc:a2d09a717415770110787788127ad6b14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop angle for the laser scan [rad]. 0 is forward and angles are measured clockwise when viewing YDLIDAR from the top. <br /></td></tr>
 <tr class="separator:a2d09a717415770110787788127ad6b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a369d0346adfed436743c01274d53da62"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a369d0346adfed436743c01274d53da62"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#a369d0346adfed436743c01274d53da62">angle_increment</a></td></tr>
-<tr class="memdesc:a369d0346adfed436743c01274d53da62"><td class="mdescLeft">&#160;</td><td class="mdescRight">angle resoltuion [rad] <br /></td></tr>
-<tr class="separator:a369d0346adfed436743c01274d53da62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67279ae0f648a129521576f52c321932"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67279ae0f648a129521576f52c321932"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#a67279ae0f648a129521576f52c321932">ang_increment</a></td></tr>
+<tr class="memdesc:a67279ae0f648a129521576f52c321932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scan resolution [rad]. <br /></td></tr>
+<tr class="separator:a67279ae0f648a129521576f52c321932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada1a720957176549489916335edcc335"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada1a720957176549489916335edcc335"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#ada1a720957176549489916335edcc335">time_increment</a></td></tr>
 <tr class="memdesc:ada1a720957176549489916335edcc335"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scan resoltuion [s]. <br /></td></tr>
@@ -135,6 +128,10 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#a977dcea9a68dc9dd21113fd0eff24c9c">max_range</a></td></tr>
 <tr class="memdesc:a977dcea9a68dc9dd21113fd0eff24c9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum range [m]. <br /></td></tr>
 <tr class="separator:a977dcea9a68dc9dd21113fd0eff24c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae52eb0e0aca41f6dde58700a642e4c80"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae52eb0e0aca41f6dde58700a642e4c80"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_laser_config.html#ae52eb0e0aca41f6dde58700a642e4c80">range_res</a></td></tr>
+<tr class="memdesc:ae52eb0e0aca41f6dde58700a642e4c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Range Resolution [m]. <br /></td></tr>
+<tr class="separator:ae52eb0e0aca41f6dde58700a642e4c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A struct for returning configuration from the YDLIDAR. </p>
