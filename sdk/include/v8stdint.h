@@ -70,7 +70,6 @@ typedef uint32_t       _size_t;
 typedef _size_t (THREAD_PROC *thread_proc_t)(void *);
 
 typedef int32_t result_t;
-typedef uint64_t TTimeStamp;
 
 #define RESULT_OK      0
 #define RESULT_TIMEOUT -1
@@ -140,7 +139,8 @@ set_signal_handler(int signal_value, signal_handler_t signal_handler)
     int error_status = strerror_r(errno, error_string, error_length);
 
     if (error_status != 0) {
-      throw std::runtime_error("Failed to get error string for errno: " + std::to_string(errno));
+      throw std::runtime_error("Failed to get error string for errno: " +
+                               std::to_string(errno));
     }
 
 #endif
@@ -245,7 +245,7 @@ inline bool fileExists(const std::string filename) {
 }
 
 
-}
+}// namespace ydlidar
 
 
 #endif  // V8STDINT_H_

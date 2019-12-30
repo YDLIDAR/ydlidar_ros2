@@ -37,7 +37,10 @@
 #endif
 
 #include "unix_serial.h"
+#ifdef USE_LOCK_FILE
 #include <lock.h>
+#endif
+
 
 #ifndef TIOCINQ
 #ifdef FIONREAD
@@ -224,7 +227,8 @@ struct serial_struct {
 #endif
 
 
-MillisecondTimer::MillisecondTimer(const uint32_t millis) : expiry(timespec_now()) {
+MillisecondTimer::MillisecondTimer(const uint32_t millis) : expiry(
+    timespec_now()) {
   int64_t tv_nsec = expiry.tv_nsec + (millis * 1e6);
 
   if (tv_nsec >= 1e9) {
@@ -269,7 +273,8 @@ timespec timespec_from_ms(const uint32_t millis) {
 
 static inline void set_common_props(termios *tio) {
 #ifdef OS_SOLARIS
-  tio->c_iflag &= ~(IMAXBEL | IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+  tio->c_iflag &= ~(IMAXBEL | IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR |
+                    ICRNL | IXON);
   tio->c_oflag &= ~OPOST;
   tio->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
   tio->c_cflag &= ~(CSIZE | PARENB);
@@ -287,25 +292,25 @@ static inline void set_databits(termios *tio, serial::bytesize_t databits) {
   tio->c_cflag &= ~CSIZE;
 
   switch (databits) {
-  case serial::fivebits:
-    tio->c_cflag |= CS5;
-    break;
+    case serial::fivebits:
+      tio->c_cflag |= CS5;
+      break;
 
-  case serial::sixbits:
-    tio->c_cflag |= CS6;
-    break;
+    case serial::sixbits:
+      tio->c_cflag |= CS6;
+      break;
 
-  case serial::sevenbits:
-    tio->c_cflag |= CS7;
-    break;
+    case serial::sevenbits:
+      tio->c_cflag |= CS7;
+      break;
 
-  case serial::eightbits:
-    tio->c_cflag |= CS8;
-    break;
+    case serial::eightbits:
+      tio->c_cflag |= CS8;
+      break;
 
-  default:
-    tio->c_cflag |= CS8;
-    break;
+    default:
+      tio->c_cflag |= CS8;
+      break;
   }
 }
 
@@ -318,76 +323,77 @@ static inline void set_parity(termios *tio, serial::parity_t parity) {
 
 #ifdef CMSPAR
 
-  // Here Installation parity only for GNU/Linux where the macro CMSPAR.
-  case serial::parity_space:
-    tio->c_cflag &= ~PARODD;
-    tio->c_cflag |= PARENB | CMSPAR;
-    break;
+    // Here Installation parity only for GNU/Linux where the macro CMSPAR.
+    case serial::parity_space:
+      tio->c_cflag &= ~PARODD;
+      tio->c_cflag |= PARENB | CMSPAR;
+      break;
 
-  case serial::parity_mark:
-    tio->c_cflag |= PARENB | CMSPAR | PARODD;
-    break;
+    case serial::parity_mark:
+      tio->c_cflag |= PARENB | CMSPAR | PARODD;
+      break;
 #endif
 
-  case serial::parity_none:
-    tio->c_cflag &= ~PARENB;
-    break;
+    case serial::parity_none:
+      tio->c_cflag &= ~PARENB;
+      break;
 
-  case serial::parity_even:
-    tio->c_cflag &= ~PARODD;
-    tio->c_cflag |= PARENB;
-    break;
+    case serial::parity_even:
+      tio->c_cflag &= ~PARODD;
+      tio->c_cflag |= PARENB;
+      break;
 
-  case serial::parity_odd:
-    tio->c_cflag |= PARENB | PARODD;
-    break;
+    case serial::parity_odd:
+      tio->c_cflag |= PARENB | PARODD;
+      break;
 
-  default:
-    tio->c_cflag |= PARENB;
-    tio->c_iflag |= PARMRK | INPCK;
-    tio->c_iflag &= ~IGNPAR;
-    break;
+    default:
+      tio->c_cflag |= PARENB;
+      tio->c_iflag |= PARMRK | INPCK;
+      tio->c_iflag &= ~IGNPAR;
+      break;
   }
 }
 
 
 static inline void set_stopbits(termios *tio, serial::stopbits_t stopbits) {
   switch (stopbits) {
-  case serial::stopbits_one:
-    tio->c_cflag &= ~CSTOPB;
-    break;
+    case serial::stopbits_one:
+      tio->c_cflag &= ~CSTOPB;
+      break;
 
-  case serial::stopbits_two:
-    tio->c_cflag |= CSTOPB;
-    break;
+    case serial::stopbits_two:
+      tio->c_cflag |= CSTOPB;
+      break;
 
-  default:
-    tio->c_cflag &= ~CSTOPB;
-    break;
+    default:
+      tio->c_cflag &= ~CSTOPB;
+      break;
   }
 }
 
-static inline void set_flowcontrol(termios *tio, serial::flowcontrol_t flowcontrol) {
+static inline void set_flowcontrol(termios *tio,
+                                   serial::flowcontrol_t flowcontrol) {
   switch (flowcontrol) {
-  case serial::flowcontrol_none:
-    tio->c_cflag &= ~CRTSCTS;
-    tio->c_iflag &= ~(IXON | IXOFF | IXANY);
-    break;
+    case serial::flowcontrol_none:
+      tio->c_cflag &= ~CRTSCTS;
+      tio->c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
 
-  case serial::flowcontrol_hardware:
-    tio->c_cflag |= CRTSCTS;
-    tio->c_iflag &= ~(IXON | IXOFF | IXANY);
-    break;
+    case serial::flowcontrol_hardware:
+      tio->c_cflag |= CRTSCTS;
+      tio->c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
 
-  case serial::flowcontrol_software:
-    tio->c_cflag &= ~CRTSCTS;
-    tio->c_iflag |= IXON | IXOFF | IXANY;
-    break;
+    case serial::flowcontrol_software:
+      tio->c_cflag &= ~CRTSCTS;
+      tio->c_iflag |= IXON | IXOFF | IXANY;
+      break;
 
-  default:
-    tio->c_cflag &= ~CRTSCTS;
-    tio->c_iflag &= ~(IXON | IXOFF | IXANY);
-    break;
+    default:
+      tio->c_cflag &= ~CRTSCTS;
+      tio->c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
   }
 }
 
@@ -399,229 +405,229 @@ static inline bool is_standardbaudrate(unsigned long baudrate, speed_t &baud) {
   switch (baudrate) {
 #ifdef B0
 
-  case 0:
-    baud = B0;
-    break;
+    case 0:
+      baud = B0;
+      break;
 #endif
 #ifdef B50
 
-  case 50:
-    baud = B50;
-    break;
+    case 50:
+      baud = B50;
+      break;
 #endif
 #ifdef B75
 
-  case 75:
-    baud = B75;
-    break;
+    case 75:
+      baud = B75;
+      break;
 #endif
 #ifdef B110
 
-  case 110:
-    baud = B110;
-    break;
+    case 110:
+      baud = B110;
+      break;
 #endif
 #ifdef B134
 
-  case 134:
-    baud = B134;
-    break;
+    case 134:
+      baud = B134;
+      break;
 #endif
 #ifdef B150
 
-  case 150:
-    baud = B150;
-    break;
+    case 150:
+      baud = B150;
+      break;
 #endif
 #ifdef B200
 
-  case 200:
-    baud = B200;
-    break;
+    case 200:
+      baud = B200;
+      break;
 #endif
 #ifdef B300
 
-  case 300:
-    baud = B300;
-    break;
+    case 300:
+      baud = B300;
+      break;
 #endif
 #ifdef B600
 
-  case 600:
-    baud = B600;
-    break;
+    case 600:
+      baud = B600;
+      break;
 #endif
 #ifdef B1200
 
-  case 1200:
-    baud = B1200;
-    break;
+    case 1200:
+      baud = B1200;
+      break;
 #endif
 #ifdef B1800
 
-  case 1800:
-    baud = B1800;
-    break;
+    case 1800:
+      baud = B1800;
+      break;
 #endif
 #ifdef B2400
 
-  case 2400:
-    baud = B2400;
-    break;
+    case 2400:
+      baud = B2400;
+      break;
 #endif
 #ifdef B4800
 
-  case 4800:
-    baud = B4800;
-    break;
+    case 4800:
+      baud = B4800;
+      break;
 #endif
 #ifdef B7200
 
-  case 7200:
-    baud = B7200;
-    break;
+    case 7200:
+      baud = B7200;
+      break;
 #endif
 #ifdef B9600
 
-  case 9600:
-    baud = B9600;
-    break;
+    case 9600:
+      baud = B9600;
+      break;
 #endif
 #ifdef B14400
 
-  case 14400:
-    baud = B14400;
-    break;
+    case 14400:
+      baud = B14400;
+      break;
 #endif
 #ifdef B19200
 
-  case 19200:
-    baud = B19200;
-    break;
+    case 19200:
+      baud = B19200;
+      break;
 #endif
 #ifdef B28800
 
-  case 28800:
-    baud = B28800;
-    break;
+    case 28800:
+      baud = B28800;
+      break;
 #endif
 #ifdef B57600
 
-  case 57600:
-    baud = B57600;
-    break;
+    case 57600:
+      baud = B57600;
+      break;
 #endif
 #ifdef B76800
 
-  case 76800:
-    baud = B76800;
-    break;
+    case 76800:
+      baud = B76800;
+      break;
 #endif
 #ifdef B38400
 
-  case 38400:
-    baud = B38400;
-    break;
+    case 38400:
+      baud = B38400;
+      break;
 #endif
 #ifdef B115200
 
-  case 115200:
-    baud = B115200;
-    break;
+    case 115200:
+      baud = B115200;
+      break;
 #endif
 #ifdef B128000
 
-  case 128000:
-    baud = B128000;
-    break;
+    case 128000:
+      baud = B128000;
+      break;
 #endif
 #ifdef B153600
 
-  case 153600:
-    baud = B153600;
-    break;
+    case 153600:
+      baud = B153600;
+      break;
 #endif
 #ifdef B230400
 
-  case 230400:
-    baud = B230400;
-    break;
+    case 230400:
+      baud = B230400;
+      break;
 #endif
 #ifdef B256000
 
-  case 256000:
-    baud = B256000;
-    break;
+    case 256000:
+      baud = B256000;
+      break;
 #endif
 #ifdef B460800
 
-  case 460800:
-    baud = B460800;
-    break;
+    case 460800:
+      baud = B460800;
+      break;
 #endif
 #ifdef B576000
 
-  case 576000:
-    baud = B576000;
-    break;
+    case 576000:
+      baud = B576000;
+      break;
 #endif
 #ifdef B921600
 
-  case 921600:
-    baud = B921600;
-    break;
+    case 921600:
+      baud = B921600;
+      break;
 #endif
 #ifdef B1000000
 
-  case 1000000:
-    baud = B1000000;
-    break;
+    case 1000000:
+      baud = B1000000;
+      break;
 #endif
 #ifdef B1152000
 
-  case 1152000:
-    baud = B1152000;
-    break;
+    case 1152000:
+      baud = B1152000;
+      break;
 #endif
 #ifdef B1500000
 
-  case 1500000:
-    baud = B1500000;
-    break;
+    case 1500000:
+      baud = B1500000;
+      break;
 #endif
 #ifdef B2000000
 
-  case 2000000:
-    baud = B2000000;
-    break;
+    case 2000000:
+      baud = B2000000;
+      break;
 #endif
 #ifdef B2500000
 
-  case 2500000:
-    baud = B2500000;
-    break;
+    case 2500000:
+      baud = B2500000;
+      break;
 #endif
 #ifdef B3000000
 
-  case 3000000:
-    baud = B3000000;
-    break;
+    case 3000000:
+      baud = B3000000;
+      break;
 #endif
 #ifdef B3500000
 
-  case 3500000:
-    baud = B3500000;
-    break;
+    case 3500000:
+      baud = B3500000;
+      break;
 #endif
 #ifdef B4000000
 
-  case 4000000:
-    baud = B4000000;
-    break;
+    case 4000000:
+      baud = B4000000;
+      break;
 #endif
 
-  default:
-    custom_baud = true;
+    default:
+      custom_baud = true;
   }
 
   return !custom_baud;
@@ -659,32 +665,41 @@ bool Serial::SerialImpl::open() {
 
   pid = -1;
   pid = getpid();
+#ifdef USE_LOCK_FILE
 
   if (LOCK(port_.c_str(), pid)) {
     fprintf(stderr, "Could not lock serial port for exclusive access\n");
     return false;
   }
 
-  fd_ = ::open(port_.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK | O_APPEND | O_NDELAY);
+#endif
+
+  fd_ = ::open(port_.c_str(),
+               O_RDWR | O_NOCTTY | O_NONBLOCK | O_APPEND | O_NDELAY);
 
   if (fd_ == -1) {
     switch (errno) {
-    case EINTR:
-      // Recurse because this is a recoverable error.
-      return open();
+      case EINTR:
+        // Recurse because this is a recoverable error.
+        return open();
 
-    case ENFILE:
-    case EMFILE:
-    default:
-      UNLOCK(port_.c_str(), pid);
-      return false;
+      case ENFILE:
+      case EMFILE:
+      default:
+#ifdef USE_LOCK_FILE
+        UNLOCK(port_.c_str(), pid);
+#endif
+        pid = -1;
+        return false;
     }
   }
 
   termios tio;
 
   if (!getTermios(&tio)) {
+#ifdef USE_LOCK_FILE
     UNLOCK(port_.c_str(), pid);
+#endif
     return false;
   }
 
@@ -695,16 +710,18 @@ bool Serial::SerialImpl::open() {
   set_flowcontrol(&tio, flowcontrol_);
 
   if (!setTermios(&tio)) {
+#ifdef USE_LOCK_FILE
     UNLOCK(port_.c_str(), pid);
+#endif
     return false;
   }
 
   if (!setBaudrate(baudrate_)) {
+#ifdef USE_LOCK_FILE
     UNLOCK(port_.c_str(), pid);
+#endif
     return false;
   }
-
-  flush();
 
   // Update byte_time_ based on the new settings.
   uint32_t bit_time_ns = 1e9 / baudrate_;
@@ -727,8 +744,11 @@ void Serial::SerialImpl::close() {
       ::close(fd_);
     }
 
+#ifdef USE_LOCK_FILE
     UNLOCK(port_.c_str(), pid);
+#endif
     fd_ = -1;
+    pid = -1;
     is_open_ = false;
   }
 }
@@ -784,7 +804,8 @@ bool Serial::SerialImpl::waitReadable(uint32_t timeout) {
 }
 
 
-int Serial::SerialImpl::waitfordata(size_t data_count, uint32_t timeout, size_t *returned_size) {
+int Serial::SerialImpl::waitfordata(size_t data_count, uint32_t timeout,
+                                    size_t *returned_size) {
   size_t length = 0;
 
   if (returned_size == NULL) {
@@ -851,7 +872,8 @@ int Serial::SerialImpl::waitfordata(size_t data_count, uint32_t timeout, size_t 
         return 0;
       } else {
         int remain_timeout = timeout_val.tv_sec * 1000000 + timeout_val.tv_usec;
-        int expect_remain_time = (data_count - *returned_size) * 1000000 * 8 / baudrate_;
+        int expect_remain_time = (data_count - *returned_size) * 1000000 * 8 /
+                                 baudrate_;
 
         if (remain_timeout > expect_remain_time) {
           usleep(expect_remain_time);
@@ -963,7 +985,8 @@ size_t Serial::SerialImpl::write(const uint8_t *data, size_t length) {
 
   // Calculate total timeout in milliseconds t_c + (t_m * N)
   long total_timeout_ms = timeout_.write_timeout_constant;
-  total_timeout_ms += timeout_.write_timeout_multiplier * static_cast<long>(length);
+  total_timeout_ms += timeout_.write_timeout_multiplier * static_cast<long>
+                      (length);
   MillisecondTimer total_timeout(total_timeout_ms);
 
   bool first_iteration = true;
@@ -1010,7 +1033,8 @@ size_t Serial::SerialImpl::write(const uint8_t *data, size_t length) {
       // Make sure our file descriptor is in the ready to write list
       if (FD_ISSET(fd_, &writefds)) {
         // This will write some
-        ssize_t bytes_written_now = ::write(fd_, data + bytes_written, length - bytes_written);
+        ssize_t bytes_written_now = ::write(fd_, data + bytes_written,
+                                            length - bytes_written);
 
         // write should always return some data as select reported it was
         // ready to write when we get to this point.
@@ -1176,6 +1200,18 @@ bool Serial::SerialImpl::setCustomBaudRate(unsigned long baudrate) {
     if (fcntl(fd_, F_SETFL, FNDELAY)) {
       return false;
     }
+
+    /*struct flock file_lock;
+    file_lock.l_type = F_WRLCK;
+    file_lock.l_whence = SEEK_SET;
+    file_lock.l_start = 0;
+    file_lock.l_len = 0;
+    file_lock.l_pid = getpid();
+    if (fcntl(fd_, F_SETLK, &file_lock) != 0) {
+      return false;
+    }*/
+
+
 
     if (::ioctl(fd_, TCSETS2, &tio2) != -1 && ::ioctl(fd_, TCGETS2, &tio2) != -1) {
       return true;

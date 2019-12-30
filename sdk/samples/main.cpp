@@ -1,13 +1,46 @@
-
+﻿/*********************************************************************
+* Software License Agreement (BSD License)
+*
+*  Copyright (c) 2018, EAIBOT, Inc.
+*  All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without
+*  modification, are permitted provided that the following conditions
+*  are met:
+*
+*   * Redistributions of source code must retain the above copyright
+*     notice, this list of conditions and the following disclaimer.
+*   * Redistributions in binary form must reproduce the above
+*     copyright notice, this list of conditions and the following
+*     disclaimer in the documentation and/or other materials provided
+*     with the distribution.
+*   * Neither the name of the Willow Garage nor the names of its
+*     contributors may be used to endorse or promote products derived
+*     from this software without specific prior written permission.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+*  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+*  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+*  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+*  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+*  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+*  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+*  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+*  POSSIBILITY OF SUCH DAMAGE.
+*********************************************************************/
 #include "CYdLidar.h"
 #include <iostream>
 #include <string>
-#include <memory>
-
+#include <algorithm>
 using namespace std;
 using namespace ydlidar;
-CYdLidar laser;
 
+#if defined(_MSC_VER)
+#pragma comment(lib, "ydlidar_driver.lib")
+#endif
 
 int main(int argc, char *argv[]) {
   printf("__   ______  _     ___ ____    _    ____  \n");
@@ -17,47 +50,29 @@ int main(int argc, char *argv[]) {
   printf("  |_| |____/|_____|___|____/_/   \\_\\_| \\_\\ \n");
   printf("\n");
   fflush(stdout);
-
-
   std::string port;
-  int baudrate;
-  std::string intensity;
   ydlidar::init(argc, argv);
 
-  std::map<std::string, std::string> ports =  ydlidar::YDlidarDriver::lidarPortList();
+  std::map<std::string, std::string> ports =
+    ydlidar::YDlidarDriver::lidarPortList();
   std::map<std::string, std::string>::iterator it;
 
   if (ports.size() == 1) {
-    it = ports.begin();
-    ydlidar::console.show("Lidar[%s] detected, whether to select current radar(yes/no)?:",
-                          it->first.c_str());
-    std::string ok;
-    std::cin >> ok;
-
-    for (size_t i = 0; i < ok.size(); i++) {
-      ok[i] = tolower(ok[i]);
-    }
-
-    if (ok.find("yes") != std::string::npos || atoi(ok.c_str()) == 1) {
-      port = it->second;
-    } else {
-      ydlidar::console.message("Please enter the lidar serial port:");
-      std::cin >> port;
-    }
+    port = ports.begin()->second;
   } else {
     int id = 0;
 
     for (it = ports.begin(); it != ports.end(); it++) {
-      ydlidar::console.show("%d. %s\n", id, it->first.c_str());
+      printf("%d. %s\n", id, it->first.c_str());
       id++;
     }
 
     if (ports.empty()) {
-      ydlidar::console.show("Not Lidar was detected. Please enter the lidar serial port:");
+      printf("Not Lidar was detected. Please enter the lidar serial port:");
       std::cin >> port;
     } else {
       while (ydlidar::ok()) {
-        ydlidar::console.show("Please select the lidar port:");
+        printf("Please select the lidar port:");
         std::string number;
         std::cin >> number;
 
@@ -79,48 +94,31 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  std::vector<unsigned int> baudrateList;
-  baudrateList.push_back(115200);
-  baudrateList.push_back(128000);
-  baudrateList.push_back(153600);
-  baudrateList.push_back(230400);
-  baudrateList.push_back(512000);
+  int baudrate = 230400;
+  std::map<int, int> baudrateList;
+  baudrateList[0] = 115200;
+  baudrateList[1] = 128000;
+  baudrateList[2] = 153600;
+  baudrateList[3] = 230400;
+  baudrateList[4] = 512000;
 
+  printf("Baudrate:\n");
 
-  for (unsigned int i = 0; i < baudrateList.size(); i ++) {
-    ydlidar::console.show("%u. %u\n", i, baudrateList[i]);
+  for (std::map<int, int>::iterator it = baudrateList.begin();
+       it != baudrateList.end(); it++) {
+    printf("%d. %d\n", it->first, it->second);
   }
 
   while (ydlidar::ok()) {
-    ydlidar::console.show("Please enter the lidar serial baud rate:");
-    std::string index;
-    std::cin >> index;
+    printf("Please select the lidar baudrate:");
+    std::string number;
+    std::cin >> number;
 
-    if (atoi(index.c_str()) >= baudrateList.size()) {
-      ydlidar::console.warning("Invalid serial number, Please re-select\n");
+    if ((size_t)atoi(number.c_str()) > baudrateList.size()) {
       continue;
     }
 
-    baudrate = baudrateList[atoi(index.c_str())];
-    break;
-
-  }
-
-
-  int intensities  = 0;
-  ydlidar::console.show("0. false\n");
-  ydlidar::console.show("1. true\n");
-
-  while (ydlidar::ok()) {
-    ydlidar::console.show("Please enter the lidar intensity:");
-    std::cin >> intensity;
-
-    if (atoi(intensity.c_str()) >= 2) {
-      ydlidar::console.warning("Invalid serial number, Please re-select");
-      continue;
-    }
-
-    intensities = atoi(intensity.c_str());
+    baudrate = baudrateList[atoi(number.c_str())];
     break;
   }
 
@@ -128,41 +126,114 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  bool isSingleChannel = false;
+  bool isTOFLidar = false;
+  std::string input_channel;
+  std::string input_tof;
+  printf("Whether the Lidar is one-way communication[yes/no]:");
+  std::cin >> input_channel;
+  std::transform(input_channel.begin(), input_channel.end(),
+                 input_channel.begin(),
+  [](unsigned char c) {
+    return std::tolower(c);  // correct
+  });
+
+  if (input_channel.find("yes") != std::string::npos) {
+    isSingleChannel = true;
+
+    printf("Whether the Lidar is a TOF Lidar [yes/no]:");
+    std::cin >> input_tof;
+    std::transform(input_tof.begin(), input_tof.end(),
+                   input_tof.begin(),
+    [](unsigned char c) {
+      return std::tolower(c);  // correct
+    });
+
+    if (input_tof.find("yes") != std::string::npos) {
+      isTOFLidar = true;
+    }
+  }
+
+
+  std::string input_frequency;
+
+  float frequency = 8.0;
+
+  while (ydlidar::ok() && !isSingleChannel) {
+    printf("Please enter the lidar scan frequency[5-12]:");
+    std::cin >> input_frequency;
+    frequency = atof(input_frequency.c_str());
+
+    if (frequency <= 12.0 && frequency >= 3.0) {
+      break;
+    }
+
+    fprintf(stderr,
+            "Invalid scan frequency,The scanning frequency range is 5 to 12 HZ, Please re-enter.\n");
+  }
+
+  if (!ydlidar::ok()) {
+    return 0;
+  }
+
+
+
+
+  CYdLidar laser;
+  //<! lidar port
   laser.setSerialPort(port);
+  //<! lidar baudrate
   laser.setSerialBaudrate(baudrate);
-  laser.setIntensities(intensities);//intensity
+
+  //<! fixed angle resolution
+  laser.setFixedResolution(false);
+  //<! rotate 180
+  laser.setReversion(true); //rotate 180
+  //<! Counterclockwise
+  laser.setInverted(true);//ccw
   laser.setAutoReconnect(true);//hot plug
-  laser.setMaxRange(16.0);
-  laser.setMinRange(0.26);
+  //<! one-way communication
+  laser.setSingleChannel(isSingleChannel);
+
+  //<! tof lidar
+  laser.setTOFLidar(isTOFLidar);
+  //unit: °
   laser.setMaxAngle(180);
   laser.setMinAngle(-180);
-  laser.setReversion(false);
-  laser.setFixedResolution(false);
-  laser.initialize();
 
+  //unit: m
+  laser.setMinRange(0.1);
+  laser.setMaxRange(32.0);
 
-  while (ydlidar::ok()) {
+  //unit: Hz
+  laser.setScanFrequency(frequency);
+  std::vector<float> ignore_array;
+  ignore_array.clear();
+  laser.setIgnoreArray(ignore_array);
+
+  bool ret = laser.initialize();
+
+  if (ret) {
+    ret = laser.turnOn();
+  }
+
+  while (ret && ydlidar::ok()) {
     bool hardError;
     LaserScan scan;
 
     if (laser.doProcessSimple(scan, hardError)) {
-      for (int i = 0; i < scan.ranges.size(); i++) {
-        float angle = scan.config.min_angle + i * scan.config.ang_increment;
-        float dis = scan.ranges[i];
-
-      }
-
-      ydlidar::console.message("Scan received[%llu]: %u ranges", scan.self_time_stamp,
-                               (unsigned int)scan.ranges.size());
+      fprintf(stdout, "Scan received[%llu]: %u ranges is [%f]Hz\n",
+              scan.stamp,
+              (unsigned int)scan.points.size(), 1.0 / scan.config.scan_time);
+      fflush(stdout);
     } else {
-      ydlidar::console.warning("Failed to get Lidar Data");
+      fprintf(stderr, "Failed to get Lidar Data\n");
+      fflush(stderr);
     }
-
   }
 
   laser.turnOff();
   laser.disconnecting();
+
   return 0;
-
-
 }

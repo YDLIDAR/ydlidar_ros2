@@ -22,25 +22,26 @@
 class Thread {
  public:
 
-  template <class CLASS, int (CLASS::*PROC)(void)> static Thread ThreadCreateObjectFunctor(
-    CLASS *pthis) {
+  template <class CLASS, int (CLASS::*PROC)(void)> static Thread
+  ThreadCreateObjectFunctor(CLASS *pthis) {
     return createThread(createThreadAux<CLASS, PROC>, pthis);
   }
 
-  template <class CLASS, int (CLASS::*PROC)(void) > static _size_t THREAD_PROC createThreadAux(
-    void *param) {
+  template <class CLASS, int (CLASS::*PROC)(void) > static _size_t THREAD_PROC
+  createThreadAux(void *param) {
     return (static_cast<CLASS *>(param)->*PROC)();
   }
 
   static Thread createThread(thread_proc_t proc, void *param = NULL) {
     Thread thread_(proc, param);
 #if defined(_WIN32)
-    thread_._handle = (_size_t)(_beginthreadex(NULL, 0, (unsigned int (__stdcall *)(void *))proc, param,
-                                0, NULL));
+    thread_._handle = (_size_t)(_beginthreadex(NULL, 0,
+                                (unsigned int (__stdcall *)(void *))proc, param, 0, NULL));
 #else
     assert(sizeof(thread_._handle) >= sizeof(pthread_t));
 
-    pthread_create((pthread_t *)&thread_._handle, NULL, (void *(*)(void *))proc, param);
+    pthread_create((pthread_t *)&thread_._handle, NULL, (void *(*)(void *))proc,
+                   param);
 #endif
     return thread_;
   }
@@ -86,21 +87,37 @@ class Thread {
 #if defined(_WIN32)
 
     switch (WaitForSingleObject(reinterpret_cast<HANDLE>(this->_handle), timeout)) {
-    case WAIT_OBJECT_0:
-      CloseHandle(reinterpret_cast<HANDLE>(this->_handle));
-      this->_handle = NULL;
-      return 0;
+      case WAIT_OBJECT_0:
+        CloseHandle(reinterpret_cast<HANDLE>(this->_handle));
+        this->_handle = NULL;
+        return 0;
 
-    case WAIT_ABANDONED:
-      return -2;
+      case WAIT_ABANDONED:
+        return -2;
 
-    case WAIT_TIMEOUT:
-      return -1;
+      case WAIT_TIMEOUT:
+        return -1;
     }
 
 #else
     UNUSED(timeout);
-    pthread_join((pthread_t)(this->_handle), NULL);
+    void *res;
+    int s = -1;
+    s = pthread_cancel((pthread_t)(this->_handle));
+
+    if (s != 0) {
+    }
+
+    s = pthread_join((pthread_t)(this->_handle), &res);
+
+    if (s != 0) {
+    }
+
+    if (res == PTHREAD_CANCELED) {
+      printf("%lu thread has been canceled\n", this->_handle);
+      this->_handle = 0;
+    }
+
 #endif
     return 0;
   }
@@ -109,7 +126,8 @@ class Thread {
     return this->_handle == right._handle;
   }
  protected:
-  explicit Thread(thread_proc_t proc, void *param): _param(param), _func(proc), _handle(0) {}
+  explicit Thread(thread_proc_t proc, void *param): _param(param), _func(proc),
+    _handle(0) {}
   void *_param;
   thread_proc_t _func;
   _size_t _handle;

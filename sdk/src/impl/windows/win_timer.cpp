@@ -19,7 +19,7 @@ uint32_t getHDTimer() {
   return (uint32_t)(current.QuadPart / (_current_freq.QuadPart));
 }
 
-TTimeStamp getCurrentTime() {
+uint64_t getCurrentTime() {
   FILETIME		t;
   GetSystemTimeAsFileTime(&t);
   return ((((uint64_t)t.dwHighDateTime) << 32) | ((uint64_t)t.dwLowDateTime)) * 100;

@@ -39,15 +39,16 @@ class Locker {
   Locker::LOCK_STATUS lock(unsigned long timeout = 0xFFFFFFFF) {
 #ifdef _WIN32
 
-    switch (WaitForSingleObject(_lock, timeout == 0xFFFFFFF ? INFINITE : (DWORD)timeout)) {
-    case WAIT_ABANDONED:
-      return LOCK_FAILED;
+    switch (WaitForSingleObject(_lock,
+                                timeout == 0xFFFFFFF ? INFINITE : (DWORD)timeout)) {
+      case WAIT_ABANDONED:
+        return LOCK_FAILED;
 
-    case WAIT_OBJECT_0:
-      return LOCK_OK;
+      case WAIT_OBJECT_0:
+        return LOCK_OK;
 
-    case WAIT_TIMEOUT:
-      return LOCK_TIMEOUT;
+      case WAIT_TIMEOUT:
+        return LOCK_TIMEOUT;
     }
 
 #else
@@ -91,11 +92,11 @@ class Locker {
 #if !defined(__ANDROID__)
 
       switch (pthread_mutex_timedlock(&_lock, &wait_time)) {
-      case 0:
-        return LOCK_OK;
+        case 0:
+          return LOCK_OK;
 
-      case ETIMEDOUT:
-        return LOCK_TIMEOUT;
+        case ETIMEDOUT:
+          return LOCK_TIMEOUT;
       }
 
 #else
@@ -198,10 +199,19 @@ class Event {
 #endif
   {
 #ifdef _WIN32
-    _event = CreateEvent(NULL, isAutoReset ? FALSE : TRUE, isSignal ? TRUE : FALSE, NULL);
+    _event = CreateEvent(NULL, isAutoReset ? FALSE : TRUE, isSignal ? TRUE : FALSE,
+                         NULL);
 #else
+    int ret = pthread_condattr_init(&_cond_cattr);
+
+    if (ret != 0) {
+      fprintf(stderr, "Failed to init condattr...\n");
+      fflush(stderr);
+    }
+
+    ret = pthread_condattr_setclock(&_cond_cattr, CLOCK_MONOTONIC);
     pthread_mutex_init(&_cond_locker, NULL);
-    pthread_cond_init(&_cond_var, NULL);
+    ret =  pthread_cond_init(&_cond_var, &_cond_cattr);
 #endif
   }
 
@@ -237,15 +247,16 @@ class Event {
   unsigned long wait(unsigned long timeout = 0xFFFFFFFF) {
 #ifdef _WIN32
 
-    switch (WaitForSingleObject(_event, timeout == 0xFFFFFFF ? INFINITE : (DWORD)timeout)) {
-    case WAIT_FAILED:
-      return EVENT_FAILED;
+    switch (WaitForSingleObject(_event,
+                                timeout == 0xFFFFFFF ? INFINITE : (DWORD)timeout)) {
+      case WAIT_FAILED:
+        return EVENT_FAILED;
 
-    case WAIT_OBJECT_0:
-      return EVENT_OK;
+      case WAIT_OBJECT_0:
+        return EVENT_OK;
 
-    case WAIT_TIMEOUT:
-      return EVENT_TIMEOUT;
+      case WAIT_TIMEOUT:
+        return EVENT_TIMEOUT;
     }
 
     return EVENT_OK;
@@ -257,12 +268,12 @@ class Event {
       if (timeout == 0xFFFFFFFF) {
         pthread_cond_wait(&_cond_var, &_cond_locker);
       } else {
-        timespec wait_time;
-        timeval now;
-        gettimeofday(&now, NULL);
+        struct timespec wait_time;
+        clock_gettime(CLOCK_MONOTONIC, &wait_time);
 
-        wait_time.tv_sec = timeout / 1000 + now.tv_sec;
-        wait_time.tv_nsec = (timeout % 1000) * 1000000ULL + now.tv_usec * 1000;
+
+        wait_time.tv_sec += timeout / 1000;
+        wait_time.tv_nsec += (timeout % 1000) * 1000000ULL;
 
         if (wait_time.tv_nsec >= 1000000000) {
           ++wait_time.tv_sec;
@@ -270,19 +281,19 @@ class Event {
         }
 
         switch (pthread_cond_timedwait(&_cond_var, &_cond_locker, &wait_time)) {
-        case 0:
-          // signalled
-          break;
+          case 0:
+            // signalled
+            break;
 
-        case ETIMEDOUT:
-          // time up
-          ans = EVENT_TIMEOUT;
-          goto _final;
-          break;
+          case ETIMEDOUT:
+            // time up
+            ans = EVENT_TIMEOUT;
+            goto _final;
+            break;
 
-        default:
-          ans = EVENT_FAILED;
-          goto _final;
+          default:
+            ans = EVENT_FAILED;
+            goto _final;
         }
 
       }
@@ -307,6 +318,7 @@ _final:
 #ifdef _WIN32
     CloseHandle(_event);
 #else
+    pthread_condattr_destroy(&_cond_cattr);
     pthread_mutex_destroy(&_cond_locker);
     pthread_cond_destroy(&_cond_var);
 #endif
@@ -315,6 +327,7 @@ _final:
 #ifdef _WIN32
   HANDLE _event;
 #else
+  pthread_condattr_t     _cond_cattr;
   pthread_cond_t         _cond_var;
   pthread_mutex_t        _cond_locker;
   bool                   _is_signalled;

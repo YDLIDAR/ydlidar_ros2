@@ -41,7 +41,7 @@ port (string, default: /dev/ydlidar)
 
     serial port name used in your system. 
 
-baudrate (int, default: 115200)
+baudrate (int, default: 230400)
 
     serial port baud rate. 
 
@@ -49,9 +49,9 @@ frame_id (string, default: laser_frame)
 
     frame ID for the device. 
 
-low_exposure (low_exposure, default: false)
+low_exposure (singleChannel, default: false)
 
-    indicated whether the LIDAR has low light power mode. 
+    indicated whether the LIDAR is single communication(S2) lidar. 
 
 resolution_fixed (bool, default: true)
 
@@ -65,9 +65,9 @@ reversion (bool, default: false)
 
     indicated whether the LIDAR data rotation 180°. 
 
-intensities (bool, default: false)
+isToFLidar (bool, default: false)
 
-    indicated whether the LIDAR has intensity. 
+    indicated whether the LIDAR is TOF(TX8) lidar. 
 
 angle_min (double, default: -180)
 
@@ -81,7 +81,7 @@ range_min (double, default: 0.08)
 
     Min valid range (m) for LIDAR data. 
 
-range_max (double, default: 16.0)
+range_max (double, default: 32.0)
 
     Max valid range (m) for LIDAR data. 
 
@@ -89,11 +89,11 @@ ignore_array (string, default: "")
 
     Set the current angle range value to zero. 
 
-samp_rate (int, default: 4)
+samp_rate (int, default: 9)
 
     the LIDAR sampling frequency.
 
-frequency (double, default: 7)
+frequency (double, default: 10)
 
     the LIDAR scanning frequency.
 
@@ -105,6 +105,11 @@ frequency (double, default: 7)
 
 Upgrade Log
 =====================================================================
+
+2019-12-23 version:1.4.4
+
+   1.support all standards lidar
+
 
 2018-07-16 version:1.3.6
 
