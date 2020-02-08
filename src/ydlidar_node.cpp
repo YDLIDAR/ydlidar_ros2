@@ -176,17 +176,7 @@ int main(int argc, char *argv[]) {
     ret = laser.turnOn();
   }
 
-  // Set the QoS. ROS 2 will provide QoS profiles based on the following use cases:
-  // Default QoS settings for publishers and subscriptions (rmw_qos_profile_default).
-  // Sensor data (rmw_qos_profile_sensor_data).
-  //rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
-  // set the depth to the QoS profile
-  //custom_qos_profile.depth = 7;
-
-
-
-
-  auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan"/*, custom_qos_profile*/);
+  auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS());
 
 
 
@@ -223,7 +213,7 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      laser_pub->publish(scan_msg);
+      laser_pub->publish(*scan_msg);
 
 
     } else {

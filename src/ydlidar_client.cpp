@@ -28,16 +28,10 @@ static void scanCb(sensor_msgs::msg::LaserScan::SharedPtr scan) {
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
 
-  rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("ydlidar_client");
+  auto node = rclcpp::Node::make_shared("ydlidar_client");
 
-  //rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
-
-  //custom_qos_profile.depth = 7;
-  //custom_qos_profile.reliability = RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT;
-  //custom_qos_profile.history = RMW_QOS_POLICY_HISTORY_KEEP_LAST;
-
-  auto cam_info_sub = node->create_subscription<sensor_msgs::msg::LaserScan>(
-                        "scan", scanCb/*, custom_qos_profile*/);
+  auto lidar_info_sub = node->create_subscription<sensor_msgs::msg::LaserScan>(
+                        "scan", rclcpp::SensorDataQoS(), scanCb);
 
   rclcpp::spin(node);
 
