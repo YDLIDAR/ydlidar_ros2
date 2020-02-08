@@ -5,14 +5,24 @@ ROS2 node and test application for YDLIDAR
 
 Visit EAI Website for more details about YDLIDAR.
 
+How to [install ROS2](https://index.ros.org/doc/ros2/Installation)
+=====================================================================
+[ubuntu](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
+[windows](https://index.ros.org/doc/ros2/Installation/Dashing/Windows-Install-Binary/)
+
+How to Create a ROS2 workspace
+=====================================================================
+[Create a workspace](https://index.ros.org/doc/ros2/Tutorials/Colcon-Tutorial/#create-a-workspace)
+
 How to build YDLIDAR ros2 package
 =====================================================================
-    1) Clone this project to your ament's workspace src folder
+    1) Clone this project to your ament's workspace src folder 
     2) Running ament to build ydlidar_node and ydlidar_client
     3) Create the name "/dev/ydlidar" for YDLIDAR
     --$ cd workspace/ydlidar_ros2/startup
     --$ sudo chmod 777 ./*
     --$ sudo sh initenv.sh
+Note: Download and Build details [here](docs/ydlidar.md)
 
 How to run YDLIDAR ros2 package
 =====================================================================
@@ -37,9 +47,9 @@ or
 
 Configuration
 =====================================================================
-path: ydlidar_ros2/params/ydlidar.yaml
+path: [ydlidar.yaml](ydlidar_ros2/params/ydlidar.yaml)
 
-ROS Interfaces
+ros2-interfaces
 =====================================================================
 
 <center>
@@ -52,19 +62,19 @@ ROS Interfaces
 |-----------------------|------------------------|-----------------------------------------------------|
 | `port`        		| String                 	| port of lidar (ex. /dev/ttyUSB0)                         		|
 | `baudrate`     	| int                      	| baudrate of lidar (ex. 230400)           				|
-| `frame_id`      	| String                	| TF frame of sensor, default `laser_frame`    		|
-| `singleChannel`  	| bool                     	| Whether LiDAR is a single-channel, default false	|
-| `resolution_fixed` | bool                     	| Fixed angluar resolution, default true                    	|
-| `auto_reconnect` | bool                  	| Automatically reconnect the LiDAR, default true    	|
-| `reversion`     	| bool                  	| Reversion LiDAR, default true  					|
-| `isToFLidar`       	| bool                  	| Whether LiDAR is TOF Type, default false  		|
-| `angle_min`       	| float                 	| Minimum Valid Angle, defalut -180     			|
-| `angle_max`       	| float                  	| Maximum Valid Angle, defalut 180      			|
-| `range_min`       	| float                  	| Minimum Valid range, defalut 0.01m      			|
-| `range_max`       	| float                  	| Maximum Valid range, defalut 64.0m      			|
-| `ignore_array`      | String                  	| LiDAR filtering angle area, default ``      			|
-| `samp_rate`       	| int                  	| sampling rate of lidar, default 9      				|
-| `frequency`       	| float                  	| scan frequency of lidar 10      					|
+| `frame_id`      	| String                	| TF frame of sensor, default: `laser_frame`    		|
+| `singleChannel`  	| bool                     	| Whether LiDAR is a single-channel, default: false	|
+| `resolution_fixed` | bool                     	| Fixed angluar resolution, default: true                    	|
+| `auto_reconnect` | bool                  	| Automatically reconnect the LiDAR, default: true    	|
+| `reversion`     	| bool                  	| Reversion LiDAR, default: true  					|
+| `isToFLidar`       	| bool                  	| Whether LiDAR is TOF Type, default: false  		|
+| `angle_min`       	| float                 	| Minimum Valid Angle, defalut: -180.0     			|
+| `angle_max`       	| float                  	| Maximum Valid Angle, defalut: 180.0      			|
+| `range_min`       	| float                  	| Minimum Valid range, defalut: 0.01m      			|
+| `range_max`       	| float                  	| Maximum Valid range, defalut: 64.0m      			|
+| `ignore_array`      | String                  	| LiDAR filtering angle area, default: ""      			|
+| `samp_rate`       	| int                  	| sampling rate of lidar, default: 9      				|
+| `frequency`       	| float                  	| scan frequency of lidar,default: 10.0      			|
 
 </center>
 
