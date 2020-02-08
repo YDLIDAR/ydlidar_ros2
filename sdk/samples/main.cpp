@@ -35,6 +35,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cctype>
 using namespace std;
 using namespace ydlidar;
 
@@ -140,31 +141,38 @@ int main(int argc, char *argv[]) {
 
   if (input_channel.find("yes") != std::string::npos) {
     isSingleChannel = true;
-
-    printf("Whether the Lidar is a TOF Lidar [yes/no]:");
-    std::cin >> input_tof;
-    std::transform(input_tof.begin(), input_tof.end(),
-                   input_tof.begin(),
-    [](unsigned char c) {
-      return std::tolower(c);  // correct
-    });
-
-    if (input_tof.find("yes") != std::string::npos) {
-      isTOFLidar = true;
-    }
   }
 
+  if (!ydlidar::ok()) {
+    return 0;
+  }
+
+  printf("Whether the Lidar is a TOF Lidar [yes/no]:");
+  std::cin >> input_tof;
+  std::transform(input_tof.begin(), input_tof.end(),
+                 input_tof.begin(),
+  [](unsigned char c) {
+    return std::tolower(c);  // correct
+  });
+
+  if (input_tof.find("yes") != std::string::npos) {
+    isTOFLidar = true;
+  }
+
+  if (!ydlidar::ok()) {
+    return 0;
+  }
 
   std::string input_frequency;
 
   float frequency = 8.0;
 
   while (ydlidar::ok() && !isSingleChannel) {
-    printf("Please enter the lidar scan frequency[5-12]:");
+    printf("Please enter the lidar scan frequency[3-15.7]:");
     std::cin >> input_frequency;
     frequency = atof(input_frequency.c_str());
 
-    if (frequency <= 12.0 && frequency >= 3.0) {
+    if (frequency <= 15.7 && frequency >= 3.0) {
       break;
     }
 
@@ -188,22 +196,22 @@ int main(int argc, char *argv[]) {
   //<! fixed angle resolution
   laser.setFixedResolution(false);
   //<! rotate 180
-  laser.setReversion(true); //rotate 180
+  laser.setReversion(false); //rotate 180
   //<! Counterclockwise
-  laser.setInverted(true);//ccw
+  laser.setInverted(false);//ccw
   laser.setAutoReconnect(true);//hot plug
   //<! one-way communication
   laser.setSingleChannel(isSingleChannel);
 
   //<! tof lidar
-  laser.setTOFLidar(isTOFLidar);
+  laser.setLidarType(isTOFLidar ? TYPE_TOF : TYPE_TRIANGLE);
   //unit: °
   laser.setMaxAngle(180);
   laser.setMinAngle(-180);
 
   //unit: m
-  laser.setMinRange(0.1);
-  laser.setMaxRange(32.0);
+  laser.setMinRange(0.01);
+  laser.setMaxRange(64.0);
 
   //unit: Hz
   laser.setScanFrequency(frequency);

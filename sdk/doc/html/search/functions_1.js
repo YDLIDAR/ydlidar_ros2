@@ -1,6 +1,7 @@
 var searchData=
 [
   ['cachescandata',['cacheScanData',['../classydlidar_1_1_y_dlidar_driver.html#ab462b22dc3a4d39fef4f722345a87d5e',1,'ydlidar::YDlidarDriver']]],
+  ['calculatesamplerate',['CalculateSampleRate',['../class_c_yd_lidar.html#a21d2e05885f5dd78773fdc2c29f2a2a6',1,'CYdLidar']]],
   ['checkautoconnecting',['checkAutoConnecting',['../classydlidar_1_1_y_dlidar_driver.html#a95e6d6ec7bc14746a0346590ff702a72',1,'ydlidar::YDlidarDriver']]],
   ['checkcalibrationangle',['checkCalibrationAngle',['../class_c_yd_lidar.html#a8a3937dfb486836da1fd56ebb0016a51',1,'CYdLidar']]],
   ['checkcomms',['checkCOMMs',['../class_c_yd_lidar.html#ab43ca6b1d054aa464a36bea0d4b7934c',1,'CYdLidar']]],

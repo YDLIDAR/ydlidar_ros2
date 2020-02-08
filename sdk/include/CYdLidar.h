@@ -71,9 +71,8 @@ class YDLIDAR_API CYdLidar {
                         private) ///<
   PropertyBuilderByName(bool, SingleChannel,
                         private) ///< 是否是单通信雷达
-  PropertyBuilderByName(bool, TOFLidar,
-                        private) ///< 是否是TOF雷达
-
+  PropertyBuilderByName(int, LidarType,
+                        private) ///< 雷达类型
 
  public:
   CYdLidar(); //!< Constructor
@@ -103,6 +102,15 @@ class YDLIDAR_API CYdLidar {
   //Whether the zero offset angle is corrected?
   bool isAngleOffetCorrected() const;
 
+  //! get lidar software version
+  std::string getSoftVersion() const;
+
+  //! get lidar hardware version
+  std::string getHardwareVersion() const;
+
+  //! get lidar serial number
+  std::string getSerialNumber() const;
+
  protected:
   /*! Returns true if communication has been established with the device. If it's not,
     *  try to create a comms channel.
@@ -130,6 +138,13 @@ class YDLIDAR_API CYdLidar {
    * @brief checkSampleRate
    */
   void checkSampleRate();
+
+  /**
+   * @brief CalculateSampleRate
+   * @param count
+   * @return
+   */
+  bool CalculateSampleRate(int count, double scan_time);
 
   /*! Retruns true if the scan frequency is set to user's frequency is successful, If it's not*/
   bool checkScanFrequency();
@@ -162,6 +177,25 @@ class YDLIDAR_API CYdLidar {
    */
   void handleSingleChannelDevice();
 
+  /**
+   * @brief parsePackageNode
+   * @param node
+   * @param info
+   */
+  void parsePackageNode(const node_info &node, LaserDebug &info);
+
+  /**
+   * @brief handleDeviceInfoPackage
+   * @param count
+   */
+  void handleDeviceInfoPackage(int count);
+
+  /**
+   * @brief printfVersionInfo
+   * @param info
+   */
+  void printfVersionInfo(const device_info &info);
+
  private:
   bool    isScanning;
   int     m_FixedSize ;
@@ -175,6 +209,11 @@ class YDLIDAR_API CYdLidar {
   uint64_t m_PointTime;
   uint64_t last_node_time;
   node_info *global_nodes;
-
+  std::map<int, int> SampleRateMap;
+  bool m_ParseSuccess;
+  std::string m_lidarSoftVer;
+  std::string m_lidarHardVer;
+  std::string m_lidarSerialNum;
+  int defalutSampleRate;
 };	// End of class
 

@@ -3,7 +3,7 @@ var searchData=
   ['waitbytetimes',['waitByteTimes',['../classserial_1_1_serial.html#a35c0f6ff20c142a5210dde288731f954',1,'serial::Serial']]],
   ['waitdevicepackage',['waitDevicePackage',['../classydlidar_1_1_y_dlidar_driver.html#adca8845f132e46fee8534a0ca0685b74',1,'ydlidar::YDlidarDriver']]],
   ['waitforchange',['waitForChange',['../classserial_1_1_serial.html#a9d889dc0ec2cec50a620650f10cf8e83',1,'serial::Serial']]],
-  ['waitfordata',['waitForData',['../classydlidar_1_1_y_dlidar_driver.html#a13f404b44f51941d1642bfe250de3522',1,'ydlidar::YDlidarDriver::waitForData()'],['../classserial_1_1_serial.html#aa94e4ca3b2b803e3145c99fe063ae09b',1,'serial::Serial::waitfordata()']]],
+  ['waitfordata',['waitfordata',['../classserial_1_1_serial.html#aa94e4ca3b2b803e3145c99fe063ae09b',1,'serial::Serial::waitfordata()'],['../classydlidar_1_1_y_dlidar_driver.html#a13f404b44f51941d1642bfe250de3522',1,'ydlidar::YDlidarDriver::waitForData()']]],
   ['waitpackage',['waitPackage',['../classydlidar_1_1_y_dlidar_driver.html#aaf78903693f58c7f739dfa493573b3b1',1,'ydlidar::YDlidarDriver']]],
   ['waitreadable',['waitReadable',['../classserial_1_1_serial.html#a59bd8d40309769e8eed91dd3684e0000',1,'serial::Serial']]],
   ['waitresponseheader',['waitResponseHeader',['../classydlidar_1_1_y_dlidar_driver.html#a0e089d615193ccef4bf488f63ff8130e',1,'ydlidar::YDlidarDriver']]],

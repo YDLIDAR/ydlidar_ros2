@@ -9,7 +9,7 @@ Introduction
 
 YDLIDAR(https://www.ydlidar.com/) series is a set of high-performance and low-cost LIDAR sensors, which is the perfect sensor of 2D SLAM, 3D reconstruction, multi-touch, and safety applications.
 
-If you are using ROS (Robot Operating System), please use our open-source [ROS Driver]( https://github.com/ydlidar/ydlidar) .
+If you are using ROS (Robot Operating System), please use our open-source [ROS Driver]( https://github.com/ydlidar/ydlidar_ros) .
 
 Licence
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -20,10 +20,12 @@ Release Notes
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 | Title      |  Version |  Data |
 | :-------- | --------:|  :--: |
-| SDK     |  1.4.4 |   2019-12-05  |
+| SDK     |  1.4.5 |   2020-01-04  |
 
 
-- [feature] Supports all standard Lidars.
+- [feature] Supports new and old protocol tof lidar.
+- [feature] Display of version number and serial number of single communication lidar.
+
 
 
 
@@ -34,6 +36,9 @@ Dataset
 
 | Model      |  Baudrate |  Sampling Frequency | Range(m)  | Scanning Frequency(HZ) | Working temperature(°C) | Laser power max(mW) | voltage(V) | Current(mA) | Intensity
 | :-------- | --------:|--------:|  --------:| --------:|--------:| --------:| --------:| --------:| :--: |
+| TG15   |  512000 |   20000  |  0.1-15   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
+| TG30   |  512000 |   4000  |  0.1-30   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
+| TG50   |  512000 |   4000  |  0.1-50   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
 | G2A    |  230400 |   5000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| false |
 | G2      |  230400 |   5000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| true |
 | G2C   |  230400 |   4000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| false |
@@ -42,12 +47,6 @@ How to build YDLIDAR SDK samples
 ---------------
 
     $ git clone https://github.com/ydlidar/sdk
-
-    $ cd sdk
-
-    $ git checkout master
-
-    $ cd ..
 
     $ mkdir build
 
@@ -76,18 +75,18 @@ windows:
 
 You should see YDLIDAR's scan result in the console:
 
-	[YDLIDAR]:SDK Version: 1.4.4
+	[YDLIDAR]:SDK Version: 1.4.5
 	[YDLIDAR]:Lidar running correctly ! The health status: good
-	[YDLIDAR] Connection established in [/dev/ttyUSB0][230400]:
-	Firmware version: 1.1
+	[YDLIDAR] Connection established in [/dev/ttyUSB0][512000]:
+	Firmware version: 1.3
 	Hardware version: 1
-	Model: G2
-	Serial: 2019071800011111
-	[YDLIDAR INFO] Current Sampling Rate : 5K
-	[YDLIDAR INFO] Current Scan Frequency : 10.000000Hz
+	Model: TG30
+	Serial: 2020010200010001
+	[YDLIDAR INFO] Current Sampling Rate : 20K
+	[YDLIDAR INFO] Current Scan Frequency : 15.000000Hz
 	[YDLIDAR INFO] Now YDLIDAR is scanning ......
-	Scan received: 500 ranges
-	Scan received: 503 ranges
+	Scan received: 1329 ranges
+	Scan received: 1329 ranges
 	
 	
 
@@ -107,6 +106,12 @@ Coordinate System
 
 Upgrade Log
 ---------------
+
+2020-01-04 version 1.4.5
+
+   1.Supports new and old protocol tof lidar.
+
+   1.Display of version number and serial number of single communication lidar.
 
 2019-12-03 version 1.4.4
 

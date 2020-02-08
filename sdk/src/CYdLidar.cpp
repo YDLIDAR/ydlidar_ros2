@@ -1,4 +1,4 @@
-﻿/*********************************************************************
+/*********************************************************************
 * Software License Agreement (BSD License)
 *
 *  Copyright (c) 2018, EAIBOT, Inc.
@@ -50,16 +50,17 @@ CYdLidar::CYdLidar(): lidarPtr(nullptr) {
   m_SerialPort        = "";
   m_SerialBaudrate    = 230400;
   m_FixedResolution   = true;
-  m_Reversion         = true;
-  m_Inverted          = true;//
+  m_Reversion         = false;
+  m_Inverted          = false;//
   m_AutoReconnect     = true;
   m_SingleChannel     = false;
-  m_TOFLidar          = false;
+  m_LidarType         = TYPE_TRIANGLE;
   m_MaxAngle          = 180.f;
   m_MinAngle          = -180.f;
-  m_MaxRange          = 32.0;
-  m_MinRange          = 0.1;
+  m_MaxRange          = 64.0;
+  m_MinRange          = 0.01;
   m_SampleRate        = 5;
+  defalutSampleRate   = 5;
   m_ScanFrequency     = 10;
   isScanning          = false;
   m_FixedSize         = 720;
@@ -71,9 +72,10 @@ CYdLidar::CYdLidar(): lidarPtr(nullptr) {
   m_PointTime         = 1e9 / 5000;
   m_OffsetTime        = 0.0;
   m_AngleOffset       = 0.0;
-  lidar_model = YDlidarDriver::YDLIDAR_G2B;
+  lidar_model = YDLIDAR_G2B;
   last_node_time = getTime();
   global_nodes = new node_info[YDlidarDriver::MAX_SCAN_NODES];
+  m_ParseSuccess = false;
 }
 
 /*-------------------------------------------------------------
@@ -105,6 +107,18 @@ float CYdLidar::getAngleOffset() const {
 
 bool CYdLidar::isAngleOffetCorrected() const {
   return m_isAngleOffsetCorrected;
+}
+
+std::string CYdLidar::getSoftVersion() const {
+  return m_lidarSoftVer;
+}
+
+std::string CYdLidar::getHardwareVersion() const {
+  return m_lidarHardVer;
+}
+
+std::string CYdLidar::getSerialNumber() const {
+  return m_lidarSerialNum;
 }
 
 bool CYdLidar::isRangeValid(double reading) const {
@@ -145,7 +159,6 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan,
   }
 
   size_t   count = YDlidarDriver::MAX_SCAN_NODES;
-
   //wait Scan data:
   uint64_t tim_scan_start = getTime();
   uint64_t startTs = tim_scan_start;
@@ -192,6 +205,7 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan,
     if (m_FixedResolution) {
       all_node_count = m_FixedSize;
     }
+
     outscan.config.angle_increment = (outscan.config.max_angle -
                                       outscan.config.min_angle) / (all_node_count - 1);
 
@@ -203,15 +217,18 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan,
       angle = static_cast<float>((global_nodes[i].angle_q6_checkbit >>
                                   LIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) / 64.0f) + m_AngleOffset;
 
-      if (isOctaveLidar(lidar_model)) {
-        range = static_cast<float>(global_nodes[i].distance_q2 / 2000.f);
-      } else {
-        if (m_TOFLidar) {
+      if (isTOFLidar(m_LidarType)) {
+        if (isOldVersionTOFLidar(lidar_model, Major, Minjor)) {
+          range = static_cast<float>(global_nodes[i].distance_q2 / 2000.f);
+        } else {
           range = static_cast<float>(global_nodes[i].distance_q2 / 1000.f);
+        }
+      } else {
+        if (isOctaveLidar(lidar_model)) {
+          range = static_cast<float>(global_nodes[i].distance_q2 / 2000.f);
         } else {
           range = static_cast<float>(global_nodes[i].distance_q2 / 4000.f);
         }
-
       }
 
       intensity = static_cast<float>(global_nodes[i].sync_quality);
@@ -253,7 +270,9 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan,
 
         outscan.points.push_back(point);
       }
+
     }
+    handleDeviceInfoPackage(count);
 
     return true;
   } else {
@@ -264,6 +283,92 @@ bool  CYdLidar::doProcessSimple(LaserScan &outscan,
 
   return false;
 
+}
+
+void CYdLidar::parsePackageNode(const node_info &node, LaserDebug &info) {
+  switch (node.index) {
+    case 0://W3F4CusMajor_W4F0CusMinor;
+      info.W3F4CusMajor_W4F0CusMinor = node.debug_info[node.index];
+      break;
+
+    case 1://W4F3Model_W3F0DebugInfTranVer
+      info.W4F3Model_W3F0DebugInfTranVer = node.debug_info[node.index];
+      break;
+
+    case 2://W3F4HardwareVer_W4F0FirewareMajor
+      info.W3F4HardwareVer_W4F0FirewareMajor = node.debug_info[node.index];
+      break;
+
+    case 4://W3F4BoradHardVer_W4F0Moth
+      info.W3F4BoradHardVer_W4F0Moth = node.debug_info[node.index];
+      break;
+
+    case 5://W2F5Output2K4K5K_W5F0Date
+      info.W2F5Output2K4K5K_W5F0Date = node.debug_info[node.index];
+      break;
+
+    case 6://W1F6GNoise_W1F5SNoise_W1F4MotorCtl_W4F0SnYear
+      info.W1F6GNoise_W1F5SNoise_W1F4MotorCtl_W4F0SnYear =
+        node.debug_info[node.index];
+      break;
+
+    case 7://W7F0SnNumH
+      info.W7F0SnNumH = node.debug_info[node.index];
+      break;
+
+    case 8://W7F0SnNumL
+      info.W7F0SnNumL = node.debug_info[node.index];
+
+      break;
+
+    default:
+      break;
+  }
+
+  if (node.index > info.MaxDebugIndex && node.index < 100) {
+    info.MaxDebugIndex = static_cast<int>(node.index);
+  }
+}
+
+void CYdLidar::handleDeviceInfoPackage(int count) {
+  if (m_ParseSuccess) {
+    return;
+  }
+
+  LaserDebug debug;
+  debug.MaxDebugIndex = 0;
+
+  for (int i = 0; i < count; i++) {
+    parsePackageNode(global_nodes[i], debug);
+  }
+
+  device_info info;
+
+  if (ParseLaserDebugInfo(debug, info)) {
+    if (info.firmware_version != 0 ||
+        info.hardware_version != 0) {
+      std::string serial_number;
+
+      for (int i = 0; i < 16; i++) {
+        serial_number += std::to_string(info.serialnum[i] & 0xff);
+      }
+
+      Major = (uint8_t)(info.firmware_version >> 8);
+      Minjor = (uint8_t)(info.firmware_version & 0xff);
+      std::string softVer =  std::to_string(Major & 0xff) + "." + std::to_string(
+                               Minjor & 0xff);
+      std::string hardVer = std::to_string(info.hardware_version & 0xff);
+
+      m_lidarSerialNum = serial_number;
+      m_lidarSoftVer = softVer;
+      m_lidarHardVer = hardVer;
+
+      if (!m_ParseSuccess) {
+        printfVersionInfo(info);
+      }
+    }
+
+  }
 }
 
 
@@ -289,6 +394,7 @@ bool  CYdLidar::turnOn() {
     }
   }
 
+  m_ParseSuccess &= !m_SingleChannel;
   m_PointTime = lidarPtr->getPointTime();
 
   if (checkLidarAbnormal()) {
@@ -299,13 +405,14 @@ bool  CYdLidar::turnOn() {
     return false;
   }
 
-  if (m_SingleChannel) {
+  if (m_SingleChannel && !m_ParseSuccess) {
     handleSingleChannelDevice();
   }
 
   m_PointTime = lidarPtr->getPointTime();
   isScanning = true;
   lidarPtr->setAutoReconnect(m_AutoReconnect);
+  printf("[YDLIDAR INFO] Current Sampling Rate : %dK\n", m_SampleRate);
   printf("[YDLIDAR INFO] Now YDLIDAR is scanning ......\n");
   fflush(stdout);
   return true;
@@ -350,20 +457,27 @@ bool CYdLidar::checkLidarAbnormal() {
     }
 
     float scan_time = 0.0;
-    uint64_t start_time = 0;
-    uint64_t end_time = 0;
+    uint32_t start_time = 0;
+    uint32_t end_time = 0;
     op_result = RESULT_OK;
 
-    while (buffer_count < 10 && scan_time < 0.05 && IS_OK(op_result)) {
-      start_time = getTime();
+    while (buffer_count < 10 && (scan_time < 0.05 ||
+                                 !lidarPtr->getSingleChannel()) && IS_OK(op_result)) {
+      start_time = getms();
       count = YDlidarDriver::MAX_SCAN_NODES;
       op_result =  lidarPtr->grabScanData(global_nodes, count);
-      end_time = getTime();
-      scan_time = 1.0 * static_cast<int64_t>(end_time - start_time) / 1e9;
+      end_time = getms();
+      scan_time = 1.0 * static_cast<int32_t>(end_time - start_time) / 1e3;
       buffer_count++;
 
-      if (!m_SingleChannel && IS_OK(op_result)) {
-        return !IS_OK(op_result);
+      if (IS_OK(op_result)) {
+        handleDeviceInfoPackage(count);
+
+        if (CalculateSampleRate(count, scan_time)) {
+          if (!lidarPtr->getSingleChannel()) {
+            return !IS_OK(op_result);
+          }
+        }
       }
     }
 
@@ -373,17 +487,23 @@ bool CYdLidar::checkLidarAbnormal() {
 
       while (collection < 5) {
         count = YDlidarDriver::MAX_SCAN_NODES;
-        start_time = getTime();
+        start_time = getms();
         op_result =  lidarPtr->grabScanData(global_nodes, count);
-        end_time = getTime();
+        end_time = getms();
 
 
         if (IS_OK(op_result)) {
-          if (abs(data.front() - count) > 10) {
+          if (std::abs(static_cast<int>(data.front() - count)) > 10) {
             data.erase(data.begin());
           }
 
-          scan_time = 1.0 * static_cast<int64_t>(end_time - start_time) / 1e9;
+          handleDeviceInfoPackage(count);
+          scan_time = 1.0 * static_cast<int32_t>(end_time - start_time) / 1e3;
+          data.push_back(count);
+
+          if (CalculateSampleRate(count, scan_time)) {
+
+          }
 
           if (scan_time > 0.05 && scan_time < 0.5 && lidarPtr->getSingleChannel()) {
             m_SampleRate = static_cast<int>((count / scan_time + 500) / 1000);
@@ -391,7 +511,6 @@ bool CYdLidar::checkLidarAbnormal() {
             lidarPtr->setPointTime(m_PointTime);
           }
 
-          data.push_back(count);
         }
 
         collection++;
@@ -470,38 +589,29 @@ bool CYdLidar::getDeviceInfo() {
   lidar_model = devinfo.model;
   model = lidarModelToString(devinfo.model);
   bool intensity = hasIntensity(devinfo.model);
-  int defalutSampleRate = lidarModelDefaultSampleRate(devinfo.model);
+  defalutSampleRate = lidarModelDefaultSampleRate(devinfo.model);
 
   std::string serial_number;
   lidarPtr->setIntensities(intensity);
-  Major = (uint8_t)(devinfo.firmware_version >> 8);
-  Minjor = (uint8_t)(devinfo.firmware_version & 0xff);
-  printf("[YDLIDAR] Connection established in [%s][%d]:\n"
-         "Firmware version: %u.%u\n"
-         "Hardware version: %u\n"
-         "Model: %s\n"
-         "Serial: ",
-         m_SerialPort.c_str(),
-         m_SerialBaudrate,
-         Major,
-         Minjor,
-         (unsigned int)devinfo.hardware_version,
-         model.c_str());
+  printfVersionInfo(devinfo);
 
   for (int i = 0; i < 16; i++) {
-    printf("%01X", devinfo.serialnum[i] & 0xff);
     serial_number += std::to_string(devinfo.serialnum[i] & 0xff);
   }
 
-  printf("\n");
+  if (devinfo.firmware_version != 0 ||
+      devinfo.hardware_version != 0) {
+    m_lidarSerialNum = serial_number;
+    m_lidarSoftVer = std::to_string(Major & 0xff) + "." + std::to_string(
+                       Minjor & 0xff);
+    m_lidarHardVer = std::to_string(devinfo.hardware_version & 0xff);
+  }
 
   if (hasSampleRate(devinfo.model)) {
     checkSampleRate();
   } else {
     m_SampleRate = defalutSampleRate;
   }
-
-  printf("[YDLIDAR INFO] Current Sampling Rate : %dK\n", m_SampleRate);
 
   if (hasScanFrequencyCtrl(devinfo.model)) {
     checkScanFrequency();
@@ -526,105 +636,49 @@ void CYdLidar::handleSingleChannelDevice() {
     return;
   }
 
-  lidar_model = devinfo.model;
-  uint8_t Major = (uint8_t)(devinfo.firmware_version >> 8);
-  uint8_t Minjor = (uint8_t)(devinfo.firmware_version & 0xff);
-  printf("[YDLIDAR] Device Info:\n"
+  printfVersionInfo(devinfo);
+  return;
+}
+
+void CYdLidar::printfVersionInfo(const device_info &info) {
+  if (info.firmware_version == 0 &&
+      info.hardware_version == 0) {
+    return;
+  }
+
+  m_ParseSuccess = true;
+  lidar_model = info.model;
+  Major = (uint8_t)(info.firmware_version >> 8);
+  Minjor = (uint8_t)(info.firmware_version & 0xff);
+  printf("[YDLIDAR] Connection established in [%s][%d]:\n"
          "Firmware version: %u.%u\n"
          "Hardware version: %u\n"
-         "Model: %dK\n"
+         "Model: %s\n"
          "Serial: ",
+         m_SerialPort.c_str(),
+         m_SerialBaudrate,
          Major,
          Minjor,
-         (unsigned int)devinfo.hardware_version,
-         m_SampleRate);
+         (unsigned int)info.hardware_version,
+         lidarModelToString(lidar_model).c_str());
 
   for (int i = 0; i < 16; i++) {
-    printf("%01X", devinfo.serialnum[i] & 0xff);
+    printf("%01X", info.serialnum[i] & 0xff);
   }
 
   printf("\n");
-  printf("[YDLIDAR INFO] Current Sampling Rate : %dK\n", m_SampleRate);
-  return;
 }
 
 void CYdLidar::checkSampleRate() {
   sampling_rate _rate;
   _rate.rate = 3;
-  int _samp_rate = 20;
+  int _samp_rate = 9;
   int try_count = 0;
-  m_FixedSize = 2880;
+  m_FixedSize = 1440;
   result_t ans = lidarPtr->getSamplingRate(_rate);
 
   if (IS_OK(ans)) {
-    switch (m_SampleRate) {
-      case 10:
-        _samp_rate = YDlidarDriver::YDLIDAR_RATE_4K;
-        break;
-
-      case 16:
-        _samp_rate = YDlidarDriver::YDLIDAR_RATE_8K;
-        break;
-
-      case 18:
-        _samp_rate = YDlidarDriver::YDLIDAR_RATE_9K;
-        break;
-
-      case 20:
-        _samp_rate = YDlidarDriver::YDLIDAR_RATE_10K;
-        break;
-
-      default:
-        _samp_rate = _rate.rate;
-        break;
-    }
-
-    if (!isOctaveLidar(lidar_model)) {
-      _rate.rate = 2;
-      _samp_rate = 9;
-      try_count = 0;
-      m_FixedSize = 1440;
-
-      switch (m_SampleRate) {
-        case 4:
-          _samp_rate = YDlidarDriver::YDLIDAR_RATE_4K;
-          break;
-
-        case 8:
-          _samp_rate = YDlidarDriver::YDLIDAR_RATE_8K;
-          break;
-
-        case 9:
-          _samp_rate = YDlidarDriver::YDLIDAR_RATE_9K;
-          break;
-
-        default:
-          _samp_rate = _rate.rate;
-          break;
-      }
-
-      if (lidar_model == YDlidarDriver::YDLIDAR_F4PRO) {
-        _rate.rate = 0;
-        _samp_rate = 4;
-        try_count = 0;
-        m_FixedSize = 720;
-
-        switch (m_SampleRate) {
-          case 4:
-            _samp_rate = YDlidarDriver::YDLIDAR_RATE_4K;
-            break;
-
-          case 6:
-            _samp_rate = YDlidarDriver::YDLIDAR_RATE_8K;
-            break;
-
-          default:
-            _samp_rate = _rate.rate;
-            break;
-        }
-
-      }
-    }
+    _samp_rate = ConvertUserToLidarSmaple(lidar_model, m_SampleRate, _rate.rate);
 
     while (_samp_rate != _rate.rate) {
       ans = lidarPtr->setSamplingRate(_rate);
@@ -635,62 +689,71 @@ void CYdLidar::checkSampleRate() {
       }
     }
 
-    switch (_rate.rate) {
-      case YDlidarDriver::YDLIDAR_RATE_4K:
-        _samp_rate = 10;
-        m_FixedSize = 1440;
-
-        if (!isOctaveLidar(lidar_model)) {
-          _samp_rate = 4;
-          m_FixedSize = 720;
-        }
-
-        break;
-
-      case YDlidarDriver::YDLIDAR_RATE_8K:
-        m_FixedSize = 2400;
-        _samp_rate = 16;
-
-        if (!isOctaveLidar(lidar_model)) {
-          _samp_rate = 8;
-          m_FixedSize = 1440;
-
-          if (lidar_model == YDlidarDriver::YDLIDAR_F4PRO) {
-            _samp_rate = 6;
-            m_FixedSize = 720;
-          }
-        }
-
-        break;
-
-      case YDlidarDriver::YDLIDAR_RATE_9K:
-        m_FixedSize = 2600;
-        _samp_rate = 18;
-
-        if (!isOctaveLidar(lidar_model)) {
-          _samp_rate = 9;
-          m_FixedSize = 1440;
-        }
-
-        break;
-
-      case YDlidarDriver::YDLIDAR_RATE_10K:
-        m_FixedSize = 2800;
-        _samp_rate = 20;
-
-        if (!isOctaveLidar(lidar_model)) {
-          _samp_rate = 10;
-          m_FixedSize = 1440;
-        }
-
-        break;
-
-      default:
-        break;
-    }
+    _samp_rate = ConvertLidarToUserSmaple(lidar_model, _rate.rate);
   }
 
   m_SampleRate = _samp_rate;
+  defalutSampleRate = m_SampleRate;
+}
+
+
+bool CYdLidar::CalculateSampleRate(int count, double scan_time) {
+  if (count < 1) {
+    return false;
+  }
+
+  if (global_nodes[0].scan_frequence != 0) {
+    double scanfrequency  = global_nodes[0].scan_frequence / 10.0;
+
+    if (isTOFLidar(m_LidarType)) {
+      if (!isOldVersionTOFLidar(lidar_model, Major, Minjor)) {
+        scanfrequency  = global_nodes[0].scan_frequence / 10.0 + 3.0;
+      }
+    }
+
+    int samplerate = static_cast<int>((count * scanfrequency + 500) / 1000);
+    int cnt = 0;
+
+    if (SampleRateMap.find(samplerate) != SampleRateMap.end()) {
+      cnt = SampleRateMap[samplerate];
+    }
+
+    cnt++;
+    SampleRateMap[samplerate] =  cnt;
+
+    if (isValidSampleRate(SampleRateMap) || defalutSampleRate == samplerate) {
+      m_SampleRate = samplerate;
+      m_PointTime = 1e9 / (m_SampleRate * 1000);
+      lidarPtr->setPointTime(m_PointTime);
+
+      if (!m_SingleChannel) {
+        m_FixedSize = m_SampleRate * 1000 / (m_ScanFrequency - 0.1);
+        printf("[YDLIDAR]:Fixed Size: %d\n", m_FixedSize);
+        printf("[YDLIDAR]:Sample Rate: %dK\n", m_SampleRate);
+      }
+
+      return true;
+    } else {
+      if (SampleRateMap.size() > 1) {
+        SampleRateMap.clear();
+      }
+    }
+  } else {
+    if (scan_time > 0.04 && scan_time < 0.4) {
+      int samplerate = static_cast<int>((count / scan_time + 500) / 1000);
+
+      if (defalutSampleRate == samplerate) {
+        m_SampleRate = samplerate;
+        m_PointTime = 1e9 / (m_SampleRate * 1000);
+        lidarPtr->setPointTime(m_PointTime);
+        return true;
+      }
+    }
+
+  }
+
+
+  return false;
 }
 /*-------------------------------------------------------------
                         checkScanFrequency
@@ -834,12 +897,7 @@ bool  CYdLidar::checkCOMMs() {
   }
 
   lidarPtr->setSingleChannel(m_SingleChannel);
-
-  if (!m_SingleChannel) {
-    m_TOFLidar = false;
-  }
-
-  lidarPtr->setTOFLidar(m_TOFLidar);
+  lidarPtr->setLidarType(m_LidarType);
 
   return true;
 }

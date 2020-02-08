@@ -118,6 +118,15 @@ typedef enum {
 #define Node_NotSync 2
 #define PackagePaidBytes 10
 #define PH 0x55AA
+#define NORMAL_PACKAGE_SIZE 90
+#define INTENSITY_NORMAL_PACKAGE_SIZE 130
+
+
+typedef enum {
+  TYPE_TOF = 0,
+  TYPE_TRIANGLE  = 1,
+  TYPE_Tail,
+} LidarTypeID;
 
 #if defined(_WIN32)
 #pragma pack(1)
@@ -130,6 +139,8 @@ struct node_info {
   uint16_t   distance_q2; //! 当前测距点距离
   uint64_t   stamp; //! 时间戳
   uint8_t    scan_frequence;//! 特定版本此值才有效,无效值是0
+  uint8_t    debug_info[12];
+  uint8_t    index;
 } __attribute__((packed)) ;
 
 struct PackageNode {
@@ -234,6 +245,18 @@ struct LaserPoint {
     this->intensity = data.intensity;
     return *this;
   }
+};
+
+struct LaserDebug {
+  uint8_t     W3F4CusMajor_W4F0CusMinor;
+  uint8_t     W4F3Model_W3F0DebugInfTranVer;
+  uint8_t     W3F4HardwareVer_W4F0FirewareMajor;
+  uint8_t     W3F4BoradHardVer_W4F0Moth;
+  uint8_t     W2F5Output2K4K5K_W5F0Date;
+  uint8_t     W1F6GNoise_W1F5SNoise_W1F4MotorCtl_W4F0SnYear;
+  uint8_t     W7F0SnNumH;
+  uint8_t     W7F0SnNumL;
+  uint8_t     MaxDebugIndex;
 };
 
 //! A struct for returning configuration from the YDLIDAR

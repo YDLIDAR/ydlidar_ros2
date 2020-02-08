@@ -25,7 +25,7 @@
   <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.4.4</span>
+   &#160;<span id="projectnumber">V1.4.5</span>
    </div>
   </td>
  </tr>
@@ -96,7 +96,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
       <li><a href="#index_w"><span>w</span></a></li>
-      <li><a href="#index_y"><span>y</span></a></li>
       <li class="current"><a href="#index_0x7e"><span>~</span></a></li>
     </ul>
   </div>
@@ -157,6 +156,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>cacheScanData()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#ab462b22dc3a4d39fef4f722345a87d5e">ydlidar::YDlidarDriver</a>
 </li>
+<li>CalculateSampleRate()
+: <a class="el" href="class_c_yd_lidar.html#a21d2e05885f5dd78773fdc2c29f2a2a6">CYdLidar</a>
+</li>
 <li>checkAutoConnecting()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a95e6d6ec7bc14746a0346590ff702a72">ydlidar::YDlidarDriver</a>
 </li>
@@ -206,6 +208,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>debug_info
+: <a class="el" href="structnode__info.html#a9335da3fd6cdf430539008d8dd0e6f3c">node_info</a>
+</li>
 <li>DEFAULT_HEART_BEAT
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#abbb612f1ac6a9f6dfdcfeafb149dd0daa94033b4717c83f52cd008fe38b712e21">ydlidar::YDlidarDriver</a>
 </li>
@@ -334,6 +339,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
+<li>handleDeviceInfoPackage()
+: <a class="el" href="class_c_yd_lidar.html#a402f601e56a3bdb6b87bc1e4c2d35539">CYdLidar</a>
+</li>
 <li>handleSingleChannelDevice()
 : <a class="el" href="class_c_yd_lidar.html#a3f6a6ba2b6db3cf3f57d7feb5b25d527">CYdLidar</a>
 </li>
@@ -420,11 +428,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>parsePackageNode()
+: <a class="el" href="class_c_yd_lidar.html#ad521498bab96c5f6823c7b107bc16c88">CYdLidar</a>
+</li>
 <li>points
 : <a class="el" href="struct_laser_scan.html#ab9b81244b06fbfe84f2fc211e538f5b4">LaserScan</a>
 </li>
 <li>port
 : <a class="el" href="structserial_1_1_port_info.html#a5d4242cdd6c0d01260e24964af4c23d2">serial::PortInfo</a>
+</li>
+<li>printfVersionInfo()
+: <a class="el" href="class_c_yd_lidar.html#a0b9719b24eb399eb7e857deb8487fa95">CYdLidar</a>
 </li>
 <li>PropertyBuilderByName()
 : <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a775ccda7f7fc95f772245d8c7d557179">ydlidar::YDlidarDriver</a>
@@ -440,7 +454,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structsampling__rate.html#a8d860fbedd930d2022fe7bb6cf1f78b6">sampling_rate</a>
 </li>
 <li>read()
-: <a class="el" href="classserial_1_1_serial.html#a3ecd4645c76548ba079eab6f2f46adfb">serial::Serial</a>
+: <a class="el" href="classserial_1_1_serial.html#a01fc2e3d77cb7d70069de87eca1400e9">serial::Serial</a>
 </li>
 <li>read_timeout_constant
 : <a class="el" href="structserial_1_1_timeout.html#a099244649dec66b6e0548480edeb2b9f">serial::Timeout</a>
@@ -611,7 +625,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>write()
 : <a class="el" href="classserial_1_1_serial_1_1_serial_impl.html#adb5572ca568cd0186dec4bc4af28f13b">serial::Serial::SerialImpl</a>
-, <a class="el" href="classserial_1_1_serial.html#a7c92c0307b86a935f6623953eec66460">serial::Serial</a>
+, <a class="el" href="classserial_1_1_serial.html#a9c2827088d82ee82f245ffa106fa7d10">serial::Serial</a>
 </li>
 <li>write_timeout_constant
 : <a class="el" href="structserial_1_1_timeout.html#accf01b97f83564f4ce3d6e5f63e21006">serial::Timeout</a>
@@ -621,76 +635,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>writeData()
 : <a class="el" href="classserial_1_1_serial.html#aeb637cc63ead4662317cea58a997e0f6">serial::Serial</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_y"></a>- y -</h3><ul>
-<li>YDLIDAR_F2
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a7d64a3d3e3d3ef6d1db5c0a8740a523a">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_F4
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a3303d67e56b0dd5a36397a5326965713">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_F4PRO
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a700fca9e58a191c0d1a4d13ae67927e8">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G1
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853aa98373fd7cf114123cf357e8bb5bc3ce">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G10
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853ae002254eaa770ccb6d0d5f611e2d3303">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G2A
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853af6980ee75e8a4f3dd3bdfbcceacf3104">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G2B
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a396e2eac21dc8b0bdb474d7f7a1b49ad">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G2C
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a880868c72282a0baf5630e43ffcb5a36">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G4
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a6bd6fb5e1f3ddd4e36ab12e53c114039">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G4B
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a767395ac3ca22f0dbe6b07a498e196c8">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G4C
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a55a9d7236d51f9d1d38d41cd102be527">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G4PRO
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853ae5e91e3e2e4fdf6a134e796e157e35ef">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_G6
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a47bc5fa1ceb0d5eda94e7e70bfa03f53">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_R2
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853ab2fd2f153ca88030ab27f48777622777">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_S2
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a99ba8286a5265e554cfba5c9d755c8be">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_S4
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853ab1d9ab224053d610e97ebee7236345ba">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_S4B
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a60b16d0468bb4fa5547de578ea6bda7e">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_T1
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a6ea5ed1cde351e4b5df40d1bbd697212">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_TG15
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a0266f6b9842d35cb3d85057d478b8e8b">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_TG30
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a21b8322d4687fc7fb9871fd5b5d372ef">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_TG50
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a249b8593318c40646f2842e5c5e89715">ydlidar::YDlidarDriver</a>
-</li>
-<li>YDLIDAR_X4
-: <a class="el" href="classydlidar_1_1_y_dlidar_driver.html#a1edd5634ea00ca122a0882d875f42853a5065807c3aa6a4a731858dda599667b7">ydlidar::YDlidarDriver</a>
 </li>
 </ul>
 

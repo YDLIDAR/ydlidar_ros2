@@ -25,7 +25,7 @@
   <td id="projectlogo"><img alt="Logo" src="ydliar.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">YDLIDAR SDK
-   &#160;<span id="projectnumber">V1.4.4</span>
+   &#160;<span id="projectnumber">V1.4.5</span>
    </div>
   </td>
  </tr>
@@ -109,6 +109,9 @@ Protected Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#abbe29195b58904a1c1c3c5183e6730df">checkSampleRate</a> ()</td></tr>
 <tr class="memdesc:abbe29195b58904a1c1c3c5183e6730df"><td class="mdescLeft">&#160;</td><td class="mdescRight">checkSampleRate <br /></td></tr>
 <tr class="separator:abbe29195b58904a1c1c3c5183e6730df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21d2e05885f5dd78773fdc2c29f2a2a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#a21d2e05885f5dd78773fdc2c29f2a2a6">CalculateSampleRate</a> (int count)</td></tr>
+<tr class="memdesc:a21d2e05885f5dd78773fdc2c29f2a2a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">CalculateSampleRate.  <a href="#a21d2e05885f5dd78773fdc2c29f2a2a6">More...</a><br /></td></tr>
+<tr class="separator:a21d2e05885f5dd78773fdc2c29f2a2a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e9ac7d5da50d40dd4f78b046a1618ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#a0e9ac7d5da50d40dd4f78b046a1618ae">checkScanFrequency</a> ()</td></tr>
 <tr class="separator:a0e9ac7d5da50d40dd4f78b046a1618ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af305323871f06007e71cc12ab8a8be9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#af305323871f06007e71cc12ab8a8be9a">checkLidarAbnormal</a> ()</td></tr>
@@ -126,8 +129,50 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#a3f6a6ba2b6db3cf3f57d7feb5b25d527">handleSingleChannelDevice</a> ()</td></tr>
 <tr class="memdesc:a3f6a6ba2b6db3cf3f57d7feb5b25d527"><td class="mdescLeft">&#160;</td><td class="mdescRight">handleSingleChannelDevice <br /></td></tr>
 <tr class="separator:a3f6a6ba2b6db3cf3f57d7feb5b25d527"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad521498bab96c5f6823c7b107bc16c88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#ad521498bab96c5f6823c7b107bc16c88">parsePackageNode</a> (const <a class="el" href="structnode__info.html">node_info</a> &amp;node, <a class="el" href="struct_laser_debug.html">LaserDebug</a> &amp;info)</td></tr>
+<tr class="memdesc:ad521498bab96c5f6823c7b107bc16c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">parsePackageNode  <a href="#ad521498bab96c5f6823c7b107bc16c88">More...</a><br /></td></tr>
+<tr class="separator:ad521498bab96c5f6823c7b107bc16c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a402f601e56a3bdb6b87bc1e4c2d35539"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#a402f601e56a3bdb6b87bc1e4c2d35539">handleDeviceInfoPackage</a> (int count)</td></tr>
+<tr class="memdesc:a402f601e56a3bdb6b87bc1e4c2d35539"><td class="mdescLeft">&#160;</td><td class="mdescRight">handleDeviceInfoPackage  <a href="#a402f601e56a3bdb6b87bc1e4c2d35539">More...</a><br /></td></tr>
+<tr class="separator:a402f601e56a3bdb6b87bc1e4c2d35539"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b9719b24eb399eb7e857deb8487fa95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_yd_lidar.html#a0b9719b24eb399eb7e857deb8487fa95">printfVersionInfo</a> (const <a class="el" href="structdevice__info.html">device_info</a> &amp;info)</td></tr>
+<tr class="memdesc:a0b9719b24eb399eb7e857deb8487fa95"><td class="mdescLeft">&#160;</td><td class="mdescRight">printfVersionInfo  <a href="#a0b9719b24eb399eb7e857deb8487fa95">More...</a><br /></td></tr>
+<tr class="separator:a0b9719b24eb399eb7e857deb8487fa95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a21d2e05885f5dd78773fdc2c29f2a2a6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CYdLidar::CalculateSampleRate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>CalculateSampleRate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a8a3937dfb486836da1fd56ebb0016a51"></a>
 <div class="memitem">
 <div class="memproto">
@@ -329,6 +374,38 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
+<a class="anchor" id="a402f601e56a3bdb6b87bc1e4c2d35539"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CYdLidar::handleDeviceInfoPackage </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>handleDeviceInfoPackage </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a9d81d57f978ec2c1918e5bb876d91ac8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -395,9 +472,84 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
+<a class="anchor" id="ad521498bab96c5f6823c7b107bc16c88"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CYdLidar::parsePackageNode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structnode__info.html">node_info</a> &amp;&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_laser_debug.html">LaserDebug</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>parsePackageNode </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td></td></tr>
+    <tr><td class="paramname">info</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0b9719b24eb399eb7e857deb8487fa95"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CYdLidar::printfVersionInfo </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdevice__info.html">device_info</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>printfVersionInfo </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/tony/gitlab/sdk/include/<a class="el" href="_c_yd_lidar_8h_source.html">CYdLidar.h</a></li>
-<li>/home/tony/gitlab/sdk/src/CYdLidar.cpp</li>
+<li>/home/yang/lidar_ws/src/sdk/include/<a class="el" href="_c_yd_lidar_8h_source.html">CYdLidar.h</a></li>
+<li>/home/yang/lidar_ws/src/sdk/src/CYdLidar.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
