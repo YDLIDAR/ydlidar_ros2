@@ -1,4 +1,4 @@
-YDLIDAR ROS2 PACKAGE V1.3.6
+YDLIDAR ROS2 PACKAGE V1.4.5
 =====================================================================
 
 ROS2 node and test application for YDLIDAR
@@ -105,6 +105,12 @@ frequency (double, default: 10)
 
 Upgrade Log
 =====================================================================
+
+2020-02-08 version:1.4.5
+
+   1.Update SDK to 1.4.5
+
+   2.fixed ROS2 Dashing and Eloquent.
 
 2019-12-23 version:1.4.4
 

@@ -30,7 +30,7 @@
 #include <string>
 #include <signal.h>
 
-#define ROS2Verision "1.4.4"
+#define ROS2Verision "1.4.5"
 
 
 using namespace ydlidar;
@@ -61,49 +61,63 @@ int main(int argc, char *argv[]) {
   std::string port = "/dev/ttyUSB0";
   int baudrate = 230400;
   std::string frame_id = "laser_frame";
-  bool reversion = false;
+  bool reversion = true;
   bool resolution_fixed = true;
   bool auto_reconnect = true;
   double angle_max = 180;
   double angle_min = -180;
   int samp_rate = 9;
   std::string list = "";
-  double max_range = 32.0;
-  double min_range = 0.06;
+  double max_range = 64.0;
+  double min_range = 0.01;
   double frequency = 10.0;
   bool m_singleChannel = false;
   bool m_isToFLidar = false;
   bool m_Inverted = true;
 
-
+  node->declare_parameter("port");
   node->get_parameter("port", port);
 
+  node->declare_parameter("frame_id");
   node->get_parameter("frame_id", frame_id);
 
+  node->declare_parameter("ignore_array");
   node->get_parameter("ignore_array", list);
 
+  node->declare_parameter("baudrate");
   node->get_parameter("baudrate", baudrate);
 
+  node->declare_parameter("samp_rate");
   node->get_parameter("samp_rate", samp_rate);
 
+  node->declare_parameter("resolution_fixed");
   node->get_parameter("resolution_fixed", resolution_fixed);
 
+  node->declare_parameter("singleChannel");
   node->get_parameter("singleChannel", m_singleChannel);
 
+  node->declare_parameter("auto_reconnect");
   node->get_parameter("auto_reconnect", auto_reconnect);
 
+  node->declare_parameter("reversion");
   node->get_parameter("reversion", reversion);
 
+  node->declare_parameter("isToFLidar");
   node->get_parameter("isToFLidar", m_isToFLidar);
 
+  node->declare_parameter("angle_max");
   node->get_parameter("angle_max", angle_max);
 
+  node->declare_parameter("angle_min");
   node->get_parameter("angle_min", angle_min);
 
+  node->declare_parameter("max_range");
   node->get_parameter("max_range", max_range);
 
+  node->declare_parameter("min_range");
   node->get_parameter("min_range", min_range);
 
+  node->declare_parameter("frequency");
   node->get_parameter("frequency", frequency);
 
 
@@ -125,12 +139,12 @@ int main(int argc, char *argv[]) {
 
   CYdLidar laser;
 
-  if (frequency < 5) {
+  if (frequency < 3) {
     frequency = 7.0;
   }
 
-  if (frequency > 12) {
-    frequency = 12;
+  if (frequency > 16) {
+    frequency = 16;
   }
 
   if (angle_max < angle_min) {
@@ -152,7 +166,7 @@ int main(int argc, char *argv[]) {
   laser.setSingleChannel(m_singleChannel);
   laser.setScanFrequency(frequency);
   laser.setSampleRate(samp_rate);
-  laser.setTOFLidar(m_isToFLidar);
+  laser.setLidarType(m_isToFLidar ? TYPE_TOF : TYPE_TRIANGLE);
   laser.setIgnoreArray(ignore_array);
 
 
@@ -165,14 +179,14 @@ int main(int argc, char *argv[]) {
   // Set the QoS. ROS 2 will provide QoS profiles based on the following use cases:
   // Default QoS settings for publishers and subscriptions (rmw_qos_profile_default).
   // Sensor data (rmw_qos_profile_sensor_data).
-  rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
+  //rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
   // set the depth to the QoS profile
-  custom_qos_profile.depth = 7;
+  //custom_qos_profile.depth = 7;
 
 
 
 
-  auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan", custom_qos_profile);
+  auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan"/*, custom_qos_profile*/);
 
 
 
@@ -215,15 +229,16 @@ int main(int argc, char *argv[]) {
     } else {
       RCLCPP_ERROR(node->get_logger(), "Failed to get scan");
     }
-
-
-
+    if(!rclcpp::ok()) {
+      break;
+    }
     rclcpp::spin_some(node);
     loop_rate.sleep();
   }
 
 
   printf("[YDLIDAR INFO] Now YDLIDAR is stopping .......\n");
+  fflush(stdout);
   laser.turnOff();
   laser.disconnecting();
   rclcpp::shutdown();

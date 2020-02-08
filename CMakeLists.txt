@@ -29,7 +29,6 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/sdk/include
   ${PROJECT_SOURCE_DIR}/sdk/src
-  ${PROJECT_SOURCE_DIR}/sdk/matrix
 )
 
 add_executable(ydlidar_node src/ydlidar_node.cpp  ${SDK_SRC})
