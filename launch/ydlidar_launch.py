@@ -16,16 +16,10 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch_ros.actions import LifecycleNode
+from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch.actions import EmitEvent
-from launch.actions import RegisterEventHandler
-from launch_ros.events.lifecycle import ChangeState
-from launch_ros.events.lifecycle import matches_node_name
-from launch_ros.event_handlers import OnStateTransition
 from launch.actions import LogInfo
-from launch.events import matches_action
-from launch.event_handlers.on_shutdown import OnShutdown
 
 import lifecycle_msgs.msg
 import os
@@ -43,23 +37,20 @@ def generate_launch_description():
 
     driver_node = LifecycleNode(package='ydlidar',
                                 node_executable='ydlidar_node',
-                                node_name=node_name,
+                                node_name='ydlidar_node',
                                 output='screen',
                                 emulate_tty=True,
                                 parameters=[parameter_file],
                                 node_namespace='/',
                                 )
-    tf_node = LifecycleNode(package='tf2_ros',
-                            node_executable='static_transform_publisher',
-                            node_name='static_tf_pub_laser',
-                            output='screen',
-                            emulate_tty=True,
-                            parameters=['0', '0', '0.02','0', '0', '0', '1','base_link','laser_frame'],
-                            node_namespace='/',
-                            )
+    tf2_node = Node(package='tf2_ros',
+                    node_executable='static_transform_publisher',
+                    node_name='static_tf_pub_laser',
+                    arguments=['0', '0', '0.02','0', '0', '0', '1','base_link','laser_frame'],
+                    )
 
     return LaunchDescription([
         params_declare,
         driver_node,
-        tf_node,
+        tf2_node,
     ])
