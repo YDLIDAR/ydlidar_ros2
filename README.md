@@ -1,21 +1,18 @@
-YDLIDAR ROS2 PACKAGE V1.4.5
-=====================================================================
-
+![YDLIDAR](sdk/image/YDLidar.jpg  "YDLIDAR")
+# YDLIDAR ROS2 PACKAGE V1.4.5
 ROS2 node and test application for YDLIDAR
 
 Visit EAI Website for more details about YDLIDAR.
 
-How to [install ROS2](https://index.ros.org/doc/ros2/Installation)
-=====================================================================
+## How to [install ROS2](https://index.ros.org/doc/ros2/Installation)
 [ubuntu](https://index.ros.org/doc/ros2/Installation/Dashing/Linux-Install-Debians/)
+
 [windows](https://index.ros.org/doc/ros2/Installation/Dashing/Windows-Install-Binary/)
 
-How to Create a ROS2 workspace
-=====================================================================
+## How to Create a ROS2 workspace
 [Create a workspace](https://index.ros.org/doc/ros2/Tutorials/Colcon-Tutorial/#create-a-workspace)
 
-How to build YDLIDAR ros2 package
-=====================================================================
+## How to build YDLIDAR ros2 package
     1) Clone this project to your ament's workspace src folder 
     2) Running ament to build ydlidar_node and ydlidar_client
     3) Create the name "/dev/ydlidar" for YDLIDAR
@@ -24,20 +21,16 @@ How to build YDLIDAR ros2 package
     --$ sudo sh initenv.sh
 Note: Download and Build details [here](docs/ydlidar.md)
 
-How to run YDLIDAR ros2 package
-=====================================================================
+## How to run YDLIDAR ros2 package
 
-1. Run YDLIDAR node and view using test application
-------------------------------------------------------------
-
+### 1. Run YDLIDAR node and view using test application
 	$ros2 run ydlidar ydlidar_node
 
 	$ros2 run ydlidar ydlidar_client
 
 Note: You should see YDLIDAR's scan result in the console
 
-2.Run YDLIDAR node and view using test application by launch
-------------------------------------------------------------
+### 2.Run YDLIDAR node and view using test application by launch
 	$launch $(ros2 pkg prefix ydlidar)/share/ydlidar/launch/ydlidar.py
 
 	$ros2 run ydldiar ydlidar_client or ros2 topic echo /scan
@@ -45,12 +38,38 @@ or
 
 	$ros2 launch ydlidar ydlidar_launch.py
 
-Configuration
-=====================================================================
-path: [ydlidar.yaml](ydlidar_ros2/params/ydlidar.yaml)
+## Dataset
+|LIDAR      | Model  |  Baudrate |  SampleRate(K) | Range(m)  		   |  Frequency(HZ) | Intenstiy(bit) | SingleChannel | voltage(V)|
+| :-------- |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| F4        | 1	   |  115200   |   4            |  0.12~12         | 5~12           | false          | false    	  | 4.8~5.2   |
+| S4        | 4	   |  115200   |   4            |  0.10~8.0        | 5~12 (PWM)     | false          | false    	  | 4.8~5.2   |
+| S4B       | 4/11   |  153600   |   4            |  0.10~8.0        | 5~12(PWM)      | true(8)        | false    	  | 4.8~5.2   |
+| S2        | 4/12   |  115200   |   3            |  0.10~8.0     	| 4~8(PWM)       | false          | true    		  | 4.8~5.2   |
+| G4        | 5	   |  230400   |   9/8/4        |  0.28/0.26/0.1~16| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| X4        | 6	   |  128000   |   5            |  0.12~10     		| 5~12(PWM)      | false          | false    	  | 4.8~5.2   |
+| X2/X2L    | 6	   |  115200   |   3            |  0.10~8.0     	| 4~8(PWM)       | false          | true    		  | 4.8~5.2   |
+| G4PRO     | 7	   |  230400   |   9/8/4        |  0.28/0.26/0.1~16| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| F4PRO     | 8	   |  230400   |   4/6          |  0.12~12         | 5~12        	  | false          | false    	  | 4.8~5.2   |
+| R2        | 9	   |  230400   |   5            |  0.12~16     		| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| G6        | 13     |  512000   |   18/16/8      |  0.28/0.26/0.1~25| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| G2A       | 14	   |  230400   |   5            |  0.12~12         | 5~12      	  | false          | false    	  | 4.8~5.2   |
+| G2        | 15		|  230400   |   5            |  0.28~16     		| 5~12      	  | true(8)        | false    	  | 4.8~5.2   |
+| G2C       | 16		|  115200   |   4            |  0.1~12        	| 5~12      	  | false      	 | false    	  | 4.8~5.2   |
+| G4B       | 17		|  512000   |   10           |  0.12~16         | 5~12        	  | true(10)       | false    	  | 4.8~5.2   |
+| G4C       | 18		|  115200   |   4            |  0.1~12		      | 5~12           | false          | false    	  | 4.8~5.2   |
+| G1        | 19		|  230400   |   9            |  0.28~16         | 5~12      	  | false          | false    	  | 4.8~5.2   |
+| TX8    　 | 100	   |  115200   |   4            |  0.1~8      	   | 4~8(PWM)       | false          | true      	  | 4.8~5.2   |
+| TX20    　| 100	   |  115200   |   4            |  0.1~20      	   | 4~8(PWM)       | false          | true     	  | 4.8~5.2   |
+| TG15    　| 100	   |  512000   |   20/18/10     |  0.05~15      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
+| TG30    　| 101	   |  512000   |   20/18/10     |  0.05~30      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
+| TG50    　| 102	   |  512000   |   20/18/10     |  0.05~50      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
 
-ros2-interfaces
-=====================================================================
+   Note: PWM option speed control requires external PWM wave.
+
+## Configuration
+path: [ydlidar.yaml](params/ydlidar.yaml)
+
+## ros2-interfaces
 
 <center>
 
@@ -78,8 +97,7 @@ ros2-interfaces
 
 </center>
 
-Parameters
-=====================================================================
+## Parameters
 port (string, default: /dev/ydlidar)
 
     serial port name used in your system. 
@@ -181,13 +199,12 @@ frequency (double, default: 10)
     the LIDAR scanning frequency.
 
 
+Note: Specific LiDAR paramter configuration, refer to [Dataset](#dataset)
 
 
 
 
-
-Upgrade Log
-=====================================================================
+## Upgrade Log
 
 2020-02-08 version:1.4.5
 
@@ -231,6 +248,18 @@ Upgrade Log
    8.Compensate for each laser point timestamp.
 
    9.Unified profile, automatic correction lidar model.
+
+# 6 Support
+
+You can get support from YDLidar with the following methods:
+* Send email to support@ydlidar.com with a clear description of your problem and your setup
+* Github Issues
+
+## Contact EAI
+
+![Development Path](sdk/image/EAI.png)
+
+If you have any extra questions, please feel free to [contact us](http://www.ydlidar.cn/cn/contact)
 
 
 

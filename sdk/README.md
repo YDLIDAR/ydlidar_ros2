@@ -1,4 +1,4 @@
-![YDLIDAR](image/index-X4.jpg  "YDLIDAR_X4")
+![YDLIDAR](image/YDLidar.jpg  "YDLIDAR")
 
 YDLIDAR SDK [![Build Status](https://travis-ci.org/cansik/sdk.svg?branch=samsung)](https://travis-ci.org/cansik/sdk) [![Build status](https://ci.appveyor.com/api/projects/status/2w9xm1dbafbi7xc0?svg=true)](https://ci.appveyor.com/project/cansik/sdk) [![codebeat badge](https://codebeat.co/badges/3d8634b7-84eb-410c-b92b-24bf6875d8ef)](https://codebeat.co/projects/github-com-cansik-sdk-samsung)
 =====================================================================
@@ -10,6 +10,13 @@ Introduction
 YDLIDAR(https://www.ydlidar.com/) series is a set of high-performance and low-cost LIDAR sensors, which is the perfect sensor of 2D SLAM, 3D reconstruction, multi-touch, and safety applications.
 
 If you are using ROS (Robot Operating System), please use our open-source [ROS Driver]( https://github.com/ydlidar/ydlidar_ros) .
+
+Prerequisites
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+* Linux
+* Windows 7/10, Visual Studio 2015/2017
+* C++11 compiler
+
 
 Licence
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,16 +39,32 @@ Release Notes
 
 Dataset 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
+|LIDAR      | Model  |  Baudrate |  SampleRate(K) | Range(m)  		   |  Frequency(HZ) | Intenstiy(bit) | SingleChannel | voltage(V)|
+| :-------- |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| F4        | 1	   |  115200   |   4            |  0.12~12         | 5~12           | false          | false    	  | 4.8~5.2   |
+| S4        | 4	   |  115200   |   4            |  0.10~8.0        | 5~12 (PWM)     | false          | false    	  | 4.8~5.2   |
+| S4B       | 4/11   |  153600   |   4            |  0.10~8.0        | 5~12(PWM)      | true(8)        | false    	  | 4.8~5.2   |
+| S2        | 4/12   |  115200   |   3            |  0.10~8.0     	| 4~8(PWM)       | false          | true    		  | 4.8~5.2   |
+| G4        | 5	   |  230400   |   9/8/4        |  0.28/0.26/0.1~16| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| X4        | 6	   |  128000   |   5            |  0.12~10     		| 5~12(PWM)      | false          | false    	  | 4.8~5.2   |
+| X2/X2L    | 6	   |  115200   |   3            |  0.10~8.0     	| 4~8(PWM)       | false          | true    		  | 4.8~5.2   |
+| G4PRO     | 7	   |  230400   |   9/8/4        |  0.28/0.26/0.1~16| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| F4PRO     | 8	   |  230400   |   4/6          |  0.12~12         | 5~12        	  | false          | false    	  | 4.8~5.2   |
+| R2        | 9	   |  230400   |   5            |  0.12~16     		| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| G6        | 13     |  512000   |   18/16/8      |  0.28/0.26/0.1~25| 5~12        	  | false          | false    	  | 4.8~5.2   |
+| G2A       | 14	   |  230400   |   5            |  0.12~12         | 5~12      	  | false          | false    	  | 4.8~5.2   |
+| G2        | 15		|  230400   |   5            |  0.28~16     		| 5~12      	  | true(8)        | false    	  | 4.8~5.2   |
+| G2C       | 16		|  115200   |   4            |  0.1~12        	| 5~12      	  | false      	 | false    	  | 4.8~5.2   |
+| G4B       | 17		|  512000   |   10           |  0.12~16         | 5~12        	  | true(10)       | false    	  | 4.8~5.2   |
+| G4C       | 18		|  115200   |   4            |  0.1~12		      | 5~12           | false          | false    	  | 4.8~5.2   |
+| G1        | 19		|  230400   |   9            |  0.28~16         | 5~12      	  | false          | false    	  | 4.8~5.2   |
+| TX8    　 | 100	   |  115200   |   4            |  0.1~8      	   | 4~8(PWM)       | false          | true      	  | 4.8~5.2   |
+| TX20    　| 100	   |  115200   |   4            |  0.1~20      	   | 4~8(PWM)       | false          | true     	  | 4.8~5.2   |
+| TG15    　| 100	   |  512000   |   20/18/10     |  0.05~15      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
+| TG30    　| 101	   |  512000   |   20/18/10     |  0.05~30      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
+| TG50    　| 102	   |  512000   |   20/18/10     |  0.05~50      	| 3~16      	  | false          | false    	  | 4.8~5.2   |
 
-
-| Model      |  Baudrate |  Sampling Frequency | Range(m)  | Scanning Frequency(HZ) | Working temperature(°C) | Laser power max(mW) | voltage(V) | Current(mA) | Intensity
-| :-------- | --------:|--------:|  --------:| --------:|--------:| --------:| --------:| --------:| :--: |
-| TG15   |  512000 |   20000  |  0.1-15   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
-| TG30   |  512000 |   4000  |  0.1-30   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
-| TG50   |  512000 |   4000  |  0.1-50   |3-15.7|0-50| ~5|4.8-5.2|400-480| false |
-| G2A    |  230400 |   5000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| false |
-| G2      |  230400 |   5000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| true |
-| G2C   |  230400 |   4000  |  0.12-12   |5-12|0-50| ~5|4.8-5.2|400-480| false |
+   Note: PWM option speed control requires external PWM wave.
 
 How to build YDLIDAR SDK samples
 ---------------
@@ -98,10 +121,10 @@ Data structure
 See [the protocol page](include/ydlidar_protocol.h) for more info.
     
 
-Coordinate System
+TOF LiDAR
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-![Coordinate](image/image.png  "Coordinate")
+![TOF](image/TOF.png  "TOF")
 
 
 Upgrade Log
@@ -192,5 +215,6 @@ Upgrade Log
    
    Contact EAI
 ---------------
+![Development Path](image/EAI.png)
 
 If you have any extra questions, please feel free to [contact us](http://www.ydlidar.cn/cn/contact)

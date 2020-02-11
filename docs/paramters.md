@@ -1,6 +1,6 @@
-#ROS2 Paramters Table
+#　ROS2 Paramters Table
 
-##Paramters Description
+##　Paramters Description
 | Parameter         | Type                    | Description                                         |
 |-----------------------|------------------------|-----------------------------------------------------|
 | `port`        		| String                 	| port of lidar (ex. /dev/ttyUSB0)                         		|
@@ -19,7 +19,7 @@
 | `samp_rate`       	| int                  	| sampling rate of lidar, default: 9      				|
 | `frequency`       	| float                  	| scan frequency of lidar,default: 10.0      			|
 
-##Baudrate Table
+##　Baudrate Table
 
 | LiDAR                					| baudrate               | 
 |-----------------------------------------------|-----------------------|
@@ -57,7 +57,7 @@
 |S2                    		| 3			 	 |
 |TG15/TG30/TG50           | 10,18,20		 |
 
-##Frequency Table
+##　Frequency Table
 
 
 | LiDAR                					| frequency             | 
