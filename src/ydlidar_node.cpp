@@ -75,49 +75,49 @@ int main(int argc, char *argv[]) {
   bool m_isToFLidar = false;
   bool m_Inverted = true;
 
-  node->declare_parameter("port");
+  node->declare_parameter("port", port);
   node->get_parameter("port", port);
 
-  node->declare_parameter("frame_id");
+  node->declare_parameter("frame_id", frame_id);
   node->get_parameter("frame_id", frame_id);
 
-  node->declare_parameter("ignore_array");
+  node->declare_parameter("ignore_array", list);
   node->get_parameter("ignore_array", list);
 
-  node->declare_parameter("baudrate");
+  node->declare_parameter("baudrate", baudrate);
   node->get_parameter("baudrate", baudrate);
 
-  node->declare_parameter("samp_rate");
+  node->declare_parameter("samp_rate", samp_rate);
   node->get_parameter("samp_rate", samp_rate);
 
-  node->declare_parameter("resolution_fixed");
+  node->declare_parameter("resolution_fixed", resolution_fixed);
   node->get_parameter("resolution_fixed", resolution_fixed);
 
-  node->declare_parameter("singleChannel");
+  node->declare_parameter("singleChannel", m_singleChannel);
   node->get_parameter("singleChannel", m_singleChannel);
 
-  node->declare_parameter("auto_reconnect");
+  node->declare_parameter("auto_reconnect", auto_reconnect);
   node->get_parameter("auto_reconnect", auto_reconnect);
 
-  node->declare_parameter("reversion");
+  node->declare_parameter("reversion", reversion);
   node->get_parameter("reversion", reversion);
 
-  node->declare_parameter("isToFLidar");
+  node->declare_parameter("isToFLidar", m_isToFLidar);
   node->get_parameter("isToFLidar", m_isToFLidar);
 
-  node->declare_parameter("angle_max");
+  node->declare_parameter("angle_max", angle_max);
   node->get_parameter("angle_max", angle_max);
 
-  node->declare_parameter("angle_min");
+  node->declare_parameter("angle_min", angle_min);
   node->get_parameter("angle_min", angle_min);
 
-  node->declare_parameter("max_range");
+  node->declare_parameter("max_range", max_range);
   node->get_parameter("max_range", max_range);
 
-  node->declare_parameter("min_range");
+  node->declare_parameter("min_range", min_range);
   node->get_parameter("min_range", min_range);
 
-  node->declare_parameter("frequency");
+  node->declare_parameter("frequency", frequency);
   node->get_parameter("frequency", frequency);
 
 
@@ -179,7 +179,7 @@ int main(int argc, char *argv[]) {
   auto laser_pub = node->create_publisher<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS());
 
 
-
+  rclcpp::Time current_time_;
   rclcpp::WallRate loop_rate(20);
 
   while (ret && rclcpp::ok()) {
@@ -191,8 +191,9 @@ int main(int argc, char *argv[]) {
 
       auto scan_msg = std::make_shared<sensor_msgs::msg::LaserScan>();
 
-      scan_msg->header.stamp.sec = RCL_NS_TO_S(scan.stamp);
-      scan_msg->header.stamp.nanosec =  scan.stamp - RCL_S_TO_NS(scan_msg->header.stamp.sec);
+      current_time_ = node->get_clock()->now();
+      scan_msg->header.stamp = current_time_;
+
       scan_msg->header.frame_id = frame_id;
       scan_msg->angle_min = scan.config.min_angle;
       scan_msg->angle_max = scan.config.max_angle;
