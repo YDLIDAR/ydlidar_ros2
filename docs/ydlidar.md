@@ -1,11 +1,19 @@
 #　YDLIDAR ROS2 Package Download and Build
-##　Step1: create a ROS2 workspace, if there is no workspace, othereise Skip to Step2
+
+##　Step1: create a ROS2 workspace, if there is no workspace, otherWise Skip to Step2
+
 ####　Linux/OS X
+
 	$mkdir -p ~/ydlidar_ros2_ws/src
+	
 	$cd ~/ydlidar_ros2_ws/src
+	
 ####　Windows
+
 	$md \dev\ydlidar_ros2_ws\src
+	
 	$cd \dev\ydlidar_ros2_ws\src
+	
 	
 ##　Step2: clone ydlidar ros2 package
 	$git clone https://github.com/YDLIDAR/ydlidar_ros2
